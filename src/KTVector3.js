@@ -62,8 +62,22 @@ Vector3.prototype.copy = function(vector3){
 	return this;
 };
 
+Vector3.prototype.set = function(x, y, z){
+	this.x = x;
+	this.y = y;
+	this.z = z;
+	
+	return this;
+};
+
 Vector3.prototype.clone = function(){
 	return new Vector3(this.x, this.y, this.z);
+};
+
+Vector3.prototype.equals = function(vector3){
+	if (!vector3.__ktv3) throw "Can only copy a Vector3 to this vector";
+	
+	return (this.x == vector3.x && this.y == vector3.y && this.z == vector3.z);
 };
 
 Vector3.vectorsDifference = function(vector3_a, vector3_b){

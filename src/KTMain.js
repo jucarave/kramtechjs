@@ -33,6 +33,17 @@ module.exports = {
 		gl.blendFunc( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA );
 		
 		this.aspectRatio = this.canvas.width / this.canvas.height;
+	},
+	
+	createArrayBuffer: function(dataArray, itemSize){
+		var gl = this.gl;
+		var buffer = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(dataArray), gl.STATIC_DRAW);
+		buffer.numItems = dataArray.length;
+		buffer.itemSize = itemSize;
+		
+		return buffer;
 	}
 };
 

@@ -39,48 +39,49 @@ Matrix4.prototype.identity = function(){
 	return this;
 };
 
-Matrix4.prototype.multiply = function(col){
-	var ret = [];
-	
-	for (var i=0;i<16;i+=4){
-		var row = [this[i], this[i+1], this[i+2], this[i+3]];
-		var sum = 0;
+Matrix4.prototype.multiply = function(matrix4){
+	if (matrix4.__ktm4){
+		var A1 = [this[0],  this[1],  this[2],  this[3]];
+		var A2 = [this[4],  this[5],  this[6],  this[7]];
+		var A3 = [this[8],  this[9],  this[10], this[11]];
+		var A4 = [this[12], this[13], this[14], this[15]];
 		
-		for (var j=0;j<4;j++){
-			sum += row[j] * col[j];
+		var B1 = [matrix4[0], matrix4[4], matrix4[8],  matrix4[12]];
+		var B2 = [matrix4[1], matrix4[5], matrix4[9],  matrix4[13]];
+		var B3 = [matrix4[2], matrix4[6], matrix4[10], matrix4[14]];
+		var B4 = [matrix4[3], matrix4[7], matrix4[11], matrix4[15]];
+		
+		var dot = function(col, row){
+			var sum = 0;
+			for (var j=0;j<4;j++){ sum += row[j] * col[j]; }
+			return sum;
+		};
+		
+		this[0] = dot(A1, B1);   this[1] = dot(A1, B2);   this[2] = dot(A1, B3);   this[3] = dot(A1, B4);
+		this[4] = dot(A2, B1);   this[5] = dot(A2, B2);   this[6] = dot(A2, B3);   this[7] = dot(A2, B4);
+		this[8] = dot(A3, B1);   this[9] = dot(A3, B2);   this[10] = dot(A3, B3);  this[11] = dot(A3, B4);
+		this[12] = dot(A4, B1);  this[13] = dot(A4, B2);  this[14] = dot(A4, B3);  this[15] = dot(A4, B4);
+		
+		return this;
+	}else if (matrix4.length == 4){
+		var ret = [];
+		var col = matrix4;
+	
+		for (var i=0;i<16;i+=4){
+			var row = [this[i], this[i+1], this[i+2], this[i+3]];
+			var sum = 0;
+			
+			for (var j=0;j<4;j++){
+				sum += row[j] * col[j];
+			}
+			
+			ret.push(sum);
 		}
 		
-		ret.push(sum);
+		return ret;
+	}else{
+		throw "Invalid constructor";
 	}
-	
-	return ret;
-};
-
-Matrix4.prototype.cross = function(matrix4){
-	if (!matrix4.__ktm4) throw "Can only perform a cross product with a matrix4";
-	
-	var A1 = [this[0],  this[1],  this[2],  this[3]];
-	var A2 = [this[4],  this[5],  this[6],  this[7]];
-	var A3 = [this[8],  this[9],  this[10], this[11]];
-	var A4 = [this[12], this[13], this[14], this[15]];
-	
-	var B1 = [matrix4[0], matrix4[4], matrix4[8],  matrix4[12]];
-	var B2 = [matrix4[1], matrix4[5], matrix4[9],  matrix4[13]];
-	var B3 = [matrix4[2], matrix4[6], matrix4[10], matrix4[14]];
-	var B4 = [matrix4[3], matrix4[7], matrix4[11], matrix4[15]];
-	
-	var dot = function(col, row){
-		var sum = 0;
-		for (var j=0;j<4;j++){ sum += row[j] * col[j]; }
-		return sum;
-	};
-	
-	this[0] = dot(A1, B1);   this[1] = dot(A1, B2);   this[2] = dot(A1, B3);   this[3] = dot(A1, B4);
-	this[4] = dot(A2, B1);   this[5] = dot(A2, B2);   this[6] = dot(A2, B3);   this[7] = dot(A2, B4);
-	this[8] = dot(A3, B1);   this[9] = dot(A3, B2);   this[10] = dot(A3, B3);  this[11] = dot(A3, B4);
-	this[12] = dot(A4, B1);  this[13] = dot(A4, B2);  this[14] = dot(A4, B3);  this[15] = dot(A4, B4);
-	
-	return this;
 };
 
 Matrix4.prototype.transpose = function(){
@@ -170,5 +171,14 @@ Matrix4.getTranslation = function(x, y, z){
 		0, 1, 0, y,
 		0, 0, 1, z,
 		0, 0, 0, 1
+	);
+};
+
+Matrix4.getScale = function(sx, sy, sz){
+	return new Matrix4(
+		sx,  0,  0, 0,
+		 0, sy,  0, 0,
+		 0,  0, sz, 0,
+		 0,  0,  0, 1
 	);
 };

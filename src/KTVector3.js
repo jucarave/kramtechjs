@@ -30,6 +30,16 @@ Vector3.prototype.dot = function(vector3){
 	return this.x * vector3.x + this.y * vector3.y + this.z * vector3.z;
 };
 
+Vector3.prototype.cross = function(vector3){
+	if (!vector3.__ktv3) throw "Can only perform a cross product with a vector3";
+	
+	return new Vector3(
+		this.y * vector3.z - this.z * vector3.y,
+		this.z * vector3.x - this.x * vector3.z,
+		this.x * vector3.y - this.y * vector3.x
+	);
+};
+
 Vector3.prototype.invert = function(){
 	return this.multiply(-1);
 };

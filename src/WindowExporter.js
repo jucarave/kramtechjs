@@ -1,0 +1,1 @@
+window.KT = require('./KramTech');

@@ -35,6 +35,8 @@ Scene.prototype.render = function(camera){
 			continue;
 		}
 		
+		this.setMaterialAttributes(mesh.material);
+		
 		gl.useProgram(shader.shaderProgram);
 		
 		this.sendAttribData(mesh, shader.attributes, camera);
@@ -80,4 +82,19 @@ Scene.prototype.sendUniformData = function(mesh, uniforms, camera){
 	}
 	
 	return this;
+};
+
+Scene.prototype.setMaterialAttributes = function(material){
+	var gl = KT.gl;
+	
+	var cull = "BACK";
+	if (material.drawFaces == 'BACK'){ cull = "FRONT"; }
+	else if (material.drawFaces == 'BOTH'){ cull = ""; }
+	
+	if (cull != ""){
+		gl.enable(gl.CULL_FACE);
+		gl.cullFace(gl[cull]);
+	}else{
+		gl.disable(gl.CULL_FACE);
+	}
 };

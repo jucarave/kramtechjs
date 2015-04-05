@@ -1,6 +1,6 @@
 var Matrix4 = require('./KTMatrix4');
 
-function Camera(position, rotation, fov, ratio, znear, zfar){
+function CameraPerspective(position, rotation, fov, ratio, znear, zfar){
 	this.__ktcamera = true;
 	
 	this.position = position;
@@ -14,9 +14,9 @@ function Camera(position, rotation, fov, ratio, znear, zfar){
 	this.setPerspective();
 }
 
-module.exports = Camera;
+module.exports = CameraPerspective;
 
-Camera.prototype.setPerspective = function(){
+CameraPerspective.prototype.setPerspective = function(){
 	var C = 1 / Math.tan(this.fov / 2);
 	var R = C * this.ratio;
 	var A = (this.znear + this.zfar) / (this.znear - this.zfar);
@@ -25,7 +25,7 @@ Camera.prototype.setPerspective = function(){
 	this.perspectiveMatrix = new Matrix4(
 		C, 0, 0,  0,
 		0, R, 0,  0,
-		0, 0, A, -1,
-		0, 0, B,  0
+		0, 0, A,  B,
+		0, 0, -1, 0
 	).toFloat32Array();
 };

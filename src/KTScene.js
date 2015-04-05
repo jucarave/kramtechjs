@@ -61,6 +61,9 @@ Scene.prototype.sendAttribData = function(mesh, attributes, camera){
 		}else if (att.name == "aVertexColor"){
 			gl.bindBuffer(gl.ARRAY_BUFFER, geometry.colorsBuffer);
 			gl.vertexAttribPointer(att.location, geometry.colorsBuffer.itemSize, gl.FLOAT, false, 0, 0);
+		}else if (att.name == "aTextureCoord"){
+			gl.bindBuffer(gl.ARRAY_BUFFER, geometry.texBuffer);
+			gl.vertexAttribPointer(att.location, geometry.texBuffer.itemSize, gl.FLOAT, false, 0, 0);
 		}
 	}
 	
@@ -79,9 +82,16 @@ Scene.prototype.sendUniformData = function(mesh, uniforms, camera){
 		}else if (uni.name == 'uPerspectiveMatrix'){
 			gl.uniformMatrix4fv(uni.location, false, camera.perspectiveMatrix);
 		}else if (uni.name == 'uMaterialColor'){
-			var c = mesh.material.color.getRGBA();
-			var color = [c[0] / 255, c[1] / 255, c[2] / 255, c[3]];
+			var color = mesh.material.color.getRGBA();
 			gl.uniform4fv(uni.location, new Float32Array(color));
+		}else if (uni.name == 'uTextureSampler'){
+			if (mesh.material.texture){
+				gl.activeTexture(gl.TEXTURE0);
+				gl.bindTexture(gl.TEXTURE_2D, mesh.material.texture.texture);
+				gl.uniform1i(uni.location, 0);
+			}
+		}else if (uni.name == 'uHasTexture'){
+			gl.uniform1i(uni.location, (mesh.material.texture)? 1 : 0);
 		}
 	}
 	

@@ -97,10 +97,10 @@ Vector3.vectorsDifference = function(vector3_a, vector3_b){
 	return new Vector3(vector3_a.x - vector3_b.x, vector3_a.y - vector3_b.y, vector3_a.z - vector3_b.z);
 };
 
-Vector3.fromAngle = function(radian_xy, radian_z){
-	var x = Math.cos(radian_xy);
-	var y = -Math.sin(radian_xy);
-	var z = Math.sin(radian_z);
+Vector3.fromAngle = function(radian_xz, radian_y){
+	var x = Math.cos(radian_xz);
+	var y = Math.sin(radian_y);
+	var z = -Math.sin(radian_xz);
 	
 	return new Vector3(x, y, z);
 };

@@ -20,15 +20,15 @@ function GeometryBox(width, length, height){
 	boxGeo.addVertice( w, -h, -l, Color._WHITE, 1.0, 1.0);
 	boxGeo.addVertice( w,  h, -l, Color._WHITE, 1.0, 0.0);
 	
-	boxGeo.addVertice( w, -h, -l, Color._WHITE, 0.0, 1.0);
+	boxGeo.addVertice( w, -h, -l, Color._WHITE, 1.0, 1.0);
 	boxGeo.addVertice( w,  h,  l, Color._WHITE, 0.0, 0.0);
-	boxGeo.addVertice( w, -h,  l, Color._WHITE, 1.0, 1.0);
+	boxGeo.addVertice( w, -h,  l, Color._WHITE, 0.0, 1.0);
 	boxGeo.addVertice( w,  h, -l, Color._WHITE, 1.0, 0.0);
 	
 	boxGeo.addVertice(-w, -h,  l, Color._WHITE, 1.0, 1.0);
-	boxGeo.addVertice(-w,  h,  l, Color._WHITE, 0.0, 0.0);
+	boxGeo.addVertice(-w,  h,  l, Color._WHITE, 1.0, 0.0);
 	boxGeo.addVertice(-w, -h, -l, Color._WHITE, 0.0, 1.0);
-	boxGeo.addVertice(-w,  h, -l, Color._WHITE, 1.0, 0.0);
+	boxGeo.addVertice(-w,  h, -l, Color._WHITE, 0.0, 0.0);
 	
 	boxGeo.addVertice( w,  h,  l, Color._WHITE, 1.0, 1.0);
 	boxGeo.addVertice(-w,  h, -l, Color._WHITE, 0.0, 0.0);

@@ -22,7 +22,7 @@ Geometry.prototype.addVertice = function(x, y, z, color, tx, ty){
 	
 	this.vertices.push(new Vector3(x, y, z));
 	this.colors.push(new Color(color));
-	this.uvCoords.push(new Vector2(x, y));
+	this.uvCoords.push(new Vector2(tx, ty));
 };
 
 Geometry.prototype.addFace = function(vertice_0, vertice_1, vertice_2){
@@ -40,24 +40,24 @@ Geometry.prototype.build = function(){
 	var colors = [];
 	
 	for (var i=0,len=this.vertices.length;i<len;i++){ 
-		v = this.vertices[i]; 
+		var v = this.vertices[i]; 
 		vertices.push(v.x, v.y, v.z); 
 	}
 	
 	for (var i=0,len=this.uvCoords.length;i<len;i++){ 
-		v = this.uvCoords[i]; 
+		var v = this.uvCoords[i]; 
 		uvCoords.push(v.x, v.y); 
 	}
 	
 	for (var i=0,len=this.triangles.length;i<len;i++){ 
-		t = this.triangles[i]; 
+		var t = this.triangles[i]; 
 		triangles.push(t.x, t.y, t.z); 
 	}
 	
 	for (var i=0,len=this.colors.length;i<len;i++){ 
-		c = this.colors[i].getRGBA(); 
+		var c = this.colors[i].getRGBA(); 
 		
-		colors.push(c[0] / 255, c[1] / 255, c[2] / 255, c[3]); 
+		colors.push(c[0], c[1], c[2], c[3]); 
 	}
 	
 	this.vertexBuffer = KT.createArrayBuffer("ARRAY_BUFFER", new Float32Array(vertices), 3);

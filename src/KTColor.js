@@ -1,11 +1,23 @@
 function Color(hexColor){
-	this.color = hexColor;
+	var str = hexColor.substring(1);
+	var r = parseInt(str.substring(0, 2), 16);
+	var g = parseInt(str.substring(2, 4), 16);
+	var b = parseInt(str.substring(4, 6), 16);
+	var a = parseInt(str.substring(6, 8), 16);
+	
+	this.color = [r / 255, g / 255, b / 255, a];
 }
 
 module.exports = Color;
 
 Color.prototype.set = function(hexColor){
-	this.color = hexColor;
+	var str = hexColor.substring(1);
+	var r = parseInt(str.substring(0, 2), 16);
+	var g = parseInt(str.substring(2, 4), 16);
+	var b = parseInt(str.substring(4, 6), 16);
+	var a = parseInt(str.substring(6, 8), 16);
+	
+	this.color = [r / 255, g / 255, b / 255, a];
 };
 
 Color.prototype.setRGB = function(red, green, blue){
@@ -13,32 +25,33 @@ Color.prototype.setRGB = function(red, green, blue){
 };
 
 Color.prototype.setRGBA = function(red, green, blue, alpha){
-	var r = (+red).toString(16);
-	var g = (+green).toString(16);
-	var b = (+blue).toString(16);
-	var a = (+alpha).toString(16);
-	
-	var c = "#" + r + g + b + a; 
-	this.color = parseInt(c, 16);
+	this.color = [red / 255, green / 255, blue / 255, alpha];
 };
 
 Color.prototype.getRGB = function(){
 	var c = this.getRGBA();
-	c.splice(3, 1);
 	
-	return c;
+	return [c[0], c[1], c[2]];
 };
 
 Color.prototype.getRGBA = function(){
-	var str = this.color.substring(1);
-	var r = parseInt(str.substring(0, 2), 16);
-	var g = parseInt(str.substring(2, 4), 16);
-	var b = parseInt(str.substring(4, 6), 16);
-	var a = parseInt(str.substring(6, 8), 16);
+	return this.color;
+};
+
+Color.prototype.getHex = function(){
+	var c = this.color;
 	
-	if (!a) a = 1;
+	var r = (c[0] * 255).toString(16);
+	var g = (c[1] * 255).toString(16);
+	var b = (c[2] * 255).toString(16);
+	var a = (c[3]).toString(16);
 	
-	return [r, g, b, a];
+	if (r.length == 1) r = "0" + r;
+	if (g.length == 1) g = "0" + g;
+	if (b.length == 1) b = "0" + b;
+	if (a.length == 1) a = "0" + a;
+	
+	return ("#" + r + g + b + a).toUpperCase();
 };
 
 Color._BLACK		= "#00000001";

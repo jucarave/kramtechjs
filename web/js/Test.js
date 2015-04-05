@@ -13,7 +13,8 @@ Test.prototype.createSimpleScene = function(){
 	this.camera = new KT.CameraPerspective(new KT.Vector3(0,0,0), new KT.Vector3(0,0,0), KT.Math.degToRad(60), this.canvas.width / this.canvas.height, 0.1, 100.0);
 	
 	var boxGeo = new KT.GeometryBox(1.0, 2.0, 3.0);
-	var material = new KT.MaterialBasic();
+	var texture = new KT.Texture('img/crate.jpg');
+	var material = new KT.MaterialBasic(texture, "#CC444401");
 	
 	this.box = new KT.Mesh(boxGeo, material);
 	this.box.position.z = -5.0;
@@ -31,3 +32,8 @@ Test.prototype.loopScene = function(){
 	
 	setTimeout(function(){ T.loopScene(); }, T.fps);
 };
+
+var test;
+KT.Utils.addEvent(window, "load", function(){
+	test = new Test();
+});

@@ -16,7 +16,7 @@ function Geometry(){
 module.exports = Geometry;
 
 Geometry.prototype.addVertice = function(x, y, z, color, tx, ty){
-	if (!color) color = Color.__WHITE;
+	if (!color) color = Color._WHITE;
 	if (!tx) tx = 0;
 	if (!ty) ty = 0;
 	

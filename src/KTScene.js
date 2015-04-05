@@ -78,6 +78,10 @@ Scene.prototype.sendUniformData = function(mesh, uniforms, camera){
 			gl.uniformMatrix4fv(uni.location, false, transformationMatrix.toFloat32Array());
 		}else if (uni.name == 'uPerspectiveMatrix'){
 			gl.uniformMatrix4fv(uni.location, false, camera.perspectiveMatrix);
+		}else if (uni.name == 'uMaterialColor'){
+			var c = mesh.material.color.getRGBA();
+			var color = [c[0] / 255, c[1] / 255, c[2] / 255, c[3]];
+			gl.uniform4fv(uni.location, new Float32Array(color));
 		}
 	}
 	

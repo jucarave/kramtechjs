@@ -14,12 +14,14 @@ Test.prototype.createSimpleScene = function(){
 	
 	var triGeo = new KT.Geometry();
 	triGeo.addVertice( 1.0, -1.0, 0.0, KT.Color._BLUE);
-	triGeo.addVertice( 0.0,  1.0, 0.0, KT.Color._GREEN);
+	triGeo.addVertice(-1.0,  1.0, 0.0, KT.Color._GREEN);
 	triGeo.addVertice(-1.0, -1.0, 0.0, KT.Color._RED);
+	triGeo.addVertice( 1.0,  1.0, 0.0, KT.Color._AQUA);
 	triGeo.addFace(0, 1, 2);
+	triGeo.addFace(0, 3, 1);
 	triGeo.build();
 	
-	var material = new KT.Material({shader: KT.shaders.basic, drawFaces: 'BOTH'});
+	var material = new KT.Material({shader: KT.shaders.basic, drawFaces: 'BOTH', color: KT.Color._WHITE});
 	
 	this.triangle = new KT.Mesh(triGeo, material);
 	this.triangle.position.z = -5.0;

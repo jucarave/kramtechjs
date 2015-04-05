@@ -76,28 +76,30 @@ module.exports = {
 			throw "Error initializing the shader program";
 		}
 		
-		var attributes = {};
+		var attributes = [];
 		for (var i=0,len=shader.attributes.length;i<len;i++){
 			var att = shader.attributes[i];
 			var location = gl.getAttribLocation(shaderProgram, att.name);
 			
 			gl.enableVertexAttribArray(location);
 			
-			attributes[att.name] = {
+			attributes.push({
+				name: att.name,
 				type: att.type,
 				location: location
-			};
+			});
 		}
 		
-		var uniforms = {};
+		var uniforms = [];
 		for (var i=0,len=shader.uniforms.length;i<len;i++){
 			var uni = shader.uniforms[i];
 			var location = gl.getUniformLocation(shaderProgram, uni.name);
 			
-			uniforms[uni.name] = {
+			uniforms.push({
+				name: uni.name,
 				type: uni.type,
 				location: location
-			};
+			});
 		}
 		
 		return {

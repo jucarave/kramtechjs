@@ -165,7 +165,13 @@ Matrix4.getZRotation = function(radians){
 	);
 };
 
-Matrix4.getTranslation = function(x, y, z){
+Matrix4.getTranslation = function(vector3){
+	if (!vector3.__ktv3) throw "Can only translate to a vector 3";
+	
+	var x = vector3.x;
+	var y = vector3.y;
+	var z = vector3.z;
+	
 	return new Matrix4(
 		1, 0, 0, x,
 		0, 1, 0, y,
@@ -174,11 +180,40 @@ Matrix4.getTranslation = function(x, y, z){
 	);
 };
 
-Matrix4.getScale = function(sx, sy, sz){
+Matrix4.getScale = function(vector3){
+	if (!vector3.__ktv3) throw "Can only scale to a vector 3";
+	
+	var sx = vector3.x;
+	var sy = vector3.y;
+	var sz = vector3.z;
+	
 	return new Matrix4(
 		sx,  0,  0, 0,
 		 0, sy,  0, 0,
 		 0,  0, sz, 0,
 		 0,  0,  0, 1
 	);
+};
+
+Matrix4.getTransformation = function(position, rotation, scale){
+	if (!position.__ktv3) throw "Position must be a Vector3";
+	if (!rotation.__ktv3) throw "Rotation must be a Vector3";
+	if (scale && !scale.__ktv3) throw "Scale must be a Vector3";
+	
+	var scale = (scale)? Matrix4.getScale(scale) : Matrix4.getIdentity();
+	
+	var rotationX = Matrix4.getXRotation(rotation.x);
+	var rotationY = Matrix4.getYRotation(rotation.y);
+	var rotationZ = Matrix4.getZRotation(rotation.z);
+	
+	var translation = Matrix4.getTranslation(position);
+	
+	
+	var matrix = scale;
+	matrix.multiply(rotationX);
+	matrix.multiply(rotationY);
+	matrix.multiply(rotationZ);
+	matrix.multiply(translation);
+	
+	return matrix;
 };

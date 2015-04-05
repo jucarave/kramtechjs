@@ -5,6 +5,8 @@ var Vector2 = require('./KTVector2');
 var Vector3 = require('./KTVector3');
 
 function Geometry(){
+	this.__ktgeometry = true;
+	
 	this.vertices = [];
 	this.triangles = [];
 	this.uvCoords = [];
@@ -61,7 +63,7 @@ Geometry.prototype.build = function(){
 	this.vertexBuffer = KT.createArrayBuffer(vertices, 3);
 	this.texBuffer = KT.createArrayBuffer(uvCoords, 2);
 	this.facesBuffer = KT.createArrayBuffer(triangles, 1);
-	this.vertexBuffer = KT.createArrayBuffer(colors, 3);
+	this.colorsBuffer = KT.createArrayBuffer(colors, 3);
 	
 	return this;
 };

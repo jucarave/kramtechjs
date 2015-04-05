@@ -4,47 +4,41 @@ function Color(hexColor){
 
 module.exports = Color;
 
-Color.prototype.setRGB = function(red, green, blue){
-	var r = (+red).toString(16);
-	var g = (+green).toString(16);
-	var b = (+blue).toString(16);
-	
-	var c = "0x" + r + g + b; 
-	this.color = parseInt(c, 16);
-};
-
 Color.prototype.set = function(hexColor){
 	this.color = hexColor;
 };
 
+Color.prototype.setRGB = function(red, green, blue){
+	this.setRGBA(red, green, blue, 1);
+};
+
+Color.prototype.setRGBA = function(red, green, blue, alpha){
+	var r = (+red).toString(16);
+	var g = (+green).toString(16);
+	var b = (+blue).toString(16);
+	var a = (+alpha).toString(16);
+	
+	var c = "0x" + r + g + b + a; 
+	this.color = parseInt(c, 16);
+};
+
 Color.prototype.getRGB = function(){
+	var c = this.getRGBA();
+	c.splice(3, 1);
+	
+	return c;
+};
+
+Color.prototype.getRGBA = function(){
 	var str = (this.color).toString(16);
 	var r = parseInt(str.substring(0, 2), 16);
 	var g = parseInt(str.substring(2, 4), 16);
 	var b = parseInt(str.substring(4, 6), 16);
+	var a = parseInt(str.substring(6, 8), 16);
 	
-	return [r, g, b];
-};
-
-Color.prototype.getR = function(){
-	var str = (this.color).toString(16);
-	str = str.substring(0, 2);
+	if (!a) a = 1;
 	
-	return parseInt(str, 16);
-};
-
-Color.prototype.getG = function(){
-	var str = (this.color).toString(16);
-	str = str.substring(2, 4);
-	
-	return parseInt(str, 16);
-};
-
-Color.prototype.getB = function(){
-	var str = (this.color).toString(16);
-	str = str.substring(4, 6);
-	
-	return parseInt(str, 16);
+	return [r, g, b, a];
 };
 
 Color._BLACK		= 0x000000;

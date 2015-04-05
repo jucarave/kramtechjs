@@ -53,9 +53,9 @@ Geometry.prototype.build = function(){
 	}
 	
 	for (var i=0,len=this.colors.length;i<len;i++){ 
-		c = this.colors[i].getRGB(); 
+		c = this.colors[i].getRGBA(); 
 		
-		colors.push(c[0] / 255, c[1] / 255, c[2] / 255); 
+		colors.push(c[0] / 255, c[1] / 255, c[2] / 255, c[3]); 
 	}
 	
 	this.vertexBuffer = KT.createArrayBuffer(vertices, 3);

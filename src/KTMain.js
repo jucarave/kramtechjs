@@ -1,11 +1,15 @@
+var Shaders = require('./KTShaders');
+
 module.exports = {
 	init: function(canvas){
 		this.canvas = canvas;
 		this.gl = null;
+		this.shaders = {};
 		this.aspectRatio = 0;
 		
 		this.__initContext(canvas);
 		this.__initProperties();
+		this.__initShaders();
 	},
 	
 	__initContext: function(canvas){
@@ -35,6 +39,10 @@ module.exports = {
 		this.aspectRatio = this.canvas.width / this.canvas.height;
 	},
 	
+	__initShaders: function(){
+		this.shaders.basic = this.processShader(Shaders.basic);
+	},
+	
 	createArrayBuffer: function(dataArray, itemSize){
 		var gl = this.gl;
 		var buffer = gl.createBuffer();
@@ -44,6 +52,59 @@ module.exports = {
 		buffer.itemSize = itemSize;
 		
 		return buffer;
+	},
+	
+	processShader: function(shader){
+		var gl = this.gl;
+		
+		var vCode = shader.vertexShader;
+		var vShader = gl.createShader(gl.VERTEX_SHADER);
+		gl.shaderSource(vShader, vCode);
+		gl.compileShader(vShader);
+		
+		var fCode = shader.fragmentShader;
+		var fShader = gl.createShader(gl.FRAGMENT_SHADER);
+		gl.shaderSource(fShader, fCode);
+		gl.compileShader(fShader);
+		
+		var shaderProgram = gl.createProgram();
+		gl.attachShader(shaderProgram, vShader);
+		gl.attachShader(shaderProgram, fShader);
+		gl.linkProgram(shaderProgram);
+		
+		if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)){
+			throw "Error initializing the shader program";
+		}
+		
+		var attributes = {};
+		for (var i=0,len=shader.attributes.length;i<len;i++){
+			var att = shader.attributes[i];
+			var location = gl.getAttribLocation(shaderProgram, att.name);
+			
+			gl.enableVertexAttribArray(location);
+			
+			attributes[att.name] = {
+				type: att.type,
+				location: location
+			};
+		}
+		
+		var uniforms = {};
+		for (var i=0,len=shader.uniforms.length;i<len;i++){
+			var uni = shader.uniforms[i];
+			var location = gl.getUniformLocation(shaderProgram, uni.name);
+			
+			uniforms[uni.name] = {
+				type: uni.type,
+				location: location
+			};
+		}
+		
+		return {
+			shaderProgram: shaderProgram,
+			attributes: attributes,
+			uniforms: uniforms
+		};
 	}
 };
 

@@ -5,7 +5,7 @@ function Color(hexColor){
 	var b = parseInt(str.substring(4, 6), 16);
 	var a = parseInt(str.substring(6, 8), 16);
 	
-	this.color = [r / 255, g / 255, b / 255, a];
+	this.color = [r / 255, g / 255, b / 255, a / 255];
 }
 
 module.exports = Color;
@@ -17,11 +17,11 @@ Color.prototype.set = function(hexColor){
 	var b = parseInt(str.substring(4, 6), 16);
 	var a = parseInt(str.substring(6, 8), 16);
 	
-	this.color = [r / 255, g / 255, b / 255, a];
+	this.color = [r / 255, g / 255, b / 255, a / 255];
 };
 
 Color.prototype.setRGB = function(red, green, blue){
-	this.setRGBA(red, green, blue, 1);
+	this.setRGBA(red, green, blue, 255);
 };
 
 Color.prototype.setRGBA = function(red, green, blue, alpha){
@@ -44,7 +44,7 @@ Color.prototype.getHex = function(){
 	var r = (c[0] * 255).toString(16);
 	var g = (c[1] * 255).toString(16);
 	var b = (c[2] * 255).toString(16);
-	var a = (c[3]).toString(16);
+	var a = (c[3] * 255).toString(16);
 	
 	if (r.length == 1) r = "0" + r;
 	if (g.length == 1) g = "0" + g;
@@ -54,14 +54,14 @@ Color.prototype.getHex = function(){
 	return ("#" + r + g + b + a).toUpperCase();
 };
 
-Color._BLACK		= "#00000001";
-Color._RED 			= "#FF000001";
-Color._GREEN 		= "#00FF0001";
-Color._BLUE 		= "#0000FF01";
-Color._WHITE		= "#FFFFFF01";
-Color._YELLOW		= "#FFFF0001";
-Color._MAGENTA		= "#FF00FF01";
-Color._AQUA			= "#00FFFF01";
-Color._GOLD			= "#FFD70001";
-Color._GRAY			= "#80808001";
-Color._PURPLE		= "#80008001";
+Color._BLACK		= "#000000FF";
+Color._RED 			= "#FF0000FF";
+Color._GREEN 		= "#00FF00FF";
+Color._BLUE 		= "#0000FFFF";
+Color._WHITE		= "#FFFFFFFF";
+Color._YELLOW		= "#FFFF00FF";
+Color._MAGENTA		= "#FF00FFFF";
+Color._AQUA			= "#00FFFFFF";
+Color._GOLD			= "#FFD700FF";
+Color._GRAY			= "#808080FF";
+Color._PURPLE		= "#800080FF";

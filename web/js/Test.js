@@ -14,7 +14,7 @@ Test.prototype.createSimpleScene = function(){
 	
 	var boxGeo = new KT.GeometryBox(1.0, 2.0, 3.0);
 	var texture = new KT.Texture('img/crate.jpg');
-	var material = new KT.MaterialBasic(texture, "#CC444401");
+	var material = new KT.MaterialBasic(texture, "#CC4444FF");
 	
 	this.box = new KT.Mesh(boxGeo, material);
 	this.box.position.z = -5.0;

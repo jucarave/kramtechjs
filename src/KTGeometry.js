@@ -60,10 +60,10 @@ Geometry.prototype.build = function(){
 		colors.push(c[0] / 255, c[1] / 255, c[2] / 255, c[3]); 
 	}
 	
-	this.vertexBuffer = KT.createArrayBuffer(vertices, 3);
-	this.texBuffer = KT.createArrayBuffer(uvCoords, 2);
-	this.facesBuffer = KT.createArrayBuffer(triangles, 1);
-	this.colorsBuffer = KT.createArrayBuffer(colors, 3);
+	this.vertexBuffer = KT.createArrayBuffer("ARRAY_BUFFER", new Float32Array(vertices), 3);
+	this.texBuffer = KT.createArrayBuffer("ARRAY_BUFFER", new Float32Array(uvCoords), 2);
+	this.facesBuffer = KT.createArrayBuffer("ELEMENT_ARRAY_BUFFER", new Uint16Array(triangles), 1);
+	this.colorsBuffer = KT.createArrayBuffer("ARRAY_BUFFER", new Float32Array(colors), 4);
 	
 	return this;
 };

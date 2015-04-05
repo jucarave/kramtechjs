@@ -1,4 +1,5 @@
 var KT = require('./KTMain');
+KT.Camera = require('./KTCamera');
 KT.Color = require('./KTColor');
 KT.Geometry = require('./KTGeometry');
 KT.Material = require('./KTMaterial');

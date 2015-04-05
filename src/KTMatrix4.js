@@ -120,6 +120,16 @@ Matrix4.prototype.clone = function(){
 	);
 };
 
+Matrix4.prototype.toFloat32Array = function(){
+	var T = this;
+	return new Float32Array([
+		T[0], T[1], T[2],  T[3],
+		T[4], T[5], T[6],  T[7],
+		T[8], T[9], T[10], T[11],
+		T[12], T[13], T[14], T[15]
+	]);
+};
+
 Matrix4.getIdentity = function(){
 	return new Matrix4(
 		1, 0, 0, 0,

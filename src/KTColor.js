@@ -18,7 +18,7 @@ Color.prototype.setRGBA = function(red, green, blue, alpha){
 	var b = (+blue).toString(16);
 	var a = (+alpha).toString(16);
 	
-	var c = "0x" + r + g + b + a; 
+	var c = "#" + r + g + b + a; 
 	this.color = parseInt(c, 16);
 };
 
@@ -30,7 +30,7 @@ Color.prototype.getRGB = function(){
 };
 
 Color.prototype.getRGBA = function(){
-	var str = (this.color).toString(16);
+	var str = this.color.substring(1);
 	var r = parseInt(str.substring(0, 2), 16);
 	var g = parseInt(str.substring(2, 4), 16);
 	var b = parseInt(str.substring(4, 6), 16);
@@ -41,14 +41,14 @@ Color.prototype.getRGBA = function(){
 	return [r, g, b, a];
 };
 
-Color._BLACK		= 0x000000;
-Color._RED 			= 0xFF0000;
-Color._GREEN 		= 0x00FF00;
-Color._BLUE 		= 0x0000FF;
-Color._WHITE		= 0xFFFFFF;
-Color._YELLOW		= 0xFFFF00;
-Color._MAGENTA		= 0xFF00FF;
-Color._CYAN			= 0x00FFFF;
-Color._GOLD			= 0xFFD700;
-Color._GRAY			= 0x808080;
-Color._PURPLE		= 0x800080;
+Color._BLACK		= "#00000001";
+Color._RED 			= "#FF000001";
+Color._GREEN 		= "#00FF0001";
+Color._BLUE 		= "#0000FF01";
+Color._WHITE		= "#FFFFFF01";
+Color._YELLOW		= "#FFFF0001";
+Color._MAGENTA		= "#FF00FF01";
+Color._CYAN			= "#00FFFF01";
+Color._GOLD			= "#FFD70001";
+Color._GRAY			= "#80808001";
+Color._PURPLE		= "#80008001";

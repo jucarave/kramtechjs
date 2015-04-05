@@ -5,7 +5,6 @@ module.exports = {
 		this.canvas = canvas;
 		this.gl = null;
 		this.shaders = {};
-		this.aspectRatio = 0;
 		
 		this.__initContext(canvas);
 		this.__initProperties();
@@ -35,19 +34,17 @@ module.exports = {
 		gl.enable( gl.BLEND );
 		gl.blendEquation( gl.FUNC_ADD );
 		gl.blendFunc( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA );
-		
-		this.aspectRatio = this.canvas.width / this.canvas.height;
 	},
 	
 	__initShaders: function(){
 		this.shaders.basic = this.processShader(Shaders.basic);
 	},
 	
-	createArrayBuffer: function(dataArray, itemSize){
+	createArrayBuffer: function(type, dataArray, itemSize){
 		var gl = this.gl;
 		var buffer = gl.createBuffer();
-		gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(dataArray), gl.STATIC_DRAW);
+		gl.bindBuffer(gl[type], buffer);
+		gl.bufferData(gl[type], dataArray, gl.STATIC_DRAW);
 		buffer.numItems = dataArray.length;
 		buffer.itemSize = itemSize;
 		

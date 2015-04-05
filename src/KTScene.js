@@ -43,7 +43,7 @@ Scene.prototype.render = function(camera){
 		this.sendUniformData(mesh, shader.uniforms, camera);
 		
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.geometry.facesBuffer);
-		gl.drawElements(gl.TRIANGLES, mesh.geometry.facesBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+		gl.drawElements(gl[mesh.material.drawAs], mesh.geometry.facesBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 	}
 	
 	return this;

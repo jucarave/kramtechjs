@@ -9,6 +9,7 @@ function Material(parameters){
 	this.shader = (parameters.shader)? parameters.shader : null;
 	this.opacity = (parameters.opacity)? parameters.opacity : 1.0;
 	this.drawFaces = (parameters.drawFaces)? parameters.drawFaces : 'FRONT';
+	this.drawAs = (parameters.drawAs)? parameters.drawAs : 'TRIANGLES';
 }
 
 module.exports = Material;

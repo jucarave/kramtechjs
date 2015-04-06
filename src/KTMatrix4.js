@@ -1,3 +1,5 @@
+var Matrix3 = require('./KTMatrix3');
+
 function Matrix4(){
 	if (arguments.length != 16) throw "Matrix 4 must receive 16 parameters";
 	
@@ -130,6 +132,15 @@ Matrix4.prototype.toFloat32Array = function(){
 	]);
 };
 
+Matrix4.prototype.toMatrix3 = function(){
+	var T = this;
+	return new Matrix3(
+		T[0], T[1], T[2],
+		T[4], T[5], T[6],
+		T[8], T[9], T[10]
+	); 
+};
+
 Matrix4.getIdentity = function(){
 	return new Matrix4(
 		1, 0, 0, 0,
@@ -145,8 +156,8 @@ Matrix4.getXRotation = function(radians){
 	
 	return new Matrix4(
 		1,  0,  0, 0,
-		0,  C, -S, 0,
-		0,  S,  C, 0,
+		0,  C,  S, 0,
+		0, -S,  C, 0,
 		0,  0,  0, 1
 	);
 };
@@ -156,9 +167,9 @@ Matrix4.getYRotation = function(radians){
 	var S = Math.sin(radians);
 	
 	return new Matrix4(
-		 C,  0, -S, 0,
+		 C,  0,  S, 0,
 		 0,  1,  0, 0,
-		 S,  0,  C, 0,
+		-S,  0,  C, 0,
 		 0,  0,  0, 1
 	);
 };
@@ -168,8 +179,8 @@ Matrix4.getZRotation = function(radians){
 	var S = Math.sin(radians);
 	
 	return new Matrix4(
-		 C, -S, 0, 0,
-		 S,  C, 0, 0,
+		 C,  S, 0, 0,
+		-S,  C, 0, 0,
 		 0,  0, 1, 0,
 		 0,  0, 0, 1
 	);

@@ -1,4 +1,3 @@
-var KT = require('./KTMain');
 var Material = require('./KTMaterial');
 
 function MaterialBasic(texture, color, opacity){
@@ -8,7 +7,6 @@ function MaterialBasic(texture, color, opacity){
 		texture: texture,
 		color: color,
 		opacity: opacity,
-		shader: KT.shaders.basic
 	});
 	
 	this.texture = material.texture;

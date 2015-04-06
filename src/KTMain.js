@@ -37,7 +37,8 @@ module.exports = {
 	},
 	
 	__initShaders: function(){
-		this.shaders.basic = this.processShader(Shaders.basic);
+		this.shader = this.processShader(Shaders);
+		this.gl.useProgram(this.shader.shaderProgram);
 	},
 	
 	createArrayBuffer: function(type, dataArray, itemSize){
@@ -70,7 +71,8 @@ module.exports = {
 		gl.linkProgram(shaderProgram);
 		
 		if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)){
-			throw "Error initializing the shader program";
+			console.error("Error initializing the shader program");
+			throw gl.getShaderInfoLog(shaderProgram);
 		}
 		
 		var attributes = [];

@@ -6,6 +6,7 @@ KT.GeometryBox = require('./KTGeometryBox');
 KT.Material = require('./KTMaterial');
 KT.MaterialBasic = require('./KTMaterialBasic');
 KT.Math = require('./KTMath');
+KT.Matrix3 = require('./KTMatrix3');
 KT.Matrix4 = require('./KTMatrix4');
 KT.Mesh = require('./KTMesh');
 KT.Texture = require('./KTTexture');

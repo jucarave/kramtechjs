@@ -30,8 +30,10 @@ Mesh.prototype.getTransformationMatrix = function(camera){
 		parent = parent.parent;
 	}
 	
-	var camMat = Matrix4.getTransformation(camera.position, camera.rotation);
-	matrix.multiply(camMat);
+	if (camera){
+		var camMat = Matrix4.getTransformation(camera.position, camera.rotation);
+		matrix.multiply(camMat);
+	}
 	
 	return matrix;
 };

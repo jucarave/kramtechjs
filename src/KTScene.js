@@ -29,18 +29,10 @@ Scene.prototype.render = function(camera){
 		if (!mesh.visible) continue;
 		if (mesh.material.opacity == 0.0) continue;
 		
-		var shader = mesh.material.shader;
-		if (!shader){
-			console.info("Material doesn't have a shader");
-			continue;
-		}
-		
 		this.setMaterialAttributes(mesh.material);
 		
-		gl.useProgram(shader.shaderProgram);
-		
-		this.sendAttribData(mesh, shader.attributes, camera);
-		this.sendUniformData(mesh, shader.uniforms, camera);
+		this.sendAttribData(mesh, KT.shader.attributes, camera);
+		this.sendUniformData(mesh, KT.shader.uniforms, camera);
 		
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.geometry.facesBuffer);
 		gl.drawElements(gl[mesh.material.drawAs], mesh.geometry.facesBuffer.numItems, gl.UNSIGNED_SHORT, 0);
@@ -64,6 +56,9 @@ Scene.prototype.sendAttribData = function(mesh, attributes, camera){
 		}else if (att.name == "aTextureCoord"){
 			gl.bindBuffer(gl.ARRAY_BUFFER, geometry.texBuffer);
 			gl.vertexAttribPointer(att.location, geometry.texBuffer.itemSize, gl.FLOAT, false, 0, 0);
+		}else if (att.name == "aVertexNormal"){
+			gl.bindBuffer(gl.ARRAY_BUFFER, geometry.normalsBuffer);
+			gl.vertexAttribPointer(att.location, geometry.normalsBuffer.itemSize, gl.FLOAT, false, 0, 0);
 		}
 	}
 	
@@ -73,11 +68,12 @@ Scene.prototype.sendAttribData = function(mesh, attributes, camera){
 Scene.prototype.sendUniformData = function(mesh, uniforms, camera){
 	var gl = KT.gl;
 	var geometry = mesh.geometry;
+	var transformationMatrix;
 	for (var i=0,len=uniforms.length;i<len;i++){
 		var uni = uniforms[i];
 		
 		if (uni.name == 'uTransformationMatrix'){
-			var transformationMatrix = mesh.getTransformationMatrix(camera);
+			transformationMatrix = mesh.getTransformationMatrix(camera);
 			gl.uniformMatrix4fv(uni.location, false, transformationMatrix.toFloat32Array());
 		}else if (uni.name == 'uPerspectiveMatrix'){
 			gl.uniformMatrix4fv(uni.location, false, camera.perspectiveMatrix);
@@ -92,6 +88,14 @@ Scene.prototype.sendUniformData = function(mesh, uniforms, camera){
 			}
 		}else if (uni.name == 'uHasTexture'){
 			gl.uniform1i(uni.location, (mesh.material.texture)? 1 : 0);
+		}else if (uni.name == 'uNormalMatrix'){
+			var normalMatrix = transformationMatrix.toMatrix3().inverse().toFloat32Array();
+			gl.uniformMatrix3fv(uni.location, false, normalMatrix);
+		}else if (uni.name == 'uLightDirection'){
+			var dir = new KT.Vector3(-0.25, -0.25, -1.0).normalize();
+			dir.multiply(-1);
+			
+			gl.uniform3f(uni.location, dir.x, dir.y, dir.z);
 		}
 	}
 	

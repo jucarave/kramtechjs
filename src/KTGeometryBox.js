@@ -58,12 +58,14 @@ function GeometryBox(width, length, height){
 	boxGeo.addFace(20, 21, 22);
 	boxGeo.addFace(21, 23, 22);
 	
+	boxGeo.computeFacesNormals();
 	boxGeo.build();
 	
 	this.vertexBuffer = boxGeo.vertexBuffer;
 	this.texBuffer = boxGeo.texBuffer;
 	this.facesBuffer = boxGeo.facesBuffer;
 	this.colorsBuffer = boxGeo.colorsBuffer;
+	this.normalsBuffer = boxGeo.normalsBuffer;
 }
 
 module.exports = GeometryBox;

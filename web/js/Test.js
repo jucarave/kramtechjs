@@ -20,6 +20,8 @@ Test.prototype.createSimpleScene = function(){
 	this.box.position.z = -5.0;
 	
 	this.scene.add(this.box);
+	
+	this.scene.add(new KT.LightDirectional(new KT.Vector3(-0.25, -0.25, -1), KT.Color._WHITE, 1));
 };
 
 Test.prototype.loopScene = function(){

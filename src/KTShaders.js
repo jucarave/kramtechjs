@@ -13,8 +13,11 @@ module.exports = {
 		{name: 'uTextureSampler', type: 'tex'},
 		{name: 'uHasTexture', type: 'bool'},
 		
+		{name: 'uUseLighting', type: 'bool'},
 		{name: 'uNormalMatrix', type: 'm3'},
-		{name: 'uLightDirection', type: 'v3'}
+		{name: 'uLightDirection', type: 'v3'},
+		{name: 'uLightDirectionColor', type: 'v3'},
+		{name: 'uLightDirectionIntensity', type: 'f'}
 	],
 	vertexShader: 
 		"attribute mediump vec2 aTextureCoord; " +
@@ -29,8 +32,11 @@ module.exports = {
 		"uniform mediump mat4 uPerspectiveMatrix; " +
 		"uniform mediump vec4 uMaterialColor; " +
 		
+		"uniform bool uUseLighting; " +
 		"uniform mediump mat3 uNormalMatrix; " +
-		"uniform mediump vec3 uLightDirection; " + 
+		"uniform mediump vec3 uLightDirection; " +
+		"uniform mediump vec3 uLightDirectionColor; " +
+		"uniform mediump float uLightDirectionIntensity; " +  
 		
 		
 		
@@ -44,9 +50,13 @@ module.exports = {
 		"} "  + 
 		
 		"void lambert(void){ " +
-			"vec3 transformedNormal = uNormalMatrix * aVertexNormal; " +
-			"float dirLightWeight = max(dot(transformedNormal, uLightDirection), 0.0); " +
-			"vLightWeight = vec3(0.8, 0.8, 0.8) * dirLightWeight; " +  
+			"if (uUseLighting){ " + 
+				"vec3 transformedNormal = uNormalMatrix * aVertexNormal; " +
+				"float dirLightWeight = max(dot(transformedNormal, uLightDirection), 0.0); " +
+				"vLightWeight = uLightDirectionColor * dirLightWeight * uLightDirectionIntensity; " +
+			"}else{ " +
+				"vLightWeight = vec3(1.0); " + 
+			"}" +   
 			 
 			"vVertexColor = aVertexColor * uMaterialColor; " +
 			"vTextureCoord = aTextureCoord; " +  

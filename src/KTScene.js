@@ -1,9 +1,13 @@
 var KT = require('./KTMain');
 
-function Scene(){
+function Scene(params){
 	this.__ktscene = true;
 	
 	this.meshes = [];
+	this.dirLight = null;
+	
+	if (!params) params = {};
+	this.useLighting = (params.useLighting)? true : false;
 }
 
 module.exports = Scene;
@@ -11,6 +15,8 @@ module.exports = Scene;
 Scene.prototype.add = function(object){
 	if (object.__ktmesh){
 		this.meshes.push(object);
+	}else if (object.__ktdirLight){
+		this.dirLight = object;
 	}else{
 		throw "Can't add the object to the scene";
 	}
@@ -88,14 +94,19 @@ Scene.prototype.sendUniformData = function(mesh, uniforms, camera){
 			}
 		}else if (uni.name == 'uHasTexture'){
 			gl.uniform1i(uni.location, (mesh.material.texture)? 1 : 0);
+		}else if (uni.name == 'uUseLighting'){
+			gl.uniform1i(uni.location, (this.useLighting)? 1 : 0);
 		}else if (uni.name == 'uNormalMatrix'){
 			var normalMatrix = transformationMatrix.toMatrix3().inverse().toFloat32Array();
 			gl.uniformMatrix3fv(uni.location, false, normalMatrix);
-		}else if (uni.name == 'uLightDirection'){
-			var dir = new KT.Vector3(-0.25, -0.25, -1.0).normalize();
-			dir.multiply(-1);
-			
+		}else if (uni.name == 'uLightDirection' && this.useLighting && this.dirLight){
+			var dir = this.dirLight.direction;
 			gl.uniform3f(uni.location, dir.x, dir.y, dir.z);
+		}else if (uni.name == 'uLightDirectionColor' && this.useLighting && this.dirLight){
+			var color = this.dirLight.color.getRGB();
+			gl.uniform3f(uni.location, color[0], color[1], color[2]);
+		}else if (uni.name == 'uLightDirectionIntensity' && this.useLighting && this.dirLight){
+			gl.uniform1f(uni.location, this.dirLight.intensity);
 		}
 	}
 	

@@ -3,6 +3,7 @@ KT.CameraPerspective = require('./KTCameraPerspective');
 KT.Color = require('./KTColor');
 KT.Geometry = require('./KTGeometry');
 KT.GeometryBox = require('./KTGeometryBox');
+KT.GeometryPlane = require('./KTGeometryPlane');
 KT.LightDirectional = require('./KTLightDirectional');
 KT.Material = require('./KTMaterial');
 KT.MaterialBasic = require('./KTMaterialBasic');

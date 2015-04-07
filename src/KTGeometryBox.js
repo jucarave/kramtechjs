@@ -1,7 +1,7 @@
 var Color = require('./KTColor');
 var Geometry = require('./KTGeometry');
 
-function GeometryBox(width, length, height){
+function GeometryBox(width, length, height, params){
 	this.__ktgeometry = true;
 	
 	var boxGeo = new Geometry();
@@ -10,35 +10,41 @@ function GeometryBox(width, length, height){
 	var l = length / 2;
 	var h = height / 2;
 	
-	boxGeo.addVertice( w, -h,  l, Color._WHITE, 1.0, 1.0);
+	if (!params) params = {};
+	this.params = params;
+	
+	var hr = (params.horizontalRepeats)? params.horizontalRepeats : 1.0;
+	var vr = (params.verticalRepeats)? params.verticalRepeats : 1.0;
+	
+	boxGeo.addVertice( w, -h,  l, Color._WHITE,  hr,  vr);
 	boxGeo.addVertice(-w,  h,  l, Color._WHITE, 0.0, 0.0);
-	boxGeo.addVertice(-w, -h,  l, Color._WHITE, 0.0, 1.0);
-	boxGeo.addVertice( w,  h,  l, Color._WHITE, 1.0, 0.0);
+	boxGeo.addVertice(-w, -h,  l, Color._WHITE, 0.0,  vr);
+	boxGeo.addVertice( w,  h,  l, Color._WHITE,  hr, 0.0);
 	
-	boxGeo.addVertice(-w, -h, -l, Color._WHITE, 0.0, 1.0);
+	boxGeo.addVertice(-w, -h, -l, Color._WHITE, 0.0,  vr);
 	boxGeo.addVertice(-w,  h, -l, Color._WHITE, 0.0, 0.0);
-	boxGeo.addVertice( w, -h, -l, Color._WHITE, 1.0, 1.0);
-	boxGeo.addVertice( w,  h, -l, Color._WHITE, 1.0, 0.0);
+	boxGeo.addVertice( w, -h, -l, Color._WHITE,  hr,  vr);
+	boxGeo.addVertice( w,  h, -l, Color._WHITE,  hr, 0.0);
 	
-	boxGeo.addVertice( w, -h, -l, Color._WHITE, 1.0, 1.0);
+	boxGeo.addVertice( w, -h, -l, Color._WHITE,  hr,  vr);
 	boxGeo.addVertice( w,  h,  l, Color._WHITE, 0.0, 0.0);
-	boxGeo.addVertice( w, -h,  l, Color._WHITE, 0.0, 1.0);
-	boxGeo.addVertice( w,  h, -l, Color._WHITE, 1.0, 0.0);
+	boxGeo.addVertice( w, -h,  l, Color._WHITE, 0.0,  vr);
+	boxGeo.addVertice( w,  h, -l, Color._WHITE,  hr, 0.0);
 	
-	boxGeo.addVertice(-w, -h,  l, Color._WHITE, 1.0, 1.0);
-	boxGeo.addVertice(-w,  h,  l, Color._WHITE, 1.0, 0.0);
-	boxGeo.addVertice(-w, -h, -l, Color._WHITE, 0.0, 1.0);
+	boxGeo.addVertice(-w, -h,  l, Color._WHITE,  hr,  vr);
+	boxGeo.addVertice(-w,  h,  l, Color._WHITE,  hr, 0.0);
+	boxGeo.addVertice(-w, -h, -l, Color._WHITE, 0.0,  vr);
 	boxGeo.addVertice(-w,  h, -l, Color._WHITE, 0.0, 0.0);
 	
-	boxGeo.addVertice( w,  h,  l, Color._WHITE, 1.0, 1.0);
+	boxGeo.addVertice( w,  h,  l, Color._WHITE,  hr,  vr);
 	boxGeo.addVertice(-w,  h, -l, Color._WHITE, 0.0, 0.0);
-	boxGeo.addVertice(-w,  h,  l, Color._WHITE, 0.0, 1.0);
-	boxGeo.addVertice( w,  h, -l, Color._WHITE, 1.0, 0.0);
+	boxGeo.addVertice(-w,  h,  l, Color._WHITE, 0.0,  vr);
+	boxGeo.addVertice( w,  h, -l, Color._WHITE,  hr, 0.0);
 	
-	boxGeo.addVertice(-w, -h,  l, Color._WHITE, 0.0, 1.0);
+	boxGeo.addVertice(-w, -h,  l, Color._WHITE, 0.0,  vr);
 	boxGeo.addVertice(-w, -h, -l, Color._WHITE, 0.0, 0.0);
-	boxGeo.addVertice( w, -h,  l, Color._WHITE, 1.0, 1.0);
-	boxGeo.addVertice( w, -h, -l, Color._WHITE, 1.0, 0.0);
+	boxGeo.addVertice( w, -h,  l, Color._WHITE,  hr,  vr);
+	boxGeo.addVertice( w, -h, -l, Color._WHITE,  hr, 0.0);
 	
 	boxGeo.addFace(0, 1, 2);
 	boxGeo.addFace(0, 3, 1);

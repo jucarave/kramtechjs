@@ -9,7 +9,10 @@ function Test(){
 }
 
 Test.prototype.createSimpleScene = function(){
-	this.scene = new KT.Scene({useLighting: true});
+	this.scene = new KT.Scene({
+		useLighting: true,
+		ambientLight: "#333333"
+	});
 	this.camera = new KT.CameraPerspective(new KT.Vector3(0,0,0), new KT.Vector3(0,0,0), KT.Math.degToRad(60), this.canvas.width / this.canvas.height, 0.1, 100.0);
 	
 	var boxGeo = new KT.GeometryBox(2.0, 2.0, 2.0);
@@ -21,7 +24,7 @@ Test.prototype.createSimpleScene = function(){
 	
 	this.scene.add(this.box);
 	
-	this.scene.add(new KT.LightDirectional(new KT.Vector3(-0.25, -0.25, -1), KT.Color._WHITE, 1));
+	this.scene.add(new KT.LightDirectional(new KT.Vector3(-0.5, -0.5, -0.5), "#FFFFFF", 0.6));
 };
 
 Test.prototype.loopScene = function(){

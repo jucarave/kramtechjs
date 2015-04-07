@@ -14,6 +14,9 @@ module.exports = {
 		
 		{name: 'uUseLighting', type: 'bool'},
 		{name: 'uNormalMatrix', type: 'm3'},
+		
+		{name: 'uAmbientLightColor', type: 'v3'},
+		
 		{name: 'uLightDirection', type: 'v3'},
 		{name: 'uLightDirectionColor', type: 'v3'},
 		{name: 'uLightDirectionIntensity', type: 'f'}
@@ -32,6 +35,9 @@ module.exports = {
 		
 		"uniform bool uUseLighting; " +
 		"uniform mediump mat3 uNormalMatrix; " +
+		
+		"uniform mediump vec3 uAmbientLightColor; " +
+		
 		"uniform mediump vec3 uLightDirection; " +
 		"uniform mediump vec3 uLightDirectionColor; " +
 		"uniform mediump float uLightDirectionIntensity; " +  
@@ -51,7 +57,7 @@ module.exports = {
 			"if (uUseLighting){ " + 
 				"vec3 transformedNormal = uNormalMatrix * aVertexNormal; " +
 				"float dirLightWeight = max(dot(transformedNormal, uLightDirection), 0.0); " +
-				"vLightWeight = uLightDirectionColor * dirLightWeight * uLightDirectionIntensity; " +
+				"vLightWeight = uAmbientLightColor + (uLightDirectionColor * dirLightWeight * uLightDirectionIntensity); " +
 			"}else{ " +
 				"vLightWeight = vec3(1.0); " + 
 			"}" +   

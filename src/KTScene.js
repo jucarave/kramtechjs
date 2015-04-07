@@ -1,4 +1,5 @@
 var KT = require('./KTMain');
+var Color = require('./KTColor');
 
 function Scene(params){
 	this.__ktscene = true;
@@ -8,6 +9,7 @@ function Scene(params){
 	
 	if (!params) params = {};
 	this.useLighting = (params.useLighting)? true : false;
+	this.ambientLight = (params.ambientLight)? new Color(params.ambientLight) : null;
 }
 
 module.exports = Scene;
@@ -106,6 +108,9 @@ Scene.prototype.sendUniformData = function(mesh, uniforms, camera){
 			gl.uniform3f(uni.location, color[0], color[1], color[2]);
 		}else if (uni.name == 'uLightDirectionIntensity' && this.useLighting && this.dirLight){
 			gl.uniform1f(uni.location, this.dirLight.intensity);
+		}else if (uni.name == 'uAmbientLightColor' && this.useLighting && this.ambientLight){
+			var color = this.ambientLight.getRGB();
+			gl.uniform3f(uni.location, color[0], color[1], color[2]);
 		}
 	}
 	

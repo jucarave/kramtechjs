@@ -7,8 +7,7 @@ module.exports = {
 		{name: 'aVertexNormal', type: 'v3'}
 	],
 	uniforms: [
-		{name: 'uTransformationMatrix', type: 'm4'},
-		{name: 'uPerspectiveMatrix', type: 'm4'},
+		{name: 'uMVPMatrix', type: 'm4'},
 		{name: 'uMaterialColor', type: 'v4'},
 		{name: 'uTextureSampler', type: 'tex'},
 		{name: 'uHasTexture', type: 'bool'},
@@ -28,8 +27,7 @@ module.exports = {
 		
 		
 		
-		"uniform mediump mat4 uTransformationMatrix; " + 
-		"uniform mediump mat4 uPerspectiveMatrix; " +
+		"uniform mediump mat4 uMVPMatrix; " +
 		"uniform mediump vec4 uMaterialColor; " +
 		
 		"uniform bool uUseLighting; " +
@@ -63,7 +61,7 @@ module.exports = {
 		"} " +  
 		
 		"void main(void){ " + 
-			"gl_Position = uPerspectiveMatrix * uTransformationMatrix * vec4(aVertexPosition, 1.0); " +
+			"gl_Position = uMVPMatrix * vec4(aVertexPosition, 1.0); " +
 		
 			"lambert();" +
 		"} " ,

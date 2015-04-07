@@ -27,5 +27,5 @@ CameraPerspective.prototype.setPerspective = function(){
 		0, R, 0,  0,
 		0, 0, A,  B,
 		0, 0, -1, 0
-	).toFloat32Array();
+	);
 };

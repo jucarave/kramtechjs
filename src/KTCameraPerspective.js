@@ -1,4 +1,5 @@
 var Matrix4 = require('./KTMatrix4');
+var Color = require('./KTColor');
 
 function CameraPerspective(position, rotation, fov, ratio, znear, zfar){
 	this.__ktcamera = true;
@@ -10,6 +11,8 @@ function CameraPerspective(position, rotation, fov, ratio, znear, zfar){
 	this.ratio = ratio;
 	this.znear = znear;
 	this.zfar = zfar;
+	
+	this.backgroundColor = new Color(Color._BLACK);
 	
 	this.setPerspective();
 }
@@ -28,4 +31,8 @@ CameraPerspective.prototype.setPerspective = function(){
 		0, 0, A,  B,
 		0, 0, -1, 0
 	);
+};
+
+CameraPerspective.prototype.setBackgroundColor = function(color){
+	this.backgroundColor = new Color(color);
 };

@@ -29,7 +29,8 @@ Scene.prototype.add = function(object){
 Scene.prototype.render = function(camera){
 	var gl = KT.gl;
 	
-	gl.clearColor(0.0, 0.0, 0.0, 1.0);
+	var bc = camera.backgroundColor.getRGBA();
+	gl.clearColor(bc[0], bc[1], bc[2], bc[3]);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	
 	for (var i=0,len=this.meshes.length;i<len;i++){

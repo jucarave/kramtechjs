@@ -13,7 +13,9 @@ Test.prototype.createSimpleScene = function(){
 		useLighting: true,
 		ambientLight: "#333333"
 	});
+	
 	this.camera = new KT.CameraPerspective(new KT.Vector3(0,0,0), new KT.Vector3(0,0,0), KT.Math.degToRad(60), this.canvas.width / this.canvas.height, 0.1, 100.0);
+	this.camera.setBackgroundColor("#7092BE");
 	
 	var boxGeo = new KT.GeometryBox(2.0, 2.0, 2.0);
 	var texture = new KT.Texture('img/crate.jpg');

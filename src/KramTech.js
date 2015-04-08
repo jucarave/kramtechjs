@@ -7,6 +7,7 @@ KT.GeometryPlane = require('./KTGeometryPlane');
 KT.LightDirectional = require('./KTLightDirectional');
 KT.Material = require('./KTMaterial');
 KT.MaterialBasic = require('./KTMaterialBasic');
+KT.MaterialLambert = require('./KTMaterialLambert');
 KT.Math = require('./KTMath');
 KT.Matrix3 = require('./KTMatrix3');
 KT.Matrix4 = require('./KTMatrix4');

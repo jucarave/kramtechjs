@@ -7,6 +7,7 @@ module.exports = {
 		{name: 'aVertexNormal', type: 'v3'}
 	],
 	uniforms: [
+		{name: 'uShadingMode', type: 'int'},
 		{name: 'uMVPMatrix', type: 'm4'},
 		{name: 'uMaterialColor', type: 'v4'},
 		{name: 'uTextureSampler', type: 'tex'},
@@ -19,7 +20,9 @@ module.exports = {
 		
 		{name: 'uLightDirection', type: 'v3'},
 		{name: 'uLightDirectionColor', type: 'v3'},
-		{name: 'uLightDirectionIntensity', type: 'f'}
+		{name: 'uLightDirectionIntensity', type: 'f'},
+		
+		{name: 'uOpacity', type: 'f'}
 	],
 	vertexShader: 
 		"attribute mediump vec2 aTextureCoord; " +
@@ -29,6 +32,7 @@ module.exports = {
 		"attribute mediump vec3 aVertexNormal; " + 
 		
 		
+		"uniform int uShadingMode; " +
 		
 		"uniform mediump mat4 uMVPMatrix; " +
 		"uniform mediump vec4 uMaterialColor; " +
@@ -43,7 +47,7 @@ module.exports = {
 		"uniform mediump float uLightDirectionIntensity; " +  
 		
 		
-		
+		"varying mediump float vShadingMode; " +
 		"varying mediump vec4 vVertexColor; " +
 		"varying mediump vec2 vTextureCoord;" +  
 		"varying mediump vec3 vLightWeight; " + 
@@ -69,12 +73,19 @@ module.exports = {
 		"void main(void){ " + 
 			"gl_Position = uMVPMatrix * vec4(aVertexPosition, 1.0); " +
 		
-			"lambert();" +
+			"vShadingMode = float(uShadingMode); " +
+			"if (uShadingMode == 0){ " +
+				"basic(); " +
+			"}else if (uShadingMode == 1){ " +
+				"lambert(); " +
+			"} " +
 		"} " ,
 	fragmentShader: 
 		"uniform sampler2D uTextureSampler; " +
 		"uniform bool uHasTexture; " +
+		"uniform mediump float uOpacity; " +
 		
+		"varying mediump float vShadingMode; " +
 		"varying mediump vec2 vTextureCoord; " + 
 		"varying mediump vec4 vVertexColor; " + 
 		"varying mediump vec3 vLightWeight; " + 
@@ -85,7 +96,7 @@ module.exports = {
 		
 		"void lambert(mediump vec4 color){ " +
 			"color.rgb *= vLightWeight; " + 
-			"gl_FragColor = color; " + 
+			"gl_FragColor = vec4(color.rgb, color.a * uOpacity); " + 
 		"} " +  
 		
 		"void main(void){ " +
@@ -95,6 +106,10 @@ module.exports = {
 				"color *= texColor; " +
 			"} " + 
 			
-			"lambert(color);" + 
+			"if (vShadingMode == 0.0){ " +
+				"basic(color); " +
+			"}else if (vShadingMode == 1.0){ " +
+				"lambert(color); " +
+			"} " +
 		"}"
 };

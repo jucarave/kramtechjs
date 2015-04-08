@@ -1,11 +1,13 @@
 var Material = require('./KTMaterial');
 
-function MaterialBasic(texture, color){
+function MaterialLambert(texture, color, opacity){
 	this.__ktmaterial = true;
 	
 	var material = new Material({
 		texture: texture,
-		color: color
+		color: color,
+		opacity: opacity,
+		shading: 'LAMBERT'
 	});
 	
 	this.texture = material.texture;
@@ -17,4 +19,4 @@ function MaterialBasic(texture, color){
 	this.shading = material.shading;
 }
 
-module.exports = MaterialBasic;
+module.exports = MaterialLambert;

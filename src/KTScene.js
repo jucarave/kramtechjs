@@ -6,6 +6,7 @@ function Scene(params){
 	
 	this.meshes = [];
 	this.dirLight = null;
+	this.shadingMode = ['BASIC', 'LAMBERT'];
 	
 	if (!params) params = {};
 	this.useLighting = (params.useLighting)? true : false;
@@ -38,6 +39,14 @@ Scene.prototype.render = function(camera){
 		if (!mesh.visible) continue;
 		if (mesh.material.opacity == 0.0) continue;
 		
+		var shading = this.shadingMode.indexOf(mesh.material.shading);
+		if (shading == 1){
+			if (mesh.material.opacity != 1.0){
+				gl.enable( gl.BLEND ); 
+				gl.disable(gl.DEPTH_TEST);
+			}
+		}
+		
 		this.setMaterialAttributes(mesh.material);
 		
 		this.sendAttribData(mesh, KT.shader.attributes, camera);
@@ -45,6 +54,13 @@ Scene.prototype.render = function(camera){
 		
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.geometry.facesBuffer);
 		gl.drawElements(gl[mesh.material.drawAs], mesh.geometry.facesBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+		
+		if (shading == 1){
+			if (mesh.material.opacity != 1.0){
+				gl.disable( gl.BLEND ); 
+				gl.enable(gl.DEPTH_TEST);
+			}
+		}
 	}
 	
 	return this;
@@ -81,7 +97,9 @@ Scene.prototype.sendUniformData = function(mesh, uniforms, camera){
 	for (var i=0,len=uniforms.length;i<len;i++){
 		var uni = uniforms[i];
 		
-		if (uni.name == 'uMVPMatrix'){
+		if (uni.name == 'uShadingMode'){
+			gl.uniform1i(uni.location, this.shadingMode.indexOf(mesh.material.shading));
+		}else if (uni.name == 'uMVPMatrix'){
 			transformationMatrix = mesh.getTransformationMatrix(camera);
 			var mvp = transformationMatrix.clone().multiply(camera.perspectiveMatrix);
 			gl.uniformMatrix4fv(uni.location, false, mvp.toFloat32Array());
@@ -112,6 +130,8 @@ Scene.prototype.sendUniformData = function(mesh, uniforms, camera){
 		}else if (uni.name == 'uAmbientLightColor' && this.useLighting && this.ambientLight){
 			var color = this.ambientLight.getRGB();
 			gl.uniform3f(uni.location, color[0], color[1], color[2]);
+		}else if (uni.name == 'uOpacity'){
+			gl.uniform1f(uni.location, mesh.material.opacity);
 		}
 	}
 	

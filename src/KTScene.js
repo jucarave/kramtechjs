@@ -27,6 +27,18 @@ Scene.prototype.add = function(object){
 	return this;
 };
 
+Scene.prototype.drawMesh = function(mesh, camera){
+	var gl = KT.gl;
+	
+	this.setMaterialAttributes(mesh.material);
+	
+	this.sendAttribData(mesh, KT.shader.attributes, camera);
+	this.sendUniformData(mesh, KT.shader.uniforms, camera);
+	
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.geometry.facesBuffer);
+	gl.drawElements(gl[mesh.material.drawAs], mesh.geometry.facesBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+};
+
 Scene.prototype.render = function(camera){
 	var gl = KT.gl;
 	
@@ -34,6 +46,9 @@ Scene.prototype.render = function(camera){
 	gl.clearColor(bc[0], bc[1], bc[2], bc[3]);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	
+	gl.disable( gl.BLEND ); 
+	gl.enable(gl.DEPTH_TEST);
+	var transparents = [];
 	for (var i=0,len=this.meshes.length;i<len;i++){
 		var mesh = this.meshes[i];
 		if (!mesh.visible) continue;
@@ -42,25 +57,19 @@ Scene.prototype.render = function(camera){
 		var shading = this.shadingMode.indexOf(mesh.material.shading);
 		if (shading == 1){
 			if (mesh.material.opacity != 1.0){
-				gl.enable( gl.BLEND ); 
-				gl.disable(gl.DEPTH_TEST);
+				transparents.push(mesh);
+				continue;
 			}
 		}
 		
-		this.setMaterialAttributes(mesh.material);
-		
-		this.sendAttribData(mesh, KT.shader.attributes, camera);
-		this.sendUniformData(mesh, KT.shader.uniforms, camera);
-		
-		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.geometry.facesBuffer);
-		gl.drawElements(gl[mesh.material.drawAs], mesh.geometry.facesBuffer.numItems, gl.UNSIGNED_SHORT, 0);
-		
-		if (shading == 1){
-			if (mesh.material.opacity != 1.0){
-				gl.disable( gl.BLEND ); 
-				gl.enable(gl.DEPTH_TEST);
-			}
-		}
+		this.drawMesh(mesh, camera);
+	}
+	
+	gl.enable( gl.BLEND ); 
+	gl.disable(gl.DEPTH_TEST);
+	for (var i=0,len=transparents.length;i<len;i++){
+		var mesh = transparents[i];
+		this.drawMesh(mesh, camera);
 	}
 	
 	return this;

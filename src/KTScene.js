@@ -132,7 +132,8 @@ Scene.prototype.sendUniformData = function(mesh, uniforms, camera){
 			var normalMatrix = transformationMatrix.toMatrix3().inverse().toFloat32Array();
 			gl.uniformMatrix3fv(uni.location, false, normalMatrix);
 		}else if (uni.name == 'uLightDirection' && this.useLighting && this.dirLight){
-			var dir = this.dirLight.direction;
+			var d = camera.NRTransformationMatrix.multiply([this.dirLight.direction.x, this.dirLight.direction.y, this.dirLight.direction.z, 1]);
+			var dir = new KT.Vector3(d[0], d[1], d[2]).normalize();
 			gl.uniform3f(uni.location, dir.x, dir.y, dir.z);
 		}else if (uni.name == 'uLightDirectionColor' && this.useLighting && this.dirLight){
 			var color = this.dirLight.color.getRGB();

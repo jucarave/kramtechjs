@@ -41,6 +41,15 @@ Matrix4.prototype.identity = function(){
 	return this;
 };
 
+Matrix4.prototype.multiplyScalar = function(number){
+	var T = this;
+	for (var i=0;i<16;i++){
+		T[i] *= number;
+	}
+	
+	return this;
+};
+
 Matrix4.prototype.multiply = function(matrix4){
 	if (matrix4.__ktm4){
 		var A1 = [this[0],  this[1],  this[2],  this[3]];
@@ -216,7 +225,7 @@ Matrix4.getScale = function(vector3){
 	);
 };
 
-Matrix4.getTransformation = function(position, rotation, scale){
+Matrix4.getTransformation = function(position, rotation, scale, order){
 	if (!position.__ktv3) throw "Position must be a Vector3";
 	if (!rotation.__ktv3) throw "Rotation must be a Vector3";
 	if (scale && !scale.__ktv3) throw "Scale must be a Vector3";
@@ -229,12 +238,22 @@ Matrix4.getTransformation = function(position, rotation, scale){
 	
 	var translation = Matrix4.getTranslation(position);
 	
+	if (!order) order = 'SRT';
 	
-	var matrix = scale;
-	matrix.multiply(rotationX);
-	matrix.multiply(rotationY);
-	matrix.multiply(rotationZ);
-	matrix.multiply(translation);
+	var matrix;
+	if (order == 'SRT'){
+		matrix = scale;
+		matrix.multiply(rotationX);
+		matrix.multiply(rotationY);
+		matrix.multiply(rotationZ);
+		matrix.multiply(translation);
+	}else if (order == 'STR'){
+		matrix = scale;
+		matrix.multiply(translation);
+		matrix.multiply(rotationY);
+		matrix.multiply(rotationX);
+		matrix.multiply(rotationZ);
+	}
 	
 	return matrix;
 };

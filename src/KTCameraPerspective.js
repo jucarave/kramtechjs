@@ -14,6 +14,7 @@ function CameraPerspective(position, rotation, fov, ratio, znear, zfar){
 	
 	this.backgroundColor = new Color(Color._BLACK);
 	
+	this.getTransformationMatrix();
 	this.setPerspective();
 }
 
@@ -35,4 +36,13 @@ CameraPerspective.prototype.setPerspective = function(){
 
 CameraPerspective.prototype.setBackgroundColor = function(color){
 	this.backgroundColor = new Color(color);
+};
+
+CameraPerspective.prototype.getTransformationMatrix = function(){
+	var pos = this.position.clone().multiply(-1);
+	var rot = this.rotation.clone().multiply(-1);
+	var camMat = Matrix4.getTransformation(pos, rot);
+	
+	this.transformationMatrix = camMat;
+	return camMat;
 };

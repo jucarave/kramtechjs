@@ -49,6 +49,9 @@ Scene.prototype.render = function(camera){
 	gl.disable( gl.BLEND ); 
 	gl.enable(gl.DEPTH_TEST);
 	var transparents = [];
+	
+	camera.getTransformationMatrix();
+	
 	for (var i=0,len=this.meshes.length;i<len;i++){
 		var mesh = this.meshes[i];
 		if (!mesh.visible) continue;
@@ -109,7 +112,7 @@ Scene.prototype.sendUniformData = function(mesh, uniforms, camera){
 		if (uni.name == 'uShadingMode'){
 			gl.uniform1i(uni.location, this.shadingMode.indexOf(mesh.material.shading));
 		}else if (uni.name == 'uMVPMatrix'){
-			transformationMatrix = mesh.getTransformationMatrix(camera);
+			transformationMatrix = mesh.getTransformationMatrix().multiply(camera.transformationMatrix);
 			var mvp = transformationMatrix.clone().multiply(camera.perspectiveMatrix);
 			gl.uniformMatrix4fv(uni.location, false, mvp.toFloat32Array());
 		}else if (uni.name == 'uMaterialColor'){

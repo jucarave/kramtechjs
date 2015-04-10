@@ -14,7 +14,7 @@ Test.prototype.createSimpleScene = function(){
 		ambientLight: "#111111"
 	});
 	
-	this.camera = new KT.CameraPerspective(new KT.Vector3(0,0,0), new KT.Vector3(0,0,0), KT.Math.degToRad(60), this.canvas.width / this.canvas.height, 0.1, 100.0);
+	this.camera = new KT.CameraPerspective(new KT.Vector3(0,0,5), new KT.Vector3(0,0,0), KT.Math.degToRad(60), this.canvas.width / this.canvas.height, 0.1, 100.0);
 	this.camera.setBackgroundColor("#000000");
 	
 	var boxGeo = new KT.GeometryBox(2.0, 2.0, 2.0);
@@ -22,7 +22,7 @@ Test.prototype.createSimpleScene = function(){
 	var material = new KT.MaterialLambert(texture, KT.Color._WHITE, 0.6);
 	material.drawFaces = 'BOTH';
 	this.box = new KT.Mesh(boxGeo, material);
-	this.box.position.z = -5.0;
+	this.box.position.x = 1.2;
 	this.scene.add(this.box);
 	
 	
@@ -30,7 +30,7 @@ Test.prototype.createSimpleScene = function(){
 	var texture = new KT.Texture('img/moon.gif');
 	var material = new KT.MaterialLambert(texture, KT.Color._WHITE);
 	this.sphere = new KT.Mesh(sphGeo, material);
-	this.sphere.position.z = -5.0;
+	this.sphere.position.x = -1.2;
 	this.scene.add(this.sphere);
 	
 	

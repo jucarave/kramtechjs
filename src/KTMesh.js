@@ -20,19 +20,12 @@ function Mesh(geometry, material){
 
 module.exports = Mesh;
 
-Mesh.prototype.getTransformationMatrix = function(camera){
+Mesh.prototype.getTransformationMatrix = function(){
 	var matrix = Matrix4.getTransformation(this.position, this.rotation, this.scale);
 	
-	var parent = this.parent;
-	while (parent){
-		var m = Matrix4.getTransformation(parent.position, parent.rotation, parent.scale);
+	if (this.parent){
+		var m = this.parent.getTransformationMatrix();
 		matrix.multiply(m);
-		parent = parent.parent;
-	}
-	
-	if (camera){
-		var camMat = Matrix4.getTransformation(camera.position, camera.rotation);
-		matrix.multiply(camMat);
 	}
 	
 	return matrix;

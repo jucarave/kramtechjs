@@ -3,11 +3,12 @@ var Color = require('./KTColor');
 var Vector3 = require('./KTVector3');
 var KTMath = require('./KTMath');
 
-function CameraPerspective(position, rotation, fov, ratio, znear, zfar){
+function CameraPerspective(fov, ratio, znear, zfar){
 	this.__ktcamera = true;
 	
-	this.position = position;
-	this.rotation = rotation;
+	this.position = new Vector3(0.0, 0.0, 0.0);
+	this.upVector = new Vector3(0.0, 1.0, 0.0);
+	this.lookAt(new Vector3(0.0, 0.0, -1.0));
 	
 	this.fov = fov;
 	this.ratio = ratio;
@@ -16,7 +17,6 @@ function CameraPerspective(position, rotation, fov, ratio, znear, zfar){
 	
 	this.backgroundColor = new Color(Color._BLACK);
 	
-	this.getTransformationMatrix();
 	this.setPerspective();
 }
 
@@ -40,31 +40,23 @@ CameraPerspective.prototype.setBackgroundColor = function(color){
 	this.backgroundColor = new Color(color);
 };
 
-CameraPerspective.prototype.getTransformationMatrix = function(){
-	var pos = this.position.clone().multiply(-1);
-	var rot = this.rotation.clone().multiply(-1);
-	var camMat = Matrix4.getTransformation(pos, rot, null, 'STR');
-	
-	rot.multiply(-1);
-	var camMatL = Matrix4.getTransformation(pos, rot, null, 'STR');
-	
-	this.transformationMatrix = camMat;
-	this.NRTransformationMatrix = camMatL;
-	return camMat;
-};
-
 CameraPerspective.prototype.lookAt = function(vector3){
-	if (!vector3.__ktv3) throw "Can only look at a vector3";
+	if (!vector3.__ktv3) throw "Can only look to a vector3";
 	
-	var forward = Vector3.vectorsDifference(this.position, vector3);
-	var xzDist = Math.sqrt(forward.x * forward.x + forward.z * forward.z);
+	var forward = Vector3.vectorsDifference(this.position, vector3).normalize();
+	var left = this.upVector.cross(forward).normalize();
+	var up = forward.cross(left).normalize();
 	
-	var xAng = KTMath.get2DAngle(0, this.position.y, xzDist, vector3.y);
-	var yAng = KTMath.get2DAngle(this.position.x, this.position.z, vector3.x, vector3.z) - KTMath.PI_2;
+	var x = -left.dot(this.position);
+	var y = -up.dot(this.position);
+	var z = -forward.dot(this.position);
 	
-	this.rotation.set(
-		xAng,
-		yAng,
-		0
+	this.transformationMatrix = new Matrix4(
+		left.x, left.y, left.z, x,
+		up.x, up.y, up.z, y,
+		forward.x, forward.y, forward.z, z,
+		0, 0, 0, 1
 	);
+	
+	return this;
 };

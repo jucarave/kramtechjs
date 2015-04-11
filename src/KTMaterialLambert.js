@@ -50,6 +50,7 @@ MaterialLambert.prototype.sendUniformData = function(mesh, camera, scene){
 	var geometry = mesh.geometry;
 	var transformationMatrix;
 	var uniforms = this.shader.uniforms;
+	var normalMatrix;
 	for (var i=0,len=uniforms.length;i<len;i++){
 		var uni = uniforms[i];
 		
@@ -71,10 +72,10 @@ MaterialLambert.prototype.sendUniformData = function(mesh, camera, scene){
 		}else if (uni.name == 'uUseLighting'){
 			gl.uniform1i(uni.location, (scene.useLighting)? 1 : 0);
 		}else if (uni.name == 'uNormalMatrix'){
-			var normalMatrix = transformationMatrix.toMatrix3().inverse().toFloat32Array();
+			normalMatrix = camera.transformationMatrix.toMatrix3().inverse.transpose().toFloat32Array();
 			gl.uniformMatrix3fv(uni.location, false, normalMatrix);
 		}else if (uni.name == 'uLightDirection' && scene.useLighting && scene.dirLight){
-			var d = camera.NRTransformationMatrix.multiply([scene.dirLight.direction.x, scene.dirLight.direction.y, scene.dirLight.direction.z, 1]);
+			var d = normalMatrix.multiply([scene.dirLight.direction.x, scene.dirLight.direction.y, scene.dirLight.direction.z]);
 			var dir = new KT.Vector3(d[0], d[1], d[2]).normalize();
 			gl.uniform3f(uni.location, dir.x, dir.y, dir.z);
 		}else if (uni.name == 'uLightDirectionColor' && scene.useLighting && scene.dirLight){

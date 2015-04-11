@@ -5,6 +5,8 @@ module.exports = {
 		this.canvas = canvas;
 		this.gl = null;
 		this.shaders = {};
+		this.maxAttribLocations = 0;
+		this.lastProgram = null;
 		
 		this.__initContext(canvas);
 		this.__initProperties();
@@ -37,8 +39,9 @@ module.exports = {
 	},
 	
 	__initShaders: function(){
-		this.shader = this.processShader(Shaders);
-		this.gl.useProgram(this.shader.shaderProgram);
+		this.shaders = {};
+		this.shaders.basic = this.processShader(Shaders.basic);
+		this.shaders.lambert = this.processShader(Shaders.lambert);
 	},
 	
 	createArrayBuffer: function(type, dataArray, itemSize){
@@ -76,6 +79,7 @@ module.exports = {
 		}
 		
 		var attributes = [];
+		this.maxAttribLocations = Math.max(this.maxAttribLocations, shader.attributes.length);
 		for (var i=0,len=shader.attributes.length;i<len;i++){
 			var att = shader.attributes[i];
 			var location = gl.getAttribLocation(shaderProgram, att.name);
@@ -106,6 +110,22 @@ module.exports = {
 			attributes: attributes,
 			uniforms: uniforms
 		};
+	},
+	
+	switchProgram: function(shader){
+		if (this.lastProgram === shader) return;
+		var gl = this.gl;
+		
+		this.lastProgram = shader;
+		gl.useProgram(shader.shaderProgram);
+		
+		for (var i=0;i<this.maxAttribLocations;i++){
+			if (i < shader.attributes.length){
+				gl.enableVertexAttribArray(i);
+			}else{
+				gl.disableVertexAttribArray(i);
+			}
+		}
 	}
 };
 

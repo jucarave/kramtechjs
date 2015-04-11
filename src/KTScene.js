@@ -30,13 +30,17 @@ Scene.prototype.add = function(object){
 Scene.prototype.drawMesh = function(mesh, camera){
 	var gl = KT.gl;
 	
+	var material = mesh.material;
+	var shader = material.shader;
+	
+	KT.switchProgram(shader);
 	this.setMaterialAttributes(mesh.material);
 	
-	this.sendAttribData(mesh, KT.shader.attributes, camera);
-	this.sendUniformData(mesh, KT.shader.uniforms, camera);
+	material.sendAttribData(mesh, camera, this);
+	material.sendUniformData(mesh, camera, this);
 	
 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.geometry.facesBuffer);
-	gl.drawElements(gl[mesh.material.drawAs], mesh.geometry.facesBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+	gl.drawElements(gl[material.drawAs], mesh.geometry.facesBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 };
 
 Scene.prototype.render = function(camera){
@@ -47,7 +51,6 @@ Scene.prototype.render = function(camera){
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	
 	gl.disable( gl.BLEND ); 
-	gl.enable(gl.DEPTH_TEST);
 	var transparents = [];
 	
 	camera.getTransformationMatrix();
@@ -69,7 +72,6 @@ Scene.prototype.render = function(camera){
 	}
 	
 	gl.enable( gl.BLEND ); 
-	gl.disable(gl.DEPTH_TEST);
 	for (var i=0,len=transparents.length;i<len;i++){
 		var mesh = transparents[i];
 		this.drawMesh(mesh, camera);
@@ -78,78 +80,6 @@ Scene.prototype.render = function(camera){
 	return this;
 };
 
-Scene.prototype.sendAttribData = function(mesh, attributes, camera){
-	var gl = KT.gl;
-	var geometry = mesh.geometry;
-	for (var i=0,len=attributes.length;i<len;i++){
-		var att = attributes[i];
-		
-		if (att.name == "aVertexPosition"){
-			gl.bindBuffer(gl.ARRAY_BUFFER, geometry.vertexBuffer);
-			gl.vertexAttribPointer(att.location, geometry.vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
-		}else if (att.name == "aVertexColor"){
-			gl.bindBuffer(gl.ARRAY_BUFFER, geometry.colorsBuffer);
-			gl.vertexAttribPointer(att.location, geometry.colorsBuffer.itemSize, gl.FLOAT, false, 0, 0);
-		}else if (att.name == "aTextureCoord"){
-			gl.bindBuffer(gl.ARRAY_BUFFER, geometry.texBuffer);
-			gl.vertexAttribPointer(att.location, geometry.texBuffer.itemSize, gl.FLOAT, false, 0, 0);
-		}else if (att.name == "aVertexNormal"){
-			gl.bindBuffer(gl.ARRAY_BUFFER, geometry.normalsBuffer);
-			gl.vertexAttribPointer(att.location, geometry.normalsBuffer.itemSize, gl.FLOAT, false, 0, 0);
-		}
-	}
-	
-	return this;
-};
-
-Scene.prototype.sendUniformData = function(mesh, uniforms, camera){
-	var gl = KT.gl;
-	var geometry = mesh.geometry;
-	var transformationMatrix;
-	for (var i=0,len=uniforms.length;i<len;i++){
-		var uni = uniforms[i];
-		
-		if (uni.name == 'uShadingMode'){
-			gl.uniform1i(uni.location, this.shadingMode.indexOf(mesh.material.shading));
-		}else if (uni.name == 'uMVPMatrix'){
-			transformationMatrix = mesh.getTransformationMatrix().multiply(camera.transformationMatrix);
-			var mvp = transformationMatrix.clone().multiply(camera.perspectiveMatrix);
-			gl.uniformMatrix4fv(uni.location, false, mvp.toFloat32Array());
-		}else if (uni.name == 'uMaterialColor'){
-			var color = mesh.material.color.getRGBA();
-			gl.uniform4fv(uni.location, new Float32Array(color));
-		}else if (uni.name == 'uTextureSampler'){
-			if (mesh.material.texture){
-				gl.activeTexture(gl.TEXTURE0);
-				gl.bindTexture(gl.TEXTURE_2D, mesh.material.texture.texture);
-				gl.uniform1i(uni.location, 0);
-			}
-		}else if (uni.name == 'uHasTexture'){
-			gl.uniform1i(uni.location, (mesh.material.texture)? 1 : 0);
-		}else if (uni.name == 'uUseLighting'){
-			gl.uniform1i(uni.location, (this.useLighting)? 1 : 0);
-		}else if (uni.name == 'uNormalMatrix'){
-			var normalMatrix = transformationMatrix.toMatrix3().inverse().toFloat32Array();
-			gl.uniformMatrix3fv(uni.location, false, normalMatrix);
-		}else if (uni.name == 'uLightDirection' && this.useLighting && this.dirLight){
-			var d = camera.NRTransformationMatrix.multiply([this.dirLight.direction.x, this.dirLight.direction.y, this.dirLight.direction.z, 1]);
-			var dir = new KT.Vector3(d[0], d[1], d[2]).normalize();
-			gl.uniform3f(uni.location, dir.x, dir.y, dir.z);
-		}else if (uni.name == 'uLightDirectionColor' && this.useLighting && this.dirLight){
-			var color = this.dirLight.color.getRGB();
-			gl.uniform3f(uni.location, color[0], color[1], color[2]);
-		}else if (uni.name == 'uLightDirectionIntensity' && this.useLighting && this.dirLight){
-			gl.uniform1f(uni.location, this.dirLight.intensity);
-		}else if (uni.name == 'uAmbientLightColor' && this.useLighting && this.ambientLight){
-			var color = this.ambientLight.getRGB();
-			gl.uniform3f(uni.location, color[0], color[1], color[2]);
-		}else if (uni.name == 'uOpacity'){
-			gl.uniform1f(uni.location, mesh.material.opacity);
-		}
-	}
-	
-	return this;
-};
 
 Scene.prototype.setMaterialAttributes = function(material){
 	var gl = KT.gl;

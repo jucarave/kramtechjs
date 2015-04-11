@@ -24,7 +24,7 @@ Test.prototype.createSimpleScene = function(){
 	var material = new KT.MaterialLambert(texture, KT.Color._WHITE);
 	material.drawFaces = 'BOTH';
 	this.box = new KT.Mesh(boxGeo, material);
-	this.box.position.x = 1.2;
+	this.box.position.x = 3.0;
 	this.scene.add(this.box);
 	
 	
@@ -32,7 +32,7 @@ Test.prototype.createSimpleScene = function(){
 	var texture = new KT.Texture('img/moon.gif');
 	var material = new KT.MaterialLambert(texture, KT.Color._WHITE);
 	this.sphere = new KT.Mesh(sphGeo, material);
-	this.sphere.position.x = -1.2;
+	this.sphere.position.x = -3.0;
 	this.scene.add(this.sphere);
 	
 	

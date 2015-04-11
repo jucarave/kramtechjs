@@ -1,4 +1,5 @@
 var Color = require('./KTColor');
+var KT = require('./KTMain');
 
 function Material(parameters){
 	this.__ktmaterial = true;
@@ -10,7 +11,9 @@ function Material(parameters){
 	this.opacity = (parameters.opacity)? parameters.opacity : 1.0;
 	this.drawFaces = (parameters.drawFaces)? parameters.drawFaces : 'FRONT';
 	this.drawAs = (parameters.drawAs)? parameters.drawAs : 'TRIANGLES';
-	this.shading = (parameters.shading)? parameters.shading : 'BASIC';
+	this.shader = (parameters.shader)? parameters.shader : null;
+	this.sendAttribData = (parameters.sendAttribData)? parameters.sendAttribData : null;
+	this.sendUniformData = (parameters.sendUniformData)? parameters.sendUniformData : null;
 }
 
 module.exports = Material;

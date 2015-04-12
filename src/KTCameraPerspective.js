@@ -73,7 +73,7 @@ CameraPerspective.prototype.setControls = function(cameraControls){
 	cameraControls.camera = this;
 	cameraControls.zoom = zoom;
 	cameraControls.angle.x = KTMath.get2DAngle(cameraControls.target.x, cameraControls.target.z,this.position.x, this.position.z);
-	cameraControls.angle.y = -KTMath.get2DAngle(0, cameraControls.target.y, zoom, this.position.y);
+	cameraControls.angle.y = KTMath.get2DAngle(0, this.position.y, zoom, cameraControls.target.y);
 	
 	cameraControls.setCameraPosition();
 	

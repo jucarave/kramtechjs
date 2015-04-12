@@ -50,13 +50,16 @@ MaterialLambert.prototype.sendUniformData = function(mesh, camera, scene){
 	var geometry = mesh.geometry;
 	var transformationMatrix;
 	var uniforms = this.shader.uniforms;
+	var modelTransformation;
 	for (var i=0,len=uniforms.length;i<len;i++){
 		var uni = uniforms[i];
 		
-		if (uni.name == 'uMVPMatrix'){
-			transformationMatrix = mesh.getTransformationMatrix().multiply(camera.transformationMatrix);
-			var mvp = transformationMatrix.clone().multiply(camera.perspectiveMatrix);
-			gl.uniformMatrix4fv(uni.location, false, mvp.toFloat32Array());
+		if (uni.name == 'uMVMatrix'){
+			modelTransformation = mesh.getTransformationMatrix();
+			transformationMatrix = modelTransformation.clone().multiply(camera.transformationMatrix);
+			gl.uniformMatrix4fv(uni.location, false, transformationMatrix.toFloat32Array());
+		}else if (uni.name == 'uPMatrix'){
+			gl.uniformMatrix4fv(uni.location, false, camera.perspectiveMatrix.toFloat32Array());
 		}else if (uni.name == 'uMaterialColor'){
 			var color = mesh.material.color.getRGBA();
 			gl.uniform4fv(uni.location, new Float32Array(color));
@@ -71,12 +74,10 @@ MaterialLambert.prototype.sendUniformData = function(mesh, camera, scene){
 		}else if (uni.name == 'uUseLighting'){
 			gl.uniform1i(uni.location, (scene.useLighting)? 1 : 0);
 		}else if (uni.name == 'uNormalMatrix'){
-			var normalMatrix = camera.transformationMatrix.toMatrix3().inverse().transpose().toFloat32Array();
+			var normalMatrix = modelTransformation.toMatrix3().inverse().toFloat32Array();
 			gl.uniformMatrix3fv(uni.location, false, normalMatrix);
 		}else if (uni.name == 'uLightDirection' && scene.useLighting && scene.dirLight){
-			var d = camera.transformationMatrix.multiply([scene.dirLight.direction.x, scene.dirLight.direction.y, scene.dirLight.direction.z, 0.0]);
-			var dir = new KT.Vector3(d[0], d[1], d[2]).normalize();
-			gl.uniform3f(uni.location, dir.x, dir.y, dir.z);
+			gl.uniform3f(uni.location, scene.dirLight.direction.x, scene.dirLight.direction.y, scene.dirLight.direction.z);
 		}else if (uni.name == 'uLightDirectionColor' && scene.useLighting && scene.dirLight){
 			var color = scene.dirLight.color.getRGB();
 			gl.uniform3f(uni.location, color[0], color[1], color[2]);

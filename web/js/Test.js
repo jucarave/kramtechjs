@@ -15,7 +15,7 @@ Test.prototype.createSimpleScene = function(){
 	});
 	
 	this.camera = new KT.CameraPerspective(KT.Math.degToRad(60), this.canvas.width / this.canvas.height, 0.1, 100.0);
-	this.camera.position.set(-5,5,5);
+	this.camera.position.set(0,5,7);
 	this.camera.lookAt(new KT.Vector3(0,0,0));
 	this.camera.setBackgroundColor("#000000");
 	
@@ -45,11 +45,11 @@ Test.prototype.loopScene = function(){
 	/*this.camera.position.x += 0.025;
 	this.camera.lookAt(new KT.Vector3(0,0,0));/**/
 
-	/*T.box.rotation.x += KT.Math.degToRad(0.25);
+	T.box.rotation.x += KT.Math.degToRad(0.25);
 	T.box.rotation.y += KT.Math.degToRad(0.25);
 	
 	T.sphere.rotation.x += KT.Math.degToRad(0.25);
-	T.sphere.rotation.y += KT.Math.degToRad(0.25);*/
+	T.sphere.rotation.y += KT.Math.degToRad(0.25);/**/
 	
 	T.scene.render(T.camera);
 	

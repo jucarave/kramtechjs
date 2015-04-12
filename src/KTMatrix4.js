@@ -225,7 +225,7 @@ Matrix4.getScale = function(vector3){
 	);
 };
 
-Matrix4.getTransformation = function(position, rotation, scale, order){
+Matrix4.getTransformation = function(position, rotation, scale){
 	if (!position.__ktv3) throw "Position must be a Vector3";
 	if (!rotation.__ktv3) throw "Rotation must be a Vector3";
 	if (scale && !scale.__ktv3) throw "Scale must be a Vector3";
@@ -238,22 +238,13 @@ Matrix4.getTransformation = function(position, rotation, scale, order){
 	
 	var translation = Matrix4.getTranslation(position);
 	
-	if (!order) order = 'SRT';
-	
 	var matrix;
-	if (order == 'SRT'){
-		matrix = scale;
-		matrix.multiply(rotationX);
-		matrix.multiply(rotationY);
-		matrix.multiply(rotationZ);
-		matrix.multiply(translation);
-	}else if (order == 'STR'){
-		matrix = scale;
-		matrix.multiply(translation);
-		matrix.multiply(rotationY);
-		matrix.multiply(rotationX);
-		matrix.multiply(rotationZ);
-	}
+	matrix = Matrix4.getIdentity();
+	matrix.multiply(rotationX);
+	matrix.multiply(rotationY);
+	matrix.multiply(rotationZ);
+	matrix.multiply(translation);
+	matrix.multiply(scale);
 	
 	return matrix;
 };

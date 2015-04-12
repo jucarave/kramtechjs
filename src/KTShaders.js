@@ -56,8 +56,8 @@ module.exports = {
 			{name: 'aVertexNormal'}
 		],
 		uniforms: [
-			{name: 'uShadingMode'},
-			{name: 'uMVPMatrix'},
+			{name: 'uMVMatrix'},
+			{name: 'uPMatrix'},
 			{name: 'uMaterialColor'},
 			{name: 'uTextureSampler'},
 			{name: 'uHasTexture'},
@@ -81,7 +81,8 @@ module.exports = {
 			"attribute mediump vec3 aVertexNormal; " + 
 			
 			
-			"uniform mediump mat4 uMVPMatrix; " +
+			"uniform mediump mat4 uMVMatrix; " +
+			"uniform mediump mat4 uPMatrix; " +
 			"uniform mediump vec4 uMaterialColor; " +
 			
 			"uniform bool uUseLighting; " +
@@ -99,7 +100,7 @@ module.exports = {
 			"varying mediump vec3 vLightWeight; " + 
 			
 			"void main(void){ " + 
-				"gl_Position = uMVPMatrix * vec4(aVertexPosition, 1.0); " +
+				"gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0); " +
 			
 				"if (uUseLighting){ " + 
 					"vec3 transformedNormal = uNormalMatrix * aVertexNormal; " +

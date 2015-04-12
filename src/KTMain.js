@@ -1,4 +1,5 @@
 var Shaders = require('./KTShaders');
+var Input = require('./KTInput');
 
 module.exports = {
 	init: function(canvas){
@@ -11,6 +12,8 @@ module.exports = {
 		this.__initContext(canvas);
 		this.__initProperties();
 		this.__initShaders();
+		
+		Input.init(canvas);
 	},
 	
 	__initContext: function(canvas){

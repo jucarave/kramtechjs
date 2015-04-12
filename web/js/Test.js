@@ -11,13 +11,16 @@ function Test(){
 Test.prototype.createSimpleScene = function(){
 	this.scene = new KT.Scene({
 		useLighting: true,
-		ambientLight: "#111111"
+		ambientLight: "#333333"
 	});
 	
 	this.camera = new KT.CameraPerspective(KT.Math.degToRad(60), this.canvas.width / this.canvas.height, 0.1, 100.0);
 	this.camera.position.set(0,5,7);
 	this.camera.lookAt(new KT.Vector3(0,0,0));
-	this.camera.setBackgroundColor("#000000");
+	this.camera.setBackgroundColor("#B1BDD1");
+	
+	var cameraControls = new KT.OrbitAndPan();
+	this.camera.setControls(cameraControls);
 	
 	var boxGeo = new KT.GeometryBox(2.0, 2.0, 2.0);
 	var texture = new KT.Texture('img/crate.jpg');
@@ -35,6 +38,12 @@ Test.prototype.createSimpleScene = function(){
 	this.sphere.position.x = -3.0;
 	this.scene.add(this.sphere);
 	
+	
+	var plnGeo = new KT.GeometryPlane(32.0, 32.0);
+	var material = new KT.MaterialBasic(null, "#8B8B8B");
+	this.plane = new KT.Mesh(plnGeo, material);
+	this.plane.position.y = -1.5;
+	this.scene.add(this.plane);
 	
 	this.scene.add(new KT.LightDirectional(new KT.Vector3(-1.0, -1.0, -1.0), "#FFFFFF", 0.6));
 };

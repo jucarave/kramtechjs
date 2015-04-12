@@ -123,9 +123,9 @@ var Input = {
 	handleMouseWheel: function(ev){
 		if (window.event) ev = window.event;
 		
-		Input.mouse.wheel = 0;
-		if (ev.wheelDelta > 0) Input.mouse.wheel = 1;
-		else if (ev.wheelDelta < 0) Input.mouse.wheel = -1;
+		Input._mouse.wheel = 0;
+		if (ev.wheelDelta > 0) Input._mouse.wheel = 1;
+		else if (ev.wheelDelta < 0) Input._mouse.wheel = -1;
 	},
 	
 	handleMouseMove: function(ev){

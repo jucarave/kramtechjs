@@ -15,6 +15,8 @@ function CameraPerspective(fov, ratio, znear, zfar){
 	this.znear = znear;
 	this.zfar = zfar;
 	
+	this.controls = null;
+	
 	this.backgroundColor = new Color(Color._BLACK);
 	
 	this.setPerspective();
@@ -57,6 +59,23 @@ CameraPerspective.prototype.lookAt = function(vector3){
 		forward.x, forward.y, forward.z, z,
 		0, 0, 0, 1
 	);
+	
+	return this;
+};
+
+CameraPerspective.prototype.setControls = function(cameraControls){
+	if (!cameraControls.__ktCamCtrls) throw "Is not a valid camera controls object";
+	
+	var zoom = Vector3.vectorsDifference(this.position, cameraControls.target).length();
+	
+	this.controls = cameraControls;
+	
+	cameraControls.camera = this;
+	cameraControls.zoom = zoom;
+	cameraControls.angle.x = KTMath.get2DAngle(cameraControls.target.x, cameraControls.target.z,this.position.x, this.position.z);
+	cameraControls.angle.y = -KTMath.get2DAngle(0, cameraControls.target.y, zoom, this.position.y);
+	
+	cameraControls.setCameraPosition();
 	
 	return this;
 };

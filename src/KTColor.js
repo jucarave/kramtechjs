@@ -1,5 +1,7 @@
 function Color(hexColor){
 	var str = hexColor.substring(1);
+	
+	if (str.length == 6) str += "FF";
 	var r = parseInt(str.substring(0, 2), 16);
 	var g = parseInt(str.substring(2, 4), 16);
 	var b = parseInt(str.substring(4, 6), 16);

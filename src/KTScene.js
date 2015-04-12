@@ -53,7 +53,7 @@ Scene.prototype.render = function(camera){
 	gl.disable( gl.BLEND ); 
 	var transparents = [];
 	
-	//camera.getTransformationMatrix();
+	if (camera.controls) camera.controls.update();
 	
 	for (var i=0,len=this.meshes.length;i<len;i++){
 		var mesh = this.meshes[i];

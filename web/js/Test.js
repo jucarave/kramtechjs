@@ -45,15 +45,27 @@ Test.prototype.createSimpleScene = function(){
 	this.plane.position.y = -1.5;
 	this.scene.add(this.plane);
 	
-	this.scene.add(new KT.LightDirectional(new KT.Vector3(-1.0, -1.0, -1.0), "#FFFFFF", 0.6));
+	this.lightAng = 0;
+	this.pLight = new KT.LightPoint(new KT.Vector3(0.0, 6.0, 0.0), 1.0, 1.0, KT.Color._RED);
+	var sphGeo = new KT.GeometrySphere(0.1, 4, 4);
+	var material = new KT.MaterialBasic(null, this.pLight.color.getHex());
+	var spLight= new KT.Mesh(sphGeo, material);
+	spLight.position = this.pLight.position;
+	this.scene.add(spLight);
+	this.scene.add(this.pLight);
+	
+	
+	this.scene.add(new KT.LightDirectional(new KT.Vector3(-1.0, -1.0, -1.0), KT.Color._GREEN, 0.6));
 };
 
 Test.prototype.loopScene = function(){
 	var T = this;
 	
-	/*this.camera.position.x += 0.025;
-	this.camera.lookAt(new KT.Vector3(0,0,0));/**/
-
+	this.lightAng += KT.Math.degToRad(3);
+	this.pLight.position.x = Math.cos(this.lightAng) * 4.5;
+	this.pLight.position.y = Math.sin(this.lightAng) * 4.5;
+	if (this.pLight.position.y <= -1.45) this.pLight.position.y = -1.45;
+	
 	T.box.rotation.x += KT.Math.degToRad(0.25);
 	T.box.rotation.y += KT.Math.degToRad(0.25);
 	

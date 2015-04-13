@@ -141,7 +141,7 @@ var Input = {
 		Utils.addEvent(document, 'keydown', Input.handleKeyDown);
 		Utils.addEvent(document, 'keyup', Input.handleKeyDown);
 		Utils.addEvent(canvas, 'mousedown', Input.handleMouseDown);
-		Utils.addEvent(canvas, 'mouseup', Input.handleMouseUp);
+		Utils.addEvent(document, 'mouseup', Input.handleMouseUp);
 		Utils.addEvent(canvas, 'mousewheel', Input.handleMouseWheel);
 		Utils.addEvent(canvas, 'mousemove', Input.handleMouseMove);
 		Utils.addEvent(document, 'contextmenu', function(ev){

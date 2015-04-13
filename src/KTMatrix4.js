@@ -78,8 +78,8 @@ Matrix4.prototype.multiply = function(matrix4){
 		var ret = [];
 		var col = matrix4;
 	
-		for (var i=0;i<16;i+=4){
-			var row = [this[i], this[i+1], this[i+2], this[i+3]];
+		for (var i=0;i<4;i+=1){
+			var row = [this[i], this[i+4], this[i+8], this[i+12]];
 			var sum = 0;
 			
 			for (var j=0;j<4;j++){

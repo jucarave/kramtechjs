@@ -76,17 +76,38 @@ MaterialLambert.prototype.sendUniformData = function(mesh, camera, scene){
 		}else if (uni.name == 'uNormalMatrix'){
 			var normalMatrix = modelTransformation.toMatrix3().inverse().toFloat32Array();
 			gl.uniformMatrix3fv(uni.location, false, normalMatrix);
-		}else if (uni.name == 'uLightDirection' && scene.useLighting && scene.dirLight){
+		}
+		
+		
+		else if (uni.name == 'uLightDirection' && scene.useLighting && scene.dirLight){
 			gl.uniform3f(uni.location, scene.dirLight.direction.x, scene.dirLight.direction.y, scene.dirLight.direction.z);
 		}else if (uni.name == 'uLightDirectionColor' && scene.useLighting && scene.dirLight){
 			var color = scene.dirLight.color.getRGB();
 			gl.uniform3f(uni.location, color[0], color[1], color[2]);
 		}else if (uni.name == 'uLightDirectionIntensity' && scene.useLighting && scene.dirLight){
 			gl.uniform1f(uni.location, scene.dirLight.intensity);
-		}else if (uni.name == 'uAmbientLightColor' && scene.useLighting && scene.ambientLight){
+		}
+		
+		
+		else if (uni.name == 'uAmbientLightColor' && scene.useLighting && scene.ambientLight){
 			var color = scene.ambientLight.getRGB();
 			gl.uniform3f(uni.location, color[0], color[1], color[2]);
-		}else if (uni.name == 'uOpacity'){
+		}
+		
+		
+		else if (uni.name == 'uLightPointPosition' && scene.useLighting && scene.pointsLights){
+			var pos = [scene.pointsLights.position.x, scene.pointsLights.position.y, scene.pointsLights.position.z];
+			var p = new KT.Vector3(pos[0] - modelTransformation[12], pos[1] - modelTransformation[13], pos[2] - modelTransformation[14]);
+			gl.uniform3f(uni.location, p.x, p.y, p.z);
+		}else if (uni.name == 'uLightPointIntensity' && scene.useLighting && scene.pointsLights){
+			gl.uniform1f(uni.location, scene.pointsLights.intensity);
+		}else if (uni.name == 'uLightPointColor' && scene.useLighting && scene.pointsLights){
+			var color = scene.pointsLights.color.getRGB();
+			gl.uniform3f(uni.location, color[0], color[1], color[2]);
+		}
+		
+		
+		else if (uni.name == 'uOpacity'){
 			gl.uniform1f(uni.location, mesh.material.opacity);
 		}
 	}

@@ -71,6 +71,10 @@ module.exports = {
 			{name: 'uLightDirectionColor'},
 			{name: 'uLightDirectionIntensity'},
 			
+			{name: 'uLightPointPosition'},
+			{name: 'uLightPointIntensity'},
+			{name: 'uLightPointColor'},
+			
 			{name: 'uOpacity'}
 		],
 		vertexShader: 
@@ -94,18 +98,29 @@ module.exports = {
 			"uniform mediump vec3 uLightDirectionColor; " +
 			"uniform mediump float uLightDirectionIntensity; " +  
 			
+			"uniform mediump vec3 uLightPointPosition; " +
+			"uniform mediump vec3 uLightPointColor; " +
+			"uniform mediump float uLightPointIntensity; " + 
+
 			
 			"varying mediump vec4 vVertexColor; " +
 			"varying mediump vec2 vTextureCoord;" +  
 			"varying mediump vec3 vLightWeight; " + 
 			
 			"void main(void){ " + 
-				"gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0); " +
+				"vec4 modelViewPosition = uMVMatrix * vec4(aVertexPosition, 1.0); " +
+				"gl_Position = uPMatrix * modelViewPosition; " +
 			
 				"if (uUseLighting){ " + 
 					"vec3 transformedNormal = uNormalMatrix * aVertexNormal; " +
+					"vLightWeight = uAmbientLightColor; " +
+					
 					"float dirLightWeight = max(dot(transformedNormal, uLightDirection), 0.0); " +
-					"vLightWeight = uAmbientLightColor + (uLightDirectionColor * dirLightWeight * uLightDirectionIntensity); " +
+					"vLightWeight += (uLightDirectionColor * dirLightWeight * uLightDirectionIntensity); " +
+					
+					"vec3 pointLightDirection = normalize(uLightPointPosition - aVertexPosition); " +
+					"float pointLightWeight = max(dot(transformedNormal, pointLightDirection), 0.0); " +
+					"vLightWeight += uLightPointColor * pointLightWeight * uLightPointIntensity; " +
 				"}else{ " +
 					"vLightWeight = vec3(1.0); " + 
 				"}" +   

@@ -45,7 +45,7 @@ OrbitAndPan.prototype.update = function(){
 		var dx = Input._mouse.position.x - this.lastPan.x;
 		var dy = Input._mouse.position.y - this.lastPan.y;
 		
-		if (dx != 0.0){
+		if (dx != 0.0 || dy != 0.0){
 			var theta = -this.angle.y;
 			var ang = -this.angle.x - KTMath.PI_2;
 			var cos = Math.cos(ang);

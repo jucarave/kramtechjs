@@ -46,7 +46,7 @@ Test.prototype.createSimpleScene = function(){
 	this.scene.add(this.plane);
 	
 	this.lightAng = 0;
-	this.pLight = new KT.LightPoint(new KT.Vector3(0.0, 6.0, 0.0), 1.0, 1.0, KT.Color._RED);
+	this.pLight = new KT.LightPoint(new KT.Vector3(-2.5, -1.45, 0.0), 1.0, 6.0, KT.Color._RED);
 	var sphGeo = new KT.GeometrySphere(0.1, 4, 4);
 	var material = new KT.MaterialBasic(null, this.pLight.color.getHex());
 	var spLight= new KT.Mesh(sphGeo, material);
@@ -61,7 +61,7 @@ Test.prototype.createSimpleScene = function(){
 Test.prototype.loopScene = function(){
 	var T = this;
 	
-	this.lightAng += KT.Math.degToRad(3);
+	this.lightAng += KT.Math.degToRad(1);
 	this.pLight.position.x = Math.cos(this.lightAng) * 4.5;
 	this.pLight.position.y = Math.sin(this.lightAng) * 4.5;
 	if (this.pLight.position.y <= -1.45) this.pLight.position.y = -1.45;
@@ -70,7 +70,7 @@ Test.prototype.loopScene = function(){
 	T.box.rotation.y += KT.Math.degToRad(0.25);
 	
 	T.sphere.rotation.x += KT.Math.degToRad(0.25);
-	T.sphere.rotation.y += KT.Math.degToRad(0.25);/**/
+	T.sphere.rotation.y += KT.Math.degToRad(1);/**/
 	
 	T.scene.render(T.camera);
 	

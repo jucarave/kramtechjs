@@ -64,6 +64,7 @@ module.exports = {
 			
 			{name: 'uUseLighting'},
 			{name: 'uNormalMatrix'},
+			{name: 'uModelMatrix'},
 			
 			{name: 'uAmbientLightColor'},
 			
@@ -74,6 +75,7 @@ module.exports = {
 			{name: 'uLightPointPosition'},
 			{name: 'uLightPointIntensity'},
 			{name: 'uLightPointColor'},
+			{name: 'uLightPointDistance'},
 			
 			{name: 'uOpacity'}
 		],
@@ -90,6 +92,7 @@ module.exports = {
 			"uniform mediump vec4 uMaterialColor; " +
 			
 			"uniform bool uUseLighting; " +
+			"uniform mediump mat4 uModelMatrix; " +
 			"uniform mediump mat3 uNormalMatrix; " +
 			
 			"uniform mediump vec3 uAmbientLightColor; " +
@@ -100,7 +103,8 @@ module.exports = {
 			
 			"uniform mediump vec3 uLightPointPosition; " +
 			"uniform mediump vec3 uLightPointColor; " +
-			"uniform mediump float uLightPointIntensity; " + 
+			"uniform mediump float uLightPointIntensity; " +
+			"uniform mediump float uLightPointDistance; " + 
 
 			
 			"varying mediump vec4 vVertexColor; " +
@@ -118,9 +122,14 @@ module.exports = {
 					"float dirLightWeight = max(dot(transformedNormal, uLightDirection), 0.0); " +
 					"vLightWeight += (uLightDirectionColor * dirLightWeight * uLightDirectionIntensity); " +
 					
-					"vec3 pointLightDirection = normalize(uLightPointPosition - aVertexPosition); " +
-					"float pointLightWeight = max(dot(transformedNormal, pointLightDirection), 0.0); " +
-					"vLightWeight += uLightPointColor * pointLightWeight * uLightPointIntensity; " +
+					"vec3 vertexModelPosition = (uModelMatrix * vec4(aVertexPosition, 1.0)).xyz; " +
+					"vec3 lightDist = uLightPointPosition - vertexModelPosition;" +
+					"float distance = length(lightDist); " +
+					"if (distance <= uLightPointDistance){ " +
+						"vec3 pointLightDirection = normalize(lightDist); " +
+						"float pointLightWeight = max(dot(transformedNormal, pointLightDirection), 0.0); " +
+						"vLightWeight += (uLightPointColor * pointLightWeight * uLightPointIntensity) / distance; " +
+					"} " +
 				"}else{ " +
 					"vLightWeight = vec3(1.0); " + 
 				"}" +   

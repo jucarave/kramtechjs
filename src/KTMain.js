@@ -45,6 +45,7 @@ module.exports = {
 		this.shaders = {};
 		this.shaders.basic = this.processShader(Shaders.basic);
 		this.shaders.lambert = this.processShader(Shaders.lambert);
+		this.shaders.phong = this.processShader(Shaders.phong);
 	},
 	
 	createArrayBuffer: function(type, dataArray, itemSize){
@@ -67,10 +68,14 @@ module.exports = {
 			
 			if (line.indexOf("attribute ") == 0){
 				var p = line.split(/ /g);
-				attributes.push({name: p[p.length - 1].trim()});
+				var name = p[p.length - 1].trim();
+				if (attributes.indexOf(name) == -1)
+					attributes.push({name: name});
 			}else if (line.indexOf("uniform ") == 0){
 				var p = line.split(/ /g);
-				uniforms.push({name: p[p.length - 1].trim()});
+				var name = p[p.length - 1].trim();
+				if (uniforms.indexOf(name) == -1)
+					uniforms.push({name: name});
 			}
 		}
 		
@@ -79,10 +84,14 @@ module.exports = {
 			
 			if (line.indexOf("attribute ") == 0){
 				var p = line.split(/ /g);
-				attributes.push({name: p[p.length - 1].trim()});
+				var name = p[p.length - 1].trim();
+				if (attributes.indexOf(name) == -1)
+					attributes.push({name: name});
 			}else if (line.indexOf("uniform ") == 0){
 				var p = line.split(/ /g);
-				uniforms.push({name: p[p.length - 1].trim()});
+				var name = p[p.length - 1].trim();
+				if (uniforms.indexOf(name) == -1)
+					uniforms.push({name: name});
 			}
 		}
 		

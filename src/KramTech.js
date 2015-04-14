@@ -11,6 +11,7 @@ KT.Input = require('./KTInput');
 KT.Material = require('./KTMaterial');
 KT.MaterialBasic = require('./KTMaterialBasic');
 KT.MaterialLambert = require('./KTMaterialLambert');
+KT.MaterialPhong = require('./KTMaterialPhong');
 KT.Math = require('./KTMath');
 KT.Matrix3 = require('./KTMatrix3');
 KT.Matrix4 = require('./KTMatrix4');

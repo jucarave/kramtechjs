@@ -58,6 +58,40 @@ module.exports = {
 		return buffer;
 	},
 	
+	getShaderAttributesAndUniforms: function(vertex, fragment){
+		var attributes = [];
+		var uniforms = [];
+		
+		for (var i=0;i<vertex.length;i++){
+			var line = vertex[i].trim();
+			
+			if (line.indexOf("attribute ") == 0){
+				var p = line.split(/ /g);
+				attributes.push({name: p[p.length - 1].trim()});
+			}else if (line.indexOf("uniform ") == 0){
+				var p = line.split(/ /g);
+				uniforms.push({name: p[p.length - 1].trim()});
+			}
+		}
+		
+		for (var i=0;i<fragment.length;i++){
+			var line = fragment[i].trim();
+			
+			if (line.indexOf("attribute ") == 0){
+				var p = line.split(/ /g);
+				attributes.push({name: p[p.length - 1].trim()});
+			}else if (line.indexOf("uniform ") == 0){
+				var p = line.split(/ /g);
+				uniforms.push({name: p[p.length - 1].trim()});
+			}
+		}
+		
+		return {
+			attributes: attributes,
+			uniforms: uniforms
+		};
+	},
+	
 	processShader: function(shader){
 		var gl = this.gl;
 		
@@ -76,15 +110,17 @@ module.exports = {
 		gl.attachShader(shaderProgram, fShader);
 		gl.linkProgram(shaderProgram);
 		
+		var params = this.getShaderAttributesAndUniforms(vCode.split(/[;{}]+/), fCode.split(/[;{}]+/));
+		
 		if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)){
 			console.error("Error initializing the shader program");
 			throw gl.getShaderInfoLog(shaderProgram);
 		}
 		
 		var attributes = [];
-		this.maxAttribLocations = Math.max(this.maxAttribLocations, shader.attributes.length);
-		for (var i=0,len=shader.attributes.length;i<len;i++){
-			var att = shader.attributes[i];
+		this.maxAttribLocations = Math.max(this.maxAttribLocations, params.attributes.length);
+		for (var i=0,len=params.attributes.length;i<len;i++){
+			var att = params.attributes[i];
 			var location = gl.getAttribLocation(shaderProgram, att.name);
 			
 			gl.enableVertexAttribArray(location);
@@ -97,8 +133,8 @@ module.exports = {
 		}
 		
 		var uniforms = [];
-		for (var i=0,len=shader.uniforms.length;i<len;i++){
-			var uni = shader.uniforms[i];
+		for (var i=0,len=params.uniforms.length;i<len;i++){
+			var uni = params.uniforms[i];
 			var location = gl.getUniformLocation(shaderProgram, uni.name);
 			
 			uniforms.push({

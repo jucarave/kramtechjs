@@ -1,16 +1,5 @@
 module.exports = {
 	basic: {
-		attributes: [
-			{name: 'aVertexPosition'},
-			{name: 'aVertexColor'},
-			{name: 'aTextureCoord'}
-		],
-		uniforms: [
-			{name: 'uMVPMatrix'},
-			{name: 'uMaterialColor'},
-			{name: 'uTextureSampler'},
-			{name: 'uHasTexture'}
-		],
 		vertexShader: 
 			"attribute mediump vec2 aTextureCoord; " +
 			"attribute mediump vec3 aVertexPosition; " +
@@ -28,6 +17,7 @@ module.exports = {
 				"vVertexColor = aVertexColor * uMaterialColor; " +
 				"vTextureCoord = aTextureCoord; " + 
 			"} " ,
+			
 		fragmentShader: 
 			"uniform sampler2D uTextureSampler; " +
 			"uniform bool uHasTexture; " +
@@ -48,37 +38,6 @@ module.exports = {
 	
 	
 	lambert: {
-		attributes: [
-			{name: 'aVertexPosition'},
-			{name: 'aVertexColor'},
-			{name: 'aTextureCoord'},
-			
-			{name: 'aVertexNormal'}
-		],
-		uniforms: [
-			{name: 'uMVMatrix'},
-			{name: 'uPMatrix'},
-			{name: 'uMaterialColor'},
-			{name: 'uTextureSampler'},
-			{name: 'uHasTexture'},
-			
-			{name: 'uUseLighting'},
-			{name: 'uNormalMatrix'},
-			{name: 'uModelMatrix'},
-			
-			{name: 'uAmbientLightColor'},
-			
-			{name: 'uLightDirection'},
-			{name: 'uLightDirectionColor'},
-			{name: 'uLightDirectionIntensity'},
-			
-			{name: 'uLightPointPosition'},
-			{name: 'uLightPointIntensity'},
-			{name: 'uLightPointColor'},
-			{name: 'uLightPointDistance'},
-			
-			{name: 'uOpacity'}
-		],
 		vertexShader: 
 			"attribute mediump vec2 aTextureCoord; " +
 			"attribute mediump vec3 aVertexPosition; " +
@@ -137,6 +96,7 @@ module.exports = {
 				"vVertexColor = aVertexColor * uMaterialColor; " +
 				"vTextureCoord = aTextureCoord; " +  
 			"} " ,
+			
 		fragmentShader: 
 			"uniform sampler2D uTextureSampler; " +
 			"uniform bool uHasTexture; " +

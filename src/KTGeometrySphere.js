@@ -9,8 +9,12 @@ function GeometrySphere(radius, latBands, lonBands, params){
 	if (!params) params = {};
 	this.params = params;
 	
-	var hr = (params.horizontalRepeats)? params.horizontalRepeats : 1.0;
-	var vr = (params.verticalRepeats)? params.verticalRepeats : 1.0;
+	this.uvRegion = (params.uvRegion)? params.uvRegion : new Vector4(0.0, 0.0, 1.0, 1.0);
+	
+	var xr = this.uvRegion.x;
+	var yr = this.uvRegion.y;
+	var hr = this.uvRegion.z - xr;
+	var vr = this.uvRegion.w - vr;
 	var hs = (params.halfSphere)? 1.0 : 2.0;
 	
 	for (var latN=0;latN<=latBands;latN++){
@@ -31,7 +35,7 @@ function GeometrySphere(radius, latBands, lonBands, params){
 			var ty = 1 - latN / latBands;
 			
 			sphGeo.addNormal(x, y, z);
-			sphGeo.addVertice(x * radius, y * radius, z * radius, Color._WHITE, tx * hr, ty * vr);
+			sphGeo.addVertice(x * radius, y * radius, z * radius, Color._WHITE, xr + tx * hr, yr + ty * vr);
 		}
 	}
 	

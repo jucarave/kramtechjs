@@ -21,6 +21,7 @@ KT.Texture = require('./KTTexture');
 KT.Utils = require('./KTUtils');
 KT.Vector2 = require('./KTVector2');
 KT.Vector3 = require('./KTVector3');
+KT.Vector4 = require('./KTVector4');
 KT.Scene = require('./KTScene');
 
 module.exports = KT;

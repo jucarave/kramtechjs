@@ -1,5 +1,6 @@
 var KT = require('./KTMain');
 var Utils = require('./KTUtils');
+var Vector2 = require('./KTVector2');
 
 function Texture(src, params){
 	this.__kttexture = true;
@@ -9,6 +10,7 @@ function Texture(src, params){
 	this.magFilter = (params.magFilter)? params.magFilter : 'LINEAR';
 	this.wrapS = (params.SWrapping)? params.SWrapping : 'REPEAT';
 	this.wrapT = (params.TWrapping)? params.TWrapping : 'REPEAT';
+	this.repeat = (params.repeat)? params.repeat : new Vector2(1.0, 1.0);
 	
 	this.textue = null;
 	

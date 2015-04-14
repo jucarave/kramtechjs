@@ -1,5 +1,6 @@
 var Color = require('./KTColor');
 var Geometry = require('./KTGeometry');
+var Vector4 = require('./KTVector4');
 
 function GeometrySphere(radius, latBands, lonBands, params){
 	this.__ktgeometry = true;
@@ -14,7 +15,7 @@ function GeometrySphere(radius, latBands, lonBands, params){
 	var xr = this.uvRegion.x;
 	var yr = this.uvRegion.y;
 	var hr = this.uvRegion.z - xr;
-	var vr = this.uvRegion.w - vr;
+	var vr = this.uvRegion.w - yr;
 	var hs = (params.halfSphere)? 1.0 : 2.0;
 	
 	for (var latN=0;latN<=latBands;latN++){

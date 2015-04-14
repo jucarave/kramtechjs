@@ -65,6 +65,8 @@ MaterialBasic.prototype.sendUniformData = function(mesh, camera, scene){
 			}
 		}else if (uni.name == 'uHasTexture'){
 			gl.uniform1i(uni.location, (mesh.material.texture)? 1 : 0);
+		}else if (uni.name == 'uTextureRepeat' && mesh.material.texture){
+			gl.uniform2f(uni.location, mesh.material.texture.repeat.x, mesh.material.texture.repeat.y);
 		}
 	}
 	

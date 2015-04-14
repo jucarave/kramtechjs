@@ -112,6 +112,8 @@ MaterialLambert.prototype.sendUniformData = function(mesh, camera, scene){
 		
 		else if (uni.name == 'uOpacity'){
 			gl.uniform1f(uni.location, mesh.material.opacity);
+		}else if (uni.name == 'uTextureRepeat' && mesh.material.texture){
+			gl.uniform2f(uni.location, mesh.material.texture.repeat.x, mesh.material.texture.repeat.y);
 		}
 	}
 	

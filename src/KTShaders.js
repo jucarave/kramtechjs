@@ -21,6 +21,8 @@ module.exports = {
 		fragmentShader: 
 			"uniform sampler2D uTextureSampler; " +
 			"uniform bool uHasTexture; " +
+			"uniform mediump vec2 uTextureRepeat; " +
+			"uniform mediump vec4 uGeometryUV; " +
 			
 			"varying mediump vec2 vTextureCoord; " + 
 			"varying mediump vec4 vVertexColor; " + 
@@ -28,7 +30,7 @@ module.exports = {
 			"void main(void){ " +
 				"mediump vec4 color = vVertexColor; " + 
 				"if (uHasTexture){ " + 
-					"mediump vec4 texColor = texture2D(uTextureSampler, vec2(vTextureCoord.s, vTextureCoord.t)); " +
+					"mediump vec4 texColor = texture2D(uTextureSampler, vec2(vTextureCoord.s * uTextureRepeat.x, vTextureCoord.t * uTextureRepeat.y)); " +
 					"color *= texColor; " +
 				"} " + 
 				
@@ -101,6 +103,7 @@ module.exports = {
 			"uniform sampler2D uTextureSampler; " +
 			"uniform bool uHasTexture; " +
 			"uniform mediump float uOpacity; " +
+			"uniform mediump vec2 uTextureRepeat; " +
 			
 			"varying mediump vec2 vTextureCoord; " + 
 			"varying mediump vec4 vVertexColor; " + 
@@ -109,7 +112,7 @@ module.exports = {
 			"void main(void){ " +
 				"mediump vec4 color = vVertexColor; " + 
 				"if (uHasTexture){ " + 
-					"mediump vec4 texColor = texture2D(uTextureSampler, vec2(vTextureCoord.s, vTextureCoord.t)); " +
+					"mediump vec4 texColor = texture2D(uTextureSampler, vec2(vTextureCoord.s * uTextureRepeat.x, vTextureCoord.t * uTextureRepeat.y)); " +
 					"color *= texColor; " +
 				"} " + 
 				
@@ -165,6 +168,7 @@ module.exports = {
 			"uniform bool uHasTexture; " +
 			"uniform bool uUseLighting; " +
 			"uniform mediump float uOpacity; " +
+			"uniform mediump vec2 uTextureRepeat; " +
 			
 			"uniform mediump vec3 uLightDirection; " +
 			"uniform mediump vec3 uLightDirectionColor; " +
@@ -184,7 +188,7 @@ module.exports = {
 			"void main(void){ " +
 				"mediump vec4 color = vVertexColor; " + 
 				"if (uHasTexture){ " + 
-					"mediump vec4 texColor = texture2D(uTextureSampler, vec2(vTextureCoord.s, vTextureCoord.t)); " +
+					"mediump vec4 texColor = texture2D(uTextureSampler, vec2(vTextureCoord.s * uTextureRepeat.x, vTextureCoord.t * uTextureRepeat.y)); " +
 					"color *= texColor; " +
 				"} " + 
 				

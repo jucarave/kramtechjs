@@ -11,6 +11,7 @@ function Texture(src, params){
 	this.wrapS = (params.SWrapping)? params.SWrapping : 'REPEAT';
 	this.wrapT = (params.TWrapping)? params.TWrapping : 'REPEAT';
 	this.repeat = (params.repeat)? params.repeat : new Vector2(1.0, 1.0);
+	this.offset = (params.offset)? params.offset : new Vector2(0.0, 0.0);
 	
 	this.textue = null;
 	

@@ -22,6 +22,7 @@ module.exports = {
 			"uniform sampler2D uTextureSampler; " +
 			"uniform bool uHasTexture; " +
 			"uniform mediump vec2 uTextureRepeat; " +
+			"uniform mediump vec2 uTextureOffset; " +
 			"uniform mediump vec4 uGeometryUV; " +
 			
 			"varying mediump vec2 vTextureCoord; " + 
@@ -30,8 +31,8 @@ module.exports = {
 			"void main(void){ " +
 				"mediump vec4 color = vVertexColor; " + 
 				"if (uHasTexture){ " + 
-					"mediump float tx = uGeometryUV.x + mod(vTextureCoord.s * uTextureRepeat.x - uGeometryUV.x, uGeometryUV.z - uGeometryUV.x);" +
-					"mediump float ty = uGeometryUV.y + mod(vTextureCoord.t * uTextureRepeat.y - uGeometryUV.y, uGeometryUV.w - uGeometryUV.y);" +
+					"mediump float tx = uGeometryUV.x + mod(uTextureOffset.x + vTextureCoord.s * uTextureRepeat.x - uGeometryUV.x, uGeometryUV.z - uGeometryUV.x);" +
+					"mediump float ty = uGeometryUV.y + mod(uTextureOffset.y + vTextureCoord.t * uTextureRepeat.y - uGeometryUV.y, uGeometryUV.w - uGeometryUV.y);" +
 					
 					"mediump vec4 texColor = texture2D(uTextureSampler, vec2(tx, ty)); " +
 					"color *= texColor; " +
@@ -107,6 +108,7 @@ module.exports = {
 			"uniform bool uHasTexture; " +
 			"uniform mediump float uOpacity; " +
 			"uniform mediump vec2 uTextureRepeat; " +
+			"uniform mediump vec2 uTextureOffset; " +
 			"uniform mediump vec4 uGeometryUV; " +
 			
 			"varying mediump vec2 vTextureCoord; " + 
@@ -116,8 +118,8 @@ module.exports = {
 			"void main(void){ " +
 				"mediump vec4 color = vVertexColor; " + 
 				"if (uHasTexture){ " + 
-					"mediump float tx = uGeometryUV.x + mod(vTextureCoord.s * uTextureRepeat.x - uGeometryUV.x, uGeometryUV.z - uGeometryUV.x);" +
-					"mediump float ty = uGeometryUV.y + mod(vTextureCoord.t * uTextureRepeat.y - uGeometryUV.y, uGeometryUV.w - uGeometryUV.y);" +
+					"mediump float tx = uGeometryUV.x + mod(uTextureOffset.x + vTextureCoord.s * uTextureRepeat.x - uGeometryUV.x, uGeometryUV.z - uGeometryUV.x);" +
+					"mediump float ty = uGeometryUV.y + mod(uTextureOffset.y + vTextureCoord.t * uTextureRepeat.y - uGeometryUV.y, uGeometryUV.w - uGeometryUV.y);" +
 					
 					"mediump vec4 texColor = texture2D(uTextureSampler, vec2(tx, ty)); " +
 					"color *= texColor; " +
@@ -176,6 +178,7 @@ module.exports = {
 			"uniform bool uUseLighting; " +
 			"uniform mediump float uOpacity; " +
 			"uniform mediump vec2 uTextureRepeat; " +
+			"uniform mediump vec2 uTextureOffset; " +
 			"uniform mediump vec4 uGeometryUV; " +
 			
 			"uniform mediump vec3 uLightDirection; " +
@@ -196,8 +199,8 @@ module.exports = {
 			"void main(void){ " +
 				"mediump vec4 color = vVertexColor; " + 
 				"if (uHasTexture){ " + 
-					"mediump float tx = uGeometryUV.x + mod(vTextureCoord.s * uTextureRepeat.x - uGeometryUV.x, uGeometryUV.z - uGeometryUV.x);" +
-					"mediump float ty = uGeometryUV.y + mod(vTextureCoord.t * uTextureRepeat.y - uGeometryUV.y, uGeometryUV.w - uGeometryUV.y);" +
+					"mediump float tx = uGeometryUV.x + mod(uTextureOffset.x + vTextureCoord.s * uTextureRepeat.x - uGeometryUV.x, uGeometryUV.z - uGeometryUV.x);" +
+					"mediump float ty = uGeometryUV.y + mod(uTextureOffset.y + vTextureCoord.t * uTextureRepeat.y - uGeometryUV.y, uGeometryUV.w - uGeometryUV.y);" +
 					
 					"mediump vec4 texColor = texture2D(uTextureSampler, vec2(tx, ty)); " +
 					"color *= texColor; " +

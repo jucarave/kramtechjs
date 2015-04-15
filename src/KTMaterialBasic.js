@@ -69,6 +69,8 @@ MaterialBasic.prototype.sendUniformData = function(mesh, camera, scene){
 			gl.uniform2f(uni.location, mesh.material.texture.repeat.x, mesh.material.texture.repeat.y);
 		}else if (uni.name == 'uGeometryUV' && mesh.material.texture){
 			gl.uniform4f(uni.location, mesh.geometry.uvRegion.x, mesh.geometry.uvRegion.y, mesh.geometry.uvRegion.z, mesh.geometry.uvRegion.w);
+		}else if (uni.name == 'uTextureOffset' && mesh.material.texture){
+			gl.uniform2f(uni.location, mesh.material.texture.offset.x, mesh.material.texture.offset.y);
 		}
 	}
 	

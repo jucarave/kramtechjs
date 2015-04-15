@@ -22,7 +22,7 @@ Test.prototype.createSimpleScene = function(){
 	var cameraControls = new KT.OrbitAndPan();
 	this.camera.setControls(cameraControls);
 	
-	var boxGeo = new KT.GeometryBox(2.0, 2.0, 2.0, {uvRegion: new KT.Vector4(0.5, 0.0, 1.0, 1.0)});
+	var boxGeo = new KT.GeometryBox(2.0, 2.0, 2.0, {uvRegion: new KT.Vector4(0.0, 0.0, 0.5, 1.0)});
 	var texture = new KT.Texture('img/crate.jpg');
 	//texture.repeat.set(2.0, 2.0);
 	var material = new KT.MaterialPhong(texture, KT.Color._WHITE);
@@ -46,7 +46,6 @@ Test.prototype.createSimpleScene = function(){
 	this.plane.position.y = -1.5;
 	this.scene.add(this.plane);
 	
-	this.lightAng = 0;
 	this.pLight = new KT.LightPoint(new KT.Vector3(0.0, 0.5, 0.0), 1.0, 30.0, KT.Color._RED);
 	var sphGeo = new KT.GeometrySphere(0.1, 8, 8);
 	var material = new KT.MaterialBasic(null, this.pLight.color.getHex());
@@ -57,6 +56,9 @@ Test.prototype.createSimpleScene = function(){
 	
 	
 	this.scene.add(new KT.LightDirectional(new KT.Vector3(-1.0, -1.0, -1.0), KT.Color._WHITE, 0.6));
+	
+	this.lightAng = 0;
+	this.texOff = 0.0;
 };
 
 Test.prototype.loopScene = function(){
@@ -67,8 +69,12 @@ Test.prototype.loopScene = function(){
 	this.pLight.position.y = Math.sin(this.lightAng) * 3.5;
 	if (this.pLight.position.y <= -1.35) this.pLight.position.y = -1.35;
 	
+	this.texOff += 0.01;
+	if (this.texOff >= 1.0) this.texOff = 0.0;
+	
 	T.box.rotation.x += KT.Math.degToRad(0.25);
 	T.box.rotation.y += KT.Math.degToRad(0.25);
+	T.box.material.texture.offset.set(this.texOff, 0.0);
 	
 	T.sphere.rotation.x += KT.Math.degToRad(0.25);
 	T.sphere.rotation.y += KT.Math.degToRad(1);/**/

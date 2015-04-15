@@ -22,8 +22,9 @@ Test.prototype.createSimpleScene = function(){
 	var cameraControls = new KT.OrbitAndPan();
 	this.camera.setControls(cameraControls);
 	
-	var boxGeo = new KT.GeometryBox(2.0, 2.0, 2.0);
+	var boxGeo = new KT.GeometryBox(2.0, 2.0, 2.0, {uvRegion: new KT.Vector4(0.5, 0.0, 1.0, 1.0)});
 	var texture = new KT.Texture('img/crate.jpg');
+	//texture.repeat.set(2.0, 2.0);
 	var material = new KT.MaterialPhong(texture, KT.Color._WHITE);
 	material.drawFaces = 'BOTH';
 	this.box = new KT.Mesh(boxGeo, material);

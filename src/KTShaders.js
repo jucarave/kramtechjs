@@ -30,7 +30,10 @@ module.exports = {
 			"void main(void){ " +
 				"mediump vec4 color = vVertexColor; " + 
 				"if (uHasTexture){ " + 
-					"mediump vec4 texColor = texture2D(uTextureSampler, vec2(vTextureCoord.s * uTextureRepeat.x, vTextureCoord.t * uTextureRepeat.y)); " +
+					"mediump float tx = uGeometryUV.x + mod(vTextureCoord.s * uTextureRepeat.x - uGeometryUV.x, uGeometryUV.z - uGeometryUV.x);" +
+					"mediump float ty = uGeometryUV.y + mod(vTextureCoord.t * uTextureRepeat.y - uGeometryUV.y, uGeometryUV.w - uGeometryUV.y);" +
+					
+					"mediump vec4 texColor = texture2D(uTextureSampler, vec2(tx, ty)); " +
 					"color *= texColor; " +
 				"} " + 
 				
@@ -104,6 +107,7 @@ module.exports = {
 			"uniform bool uHasTexture; " +
 			"uniform mediump float uOpacity; " +
 			"uniform mediump vec2 uTextureRepeat; " +
+			"uniform mediump vec4 uGeometryUV; " +
 			
 			"varying mediump vec2 vTextureCoord; " + 
 			"varying mediump vec4 vVertexColor; " + 
@@ -112,7 +116,10 @@ module.exports = {
 			"void main(void){ " +
 				"mediump vec4 color = vVertexColor; " + 
 				"if (uHasTexture){ " + 
-					"mediump vec4 texColor = texture2D(uTextureSampler, vec2(vTextureCoord.s * uTextureRepeat.x, vTextureCoord.t * uTextureRepeat.y)); " +
+					"mediump float tx = uGeometryUV.x + mod(vTextureCoord.s * uTextureRepeat.x - uGeometryUV.x, uGeometryUV.z - uGeometryUV.x);" +
+					"mediump float ty = uGeometryUV.y + mod(vTextureCoord.t * uTextureRepeat.y - uGeometryUV.y, uGeometryUV.w - uGeometryUV.y);" +
+					
+					"mediump vec4 texColor = texture2D(uTextureSampler, vec2(tx, ty)); " +
 					"color *= texColor; " +
 				"} " + 
 				
@@ -169,6 +176,7 @@ module.exports = {
 			"uniform bool uUseLighting; " +
 			"uniform mediump float uOpacity; " +
 			"uniform mediump vec2 uTextureRepeat; " +
+			"uniform mediump vec4 uGeometryUV; " +
 			
 			"uniform mediump vec3 uLightDirection; " +
 			"uniform mediump vec3 uLightDirectionColor; " +
@@ -188,7 +196,10 @@ module.exports = {
 			"void main(void){ " +
 				"mediump vec4 color = vVertexColor; " + 
 				"if (uHasTexture){ " + 
-					"mediump vec4 texColor = texture2D(uTextureSampler, vec2(vTextureCoord.s * uTextureRepeat.x, vTextureCoord.t * uTextureRepeat.y)); " +
+					"mediump float tx = uGeometryUV.x + mod(vTextureCoord.s * uTextureRepeat.x - uGeometryUV.x, uGeometryUV.z - uGeometryUV.x);" +
+					"mediump float ty = uGeometryUV.y + mod(vTextureCoord.t * uTextureRepeat.y - uGeometryUV.y, uGeometryUV.w - uGeometryUV.y);" +
+					
+					"mediump vec4 texColor = texture2D(uTextureSampler, vec2(tx, ty)); " +
 					"color *= texColor; " +
 				"} " + 
 				

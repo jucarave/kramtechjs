@@ -23,33 +23,38 @@ function GeometryCylinder(radiusTop, radiusBottom, height, widthSegments, height
 	var bandW = KTMath.PI2 / (widthSegments - 1);
 	
 	for (var i=0;i<widthSegments;i++){
-		var x1 = Math.cos(bandW * i) * radiusBottom;
+		var x1 = Math.cos(bandW * i);
 		var y1 = -h;
-		var z1 = -Math.sin(bandW * i) * radiusBottom;
-		var x2 = Math.cos(bandW * i) * radiusTop;
+		var z1 = -Math.sin(bandW * i);
+		var x2 = Math.cos(bandW * i);
 		var y2 = h;
-		var z2 = -Math.sin(bandW * i) * radiusTop;
+		var z2 = -Math.sin(bandW * i);
 		
-		var xt = i / widthSegments;
+		var xt = i / (widthSegments - 1);
+		
+		cylGeo.addNormal(x1, 0, z1);
+		cylGeo.addNormal(x2, 0, z2);
+		
+		x1 *= radiusBottom;
+		z1 *= radiusBottom;
+		x2 *= radiusTop;
+		z2 *= radiusTop;
 		
 		cylGeo.addVertice( x1, y1, z1, Color._WHITE, xr + (xt * hr), yr);
 		cylGeo.addVertice( x2, y2, z2, Color._WHITE, xr + (xt * hr), vr);
 	}
 	
-	cylGeo.addVertice( radiusBottom, -h, 0, Color._WHITE, xr, yr);
-	cylGeo.addVertice( radiusTop, h, 0, Color._WHITE, xr, vr);
-	
-	for (var i=0;i<widthSegments*2;i+=2){
+	for (var i=0;i<widthSegments*2 - 2;i+=2){
 		var i1 = i;
 		var i2 = i+1;
 		var i3 = i+2;
 		var i4 = i+3;
 		
-		cylGeo.addFace(i4, i1, i3);
-		cylGeo.addFace(i4, i2, i1);
+		cylGeo.addFace(i3, i2, i1);
+		cylGeo.addFace(i3, i4, i2);
 	}
 	
-	cylGeo.computeFacesNormals();
+	//cylGeo.computeFacesNormals();
 	cylGeo.build();
 	
 	this.vertexBuffer = cylGeo.vertexBuffer;

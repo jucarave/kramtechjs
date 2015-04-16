@@ -54,7 +54,7 @@ OrbitAndPan.prototype.update = function(){
 			var sinT = Math.sin(theta);
 			
 			this.target.x -= cos * dx * this.sensitivity.x / 10;
-			this.target.y -= cosT * dy * this.sensitivity.y / 10;
+			this.target.y += cosT * dy * this.sensitivity.y / 10;
 			this.target.z -= sin * dx * this.sensitivity.x / 10;
 			
 			this.setCameraPosition();

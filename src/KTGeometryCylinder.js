@@ -54,7 +54,26 @@ function GeometryCylinder(radiusTop, radiusBottom, height, widthSegments, height
 		cylGeo.addFace(i3, i4, i2);
 	}
 	
-	//cylGeo.computeFacesNormals();
+	var i1 = cylGeo.addVertice( 0, h, 0, Color._WHITE, 0.5, 0.5);
+	cylGeo.addNormal(0, 1, 0);
+	for (var i=0;i<widthSegments*2 - 2;i+=2){
+		var v1 = cylGeo.vertices[i + 1];
+		var v2 = cylGeo.vertices[i + 3];
+		
+		var tx1 = v1.x / 2 + 0.5;
+		var ty1 = v1.z / 2 + 0.5;
+		var tx2 = v2.x / 2 + 0.5;
+		var ty2 = v1.z / 2 + 0.5;
+		
+		var i2 = cylGeo.addVertice( v1.x, h, v1.z, Color._WHITE, tx1, ty1);
+		var i3 = cylGeo.addVertice( v2.x, h, v2.z, Color._WHITE, tx2, ty2);
+		
+		cylGeo.addNormal(0, 1, 0);
+		cylGeo.addNormal(0, 1, 0);
+		
+		cylGeo.addFace(i3, i1, i2);
+	}
+	
 	cylGeo.build();
 	
 	this.vertexBuffer = cylGeo.vertexBuffer;

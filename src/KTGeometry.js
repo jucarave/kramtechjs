@@ -21,9 +21,12 @@ Geometry.prototype.addVertice = function(x, y, z, color, tx, ty){
 	if (!tx) tx = 0;
 	if (!ty) ty = 0;
 	
+	var ind = this.vertices.length;
 	this.vertices.push(new Vector3(x, y, z));
 	this.colors.push(new Color(color));
 	this.uvCoords.push(new Vector2(tx, ty));
+	
+	return ind;
 };
 
 Geometry.prototype.addFace = function(vertice_0, vertice_1, vertice_2){

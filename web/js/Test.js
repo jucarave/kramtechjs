@@ -39,14 +39,13 @@ Test.prototype.createSimpleScene = function(){
 	this.sphere.position.x = -2.0;
 	this.scene.add(this.sphere);
 	
-	
 	var plnGeo = new KT.GeometryPlane(32.0, 32.0);
 	var material = new KT.MaterialPhong(null, "#FFFFFF");
 	this.plane = new KT.Mesh(plnGeo, material);
 	this.plane.position.y = -1.5;
 	this.scene.add(this.plane);
 	
-	var cylGeo  = new KT.GeometryCylinder(1.0, 1.0, 2.0, 16, 16, {uvRegion: new KT.Vector4(0.0, 0.0, 0.5, 1.0)});
+	var cylGeo  = new KT.GeometryCylinder(1.0, 1.0, 2.0, 16, 16, false, false, {uvRegion: new KT.Vector4(0.0, 0.0, 0.5, 1.0)});
 	var material = new KT.MaterialPhong(null, "#66FF66");
 	this.cylinder = new KT.Mesh(cylGeo, material);
 	this.cylinder.position.z = -2.0;

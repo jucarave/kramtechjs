@@ -3,7 +3,7 @@ var Geometry = require('./KTGeometry');
 var Vector4 = require('./KTVector4');
 var KTMath = require('./KTMath');
 
-function GeometryCylinder(radiusTop, radiusBottom, height, widthSegments, heightSegments, params){
+function GeometryCylinder(radiusTop, radiusBottom, height, widthSegments, heightSegments, openTop, openBottom, params){
 	this.__ktgeometry = true;
 	
 	var cylGeo = new Geometry();
@@ -54,34 +54,40 @@ function GeometryCylinder(radiusTop, radiusBottom, height, widthSegments, height
 		cylGeo.addFace(i3, i4, i2);
 	}
 	
-	var i1 = cylGeo.addVertice( 0, h, 0, Color._WHITE, xr + (0.5 * hr), yr + (0.5 * vr));
-	var i2 = cylGeo.addVertice( 0, -h, 0, Color._WHITE, xr + (0.5 * hr), yr + (0.5 * vr));
-	cylGeo.addNormal(0,  1, 0);
-	cylGeo.addNormal(0, -1, 0);
-	for (var i=0;i<widthSegments*2 - 2;i+=2){
-		var v1 = cylGeo.vertices[i + 1];
-		var v2 = cylGeo.vertices[i + 3];
-		
-		var tx1 = xr + (v1.x / 2 + 0.5) * hr;
-		var ty1 = yr + (v1.z / 2 + 0.5) * vr;
-		var tx2 = xr + (v2.x / 2 + 0.5) * hr;
-		var ty2 = yr + (v2.z / 2 + 0.5) * vr;
-		
-		var i3 = cylGeo.addVertice( v1.x, h, v1.z, Color._WHITE, tx1, ty1);
-		var i4 = cylGeo.addVertice( v2.x, h, v2.z, Color._WHITE, tx2, ty2);
-		
-		cylGeo.addNormal(0, 1, 0);
-		cylGeo.addNormal(0, 1, 0);
-		
-		cylGeo.addFace(i4, i1, i3);
-		
-		var i3 = cylGeo.addVertice( v1.x, -h, v1.z, Color._WHITE, tx1, ty1);
-		var i4 = cylGeo.addVertice( v2.x, -h, v2.z, Color._WHITE, tx2, ty2);
-		
+	if (!openTop || !openBottom){
+		var i1 = cylGeo.addVertice( 0, h, 0, Color._WHITE, xr + (0.5 * hr), yr + (0.5 * vr));
+		var i2 = cylGeo.addVertice( 0, -h, 0, Color._WHITE, xr + (0.5 * hr), yr + (0.5 * vr));
+		cylGeo.addNormal(0,  1, 0);
 		cylGeo.addNormal(0, -1, 0);
-		cylGeo.addNormal(0, -1, 0);
-		
-		cylGeo.addFace(i3, i2, i4);
+		for (var i=0;i<widthSegments*2 - 2;i+=2){
+			var v1 = cylGeo.vertices[i + 1];
+			var v2 = cylGeo.vertices[i + 3];
+			
+			var tx1 = xr + (v1.x / 2 + 0.5) * hr;
+			var ty1 = yr + (v1.z / 2 + 0.5) * vr;
+			var tx2 = xr + (v2.x / 2 + 0.5) * hr;
+			var ty2 = yr + (v2.z / 2 + 0.5) * vr;
+			
+			if (!openTop){
+				var i3 = cylGeo.addVertice( v1.x, h, v1.z, Color._WHITE, tx1, ty1);
+				var i4 = cylGeo.addVertice( v2.x, h, v2.z, Color._WHITE, tx2, ty2);
+				
+				cylGeo.addNormal(0, 1, 0);
+				cylGeo.addNormal(0, 1, 0);
+				
+				cylGeo.addFace(i4, i1, i3);
+			}
+			
+			if (!openBottom){
+				var i3 = cylGeo.addVertice( v1.x, -h, v1.z, Color._WHITE, tx1, ty1);
+				var i4 = cylGeo.addVertice( v2.x, -h, v2.z, Color._WHITE, tx2, ty2);
+				
+				cylGeo.addNormal(0, -1, 0);
+				cylGeo.addNormal(0, -1, 0);
+				
+				cylGeo.addFace(i3, i2, i4);
+			}
+		}
 	}
 	
 	cylGeo.build();

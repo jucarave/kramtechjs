@@ -35,6 +35,7 @@ Test.prototype.createSimpleScene = function(){
 	var sphGeo = new KT.GeometrySphere(1.0, 16, 16);
 	var texture = new KT.Texture('img/moon.gif');
 	var material = new KT.MaterialPhong(texture, KT.Color._WHITE);
+	material.shininess = 32.0;
 	this.sphere = new KT.Mesh(sphGeo, material);
 	this.sphere.position.x = -2.0;
 	this.scene.add(this.sphere);
@@ -47,6 +48,7 @@ Test.prototype.createSimpleScene = function(){
 	
 	var cylGeo  = new KT.GeometryCylinder(1.0, 1.0, 2.0, 16, 16, false, false, {uvRegion: new KT.Vector4(0.0, 0.0, 0.5, 1.0)});
 	var material = new KT.MaterialPhong(null, "#66FF66");
+	material.shininess = 32.0;
 	this.cylinder = new KT.Mesh(cylGeo, material);
 	this.cylinder.position.z = -2.0;
 	this.scene.add(this.cylinder);

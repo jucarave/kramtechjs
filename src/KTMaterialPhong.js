@@ -1,4 +1,5 @@
 var Material = require('./KTMaterial');
+var Color = require('./KTColor');
 
 function MaterialPhong(texture, color, opacity){
 	this.__ktmaterial = true;
@@ -16,6 +17,8 @@ function MaterialPhong(texture, color, opacity){
 	this.opacity = material.opacity;
 	this.drawFaces = material.drawFaces;
 	this.drawAs = material.drawAs;
+	this.specularColor = new Color(Color._WHITE);
+	this.shininess = 0.0;
 }
 
 module.exports = MaterialPhong;
@@ -80,6 +83,11 @@ MaterialPhong.prototype.sendUniformData = function(mesh, camera, scene){
 			gl.uniformMatrix4fv(uni.location, false, modelTransformation.toFloat32Array());
 		}else if (uni.name == 'uCameraPosition'){
 			gl.uniform3f(uni.location, camera.position.x, camera.position.y, camera.position.z);
+		}else if (uni.name == 'uSpecularColor'){
+			var color = this.specularColor.getRGB();
+			gl.uniform3f(uni.location, color[0], color[1], color[2]);
+		}else if (uni.name == 'uShininess'){
+			gl.uniform1f(uni.location, this.shininess);
 		}
 		
 		

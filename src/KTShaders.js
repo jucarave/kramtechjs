@@ -182,6 +182,10 @@ module.exports = {
 			"uniform mediump vec4 uGeometryUV; " +
 			"uniform mediump vec3 uCameraPosition; " +
 			
+			"uniform mediump vec3 uSpecularColor; " +
+			"uniform mediump float uShininess; " +
+			
+			
 			"uniform mediump vec3 uLightDirection; " +
 			"uniform mediump vec3 uLightDirectionColor; " +
 			"uniform mediump float uLightDirectionIntensity; " +  
@@ -211,7 +215,6 @@ module.exports = {
 				"} " + 
 				
 				"mediump vec3 phongLightWeight = vec3(0.0); " + 
-				"mediump vec3 specular = vec3(0.0); " +
 				"if (uUseLighting){ " +
 					"mediump float dirLightWeight = max(dot(normal, uLightDirection), 0.0); " +
 					"phongLightWeight += (uLightDirectionColor * dirLightWeight * uLightDirectionIntensity); " +
@@ -224,12 +227,14 @@ module.exports = {
 						"phongLightWeight += (uLightPointColor * pointLightWeight * uLightPointIntensity) / (distance / 2.0); " +
 					"} " +
 					
-					"mediump vec3 halfAngle = normalize(cameraDirection + uLightDirection); " +
-					"mediump float specDot = max(dot(halfAngle, normal), 0.0); " +
-					"specular = vec3(1.0) * pow(specDot, 16.0); " +
+					"if (uShininess > 0.0){ " + 
+						"mediump vec3 halfAngle = normalize(cameraDirection + uLightDirection); " +
+						"mediump float specDot = max(dot(halfAngle, normal), 0.0); " +
+						"color += vec4(uSpecularColor, 1.0) * pow(specDot, uShininess); " +
+					"} " +
 				"} " +
 				
-				"color.rgb *= vLightWeight + phongLightWeight + specular; " + 
+				"color.rgb *= vLightWeight + phongLightWeight; " + 
 				"gl_FragColor = vec4(color.rgb, color.a * uOpacity); " + 
 			"}"
 	}

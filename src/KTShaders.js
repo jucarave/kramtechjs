@@ -236,6 +236,12 @@ module.exports = {
 						"} " +
 						"mediump vec3 lightDirection = l.direction + normalize(lPos); " +
 						"phongLightWeight += getLightWeight(normal, lightDirection, l.color, l.intensity) / lDistance; " +
+						
+						"if (uShininess > 0.0){ " +
+							"mediump vec3 halfAngle = normalize(cameraDirection + lightDirection); " +
+							"mediump float specDot = max(dot(halfAngle, normal), 0.0); " +
+							"color += vec4(uSpecularColor, 1.0) * pow(specDot, uShininess); " + 
+						"} " +
 					"} " +
 				"} " +
 				

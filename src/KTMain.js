@@ -63,19 +63,37 @@ module.exports = {
 		var attributes = [];
 		var uniforms = [];
 		
+		var structs = [];
+		var uniformsArrays = [];
+		var st = null;
 		for (var i=0;i<vertex.length;i++){
 			var line = vertex[i].trim();
 			
 			if (line.indexOf("attribute ") == 0){
+				st = null;
 				var p = line.split(/ /g);
 				var name = p[p.length - 1].trim();
 				if (attributes.indexOf(name) == -1)
 					attributes.push({name: name});
 			}else if (line.indexOf("uniform ") == 0){
+				st = null;
+				if (line.indexOf("[") != -1){
+					uniformsArrays.push(line);
+					continue;
+				}
+				
 				var p = line.split(/ /g);
 				var name = p[p.length - 1].trim();
 				if (uniforms.indexOf(name) == -1)
 					uniforms.push({name: name});
+			}else if (line.indexOf("struct") == 0){
+				st = { name: line.replace("struct ", ""), data: [] };
+				structs.push(st);
+			}else if (st != null){
+				if (line.trim() == "") continue;
+				var p = line.split(/ /g);
+				var name = p[p.length -1].trim();
+				st.data.push(name);
 			}
 		}
 		
@@ -83,15 +101,68 @@ module.exports = {
 			var line = fragment[i].trim();
 			
 			if (line.indexOf("attribute ") == 0){
+				st = null;
 				var p = line.split(/ /g);
 				var name = p[p.length - 1].trim();
 				if (attributes.indexOf(name) == -1)
 					attributes.push({name: name});
 			}else if (line.indexOf("uniform ") == 0){
+				st = null;
+				if (line.indexOf("[") != -1){
+					uniformsArrays.push(line);
+					continue;
+				}
+				
 				var p = line.split(/ /g);
 				var name = p[p.length - 1].trim();
 				if (uniforms.indexOf(name) == -1)
 					uniforms.push({name: name});
+			}else if (line.indexOf("struct") != -1){
+				st = { name: line.replace("struct ", ""), data: [] };
+				structs.push(st);
+			}else if (st != null){
+				if (line.trim() == "") continue;
+				var p = line.split(/ /g);
+				var name = p[p.length -1].trim();
+				st.data.push(name);
+			}
+		}
+		
+		for (var i=0,len=uniformsArrays.length;i<len;i++){
+			var line = uniformsArrays[i];
+			var p = line.split(/ /g);
+			var type = p[p.length - 2].trim();
+			var name = p[p.length - 1].trim();
+			var uniLen = parseInt(name.substring(name.indexOf("[") + 1, name.indexOf("]")), 10);
+			var name = name.substring(0, name.indexOf("["));
+			
+			var str = null;
+			for (var j=0,jlen=structs.length;j<jlen;j++){
+				if (structs[j].name == type){
+					str = structs[j];
+					j = jlen;
+				}
+			}
+			
+			if (str){
+				var structUni = [];
+				for (var j=0;j<uniLen;j++){
+					structUni[j] = ({name: name, len: uniLen, data: []});
+					for (var k=0,klen=str.data.length;k<klen;k++){
+						var prop = str.data[k];
+						
+						structUni[j].data.push({
+							name: prop,
+							locName: name + "[" + j + "]." + prop
+						});
+					}
+				}
+				
+				uniforms.push({
+					multi: true,
+					data: structUni,
+					type: type
+				});
 			}
 		}
 		
@@ -136,7 +207,6 @@ module.exports = {
 			
 			attributes.push({
 				name: att.name,
-				type: att.type,
 				location: location
 			});
 		}
@@ -144,13 +214,24 @@ module.exports = {
 		var uniforms = [];
 		for (var i=0,len=params.uniforms.length;i<len;i++){
 			var uni = params.uniforms[i];
-			var location = gl.getUniformLocation(shaderProgram, uni.name);
+			if (uni.multi){
+				for (var j=0,jlen=uni.data.length;j<jlen;j++){
+					var uniD = uni.data[j];
+					for (var k=0,klen=uniD.data.length;k<klen;k++){
+						var dat = uniD.data[k];
+						dat.location = gl.getUniformLocation(shaderProgram, dat.locName);
+					}
+				}
+				
+				uniforms.push(uni);
+			}else{
+				var location = gl.getUniformLocation(shaderProgram, uni.name);
 			
-			uniforms.push({
-				name: uni.name,
-				type: uni.type,
-				location: location
-			});
+				uniforms.push({
+					name: uni.name,
+					location: location
+				});
+			}
 		}
 		
 		return {

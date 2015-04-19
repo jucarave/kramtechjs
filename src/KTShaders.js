@@ -3,10 +3,10 @@ module.exports = {
 		vertexShader: 
 			"attribute mediump vec2 aTextureCoord; " +
 			"attribute mediump vec3 aVertexPosition; " +
-			"attribute mediump vec4 aVertexColor; " +
+			"attribute lowp vec4 aVertexColor; " +
 			
 			"uniform mediump mat4 uMVPMatrix; " +
-			"uniform mediump vec4 uMaterialColor; " +
+			"uniform lowp vec4 uMaterialColor; " +
 			
 			"varying mediump vec4 vVertexColor; " +
 			"varying mediump vec2 vTextureCoord;" +  
@@ -21,8 +21,8 @@ module.exports = {
 		fragmentShader: 
 			"uniform sampler2D uTextureSampler; " +
 			"uniform bool uHasTexture; " +
-			"uniform mediump vec2 uTextureRepeat; " +
-			"uniform mediump vec2 uTextureOffset; " +
+			"uniform lowp vec2 uTextureRepeat; " +
+			"uniform lowp vec2 uTextureOffset; " +
 			"uniform mediump vec4 uGeometryUV; " +
 			
 			"varying mediump vec2 vTextureCoord; " + 
@@ -47,29 +47,29 @@ module.exports = {
 		vertexShader: 
 			"attribute mediump vec2 aTextureCoord; " +
 			"attribute mediump vec3 aVertexPosition; " +
-			"attribute mediump vec4 aVertexColor; " +
+			"attribute lowp vec4 aVertexColor; " +
 			
 			"attribute mediump vec3 aVertexNormal; " + 
 			
 			
 			"uniform mediump mat4 uMVMatrix; " +
 			"uniform mediump mat4 uPMatrix; " +
-			"uniform mediump vec4 uMaterialColor; " +
+			"uniform lowp vec4 uMaterialColor; " +
 			
 			"uniform bool uUseLighting; " +
 			"uniform mediump mat4 uModelMatrix; " +
 			"uniform mediump mat3 uNormalMatrix; " +
 			
-			"uniform mediump vec3 uAmbientLightColor; " +
+			"uniform lowp vec3 uAmbientLightColor; " +
 			
 			"uniform mediump vec3 uLightDirection; " +
-			"uniform mediump vec3 uLightDirectionColor; " +
-			"uniform mediump float uLightDirectionIntensity; " +  
+			"uniform lowp vec3 uLightDirectionColor; " +
+			"uniform lowp float uLightDirectionIntensity; " +  
 			
 			"uniform mediump vec3 uLightPointPosition; " +
-			"uniform mediump vec3 uLightPointColor; " +
-			"uniform mediump float uLightPointIntensity; " +
-			"uniform mediump float uLightPointDistance; " + 
+			"uniform lowp vec3 uLightPointColor; " +
+			"uniform lowp float uLightPointIntensity; " +
+			"uniform lowp float uLightPointDistance; " + 
 
 			
 			"varying mediump vec4 vVertexColor; " +
@@ -106,9 +106,9 @@ module.exports = {
 		fragmentShader: 
 			"uniform sampler2D uTextureSampler; " +
 			"uniform bool uHasTexture; " +
-			"uniform mediump float uOpacity; " +
-			"uniform mediump vec2 uTextureRepeat; " +
-			"uniform mediump vec2 uTextureOffset; " +
+			"uniform lowp float uOpacity; " +
+			"uniform lowp vec2 uTextureRepeat; " +
+			"uniform lowp vec2 uTextureOffset; " +
 			"uniform mediump vec4 uGeometryUV; " +
 			
 			"varying mediump vec2 vTextureCoord; " + 
@@ -135,20 +135,20 @@ module.exports = {
 		vertexShader: 
 			"attribute mediump vec2 aTextureCoord; " +
 			"attribute mediump vec3 aVertexPosition; " +
-			"attribute mediump vec4 aVertexColor; " +
+			"attribute lowp vec4 aVertexColor; " +
 			
 			"attribute mediump vec3 aVertexNormal; " + 
 			
 			
 			"uniform mediump mat4 uMVMatrix; " +
 			"uniform mediump mat4 uPMatrix; " +
-			"uniform mediump vec4 uMaterialColor; " +
+			"uniform lowp vec4 uMaterialColor; " +
 			
 			"uniform bool uUseLighting; " +
 			"uniform mediump mat4 uModelMatrix; " +
 			"uniform mediump mat3 uNormalMatrix; " +
 			
-			"uniform mediump vec3 uAmbientLightColor; " +
+			"uniform lowp vec3 uAmbientLightColor; " +
 			
 			"varying mediump vec4 vVertexColor; " +
 			"varying mediump vec2 vTextureCoord;" +  
@@ -173,33 +173,39 @@ module.exports = {
 			"} " ,
 			
 		fragmentShader: 
+			"struct Light{ " +
+			    "lowp vec3 position; " +
+			    "lowp vec3 color; " +
+			    "lowp vec3 direction; " +
+			    "lowp float intensity; " +
+			"}; " +
+			    
+			"uniform Light lights[8]; " +
+			"uniform int usedLights; " +
+			
 			"uniform sampler2D uTextureSampler; " +
 			"uniform bool uHasTexture; " +
 			"uniform bool uUseLighting; " +
-			"uniform mediump float uOpacity; " +
-			"uniform mediump vec2 uTextureRepeat; " +
-			"uniform mediump vec2 uTextureOffset; " +
+			"uniform lowp float uOpacity; " +
+			"uniform lowp vec2 uTextureRepeat; " +
+			"uniform lowp vec2 uTextureOffset; " +
 			"uniform mediump vec4 uGeometryUV; " +
 			"uniform mediump vec3 uCameraPosition; " +
 			
-			"uniform mediump vec3 uSpecularColor; " +
-			"uniform mediump float uShininess; " +
-			
-			
-			"uniform mediump vec3 uLightDirection; " +
-			"uniform mediump vec3 uLightDirectionColor; " +
-			"uniform mediump float uLightDirectionIntensity; " +  
-			
-			"uniform mediump vec3 uLightPointPosition; " +
-			"uniform mediump vec3 uLightPointColor; " +
-			"uniform mediump float uLightPointIntensity; " +
-			"uniform mediump float uLightPointDistance; " +
+			"uniform lowp vec3 uSpecularColor; " +
+			"uniform lowp float uShininess; " +
 			
 			"varying mediump vec2 vTextureCoord; " + 
 			"varying mediump vec4 vVertexColor; " + 
 			"varying mediump vec3 vLightWeight; " + 
 			"varying mediump vec3 vNormal; " + 
 			"varying mediump vec3 vPosition; " +
+			
+			"mediump vec3 getLightWeight(mediump vec3 normal, mediump vec3 direction, lowp vec3 color, lowp float intensity){ " +
+				"mediump float lightDot = max(dot(normal, direction), 0.0); " +
+				"mediump vec3 lightWeight = (color * lightDot * intensity); " +
+				"return lightWeight; " +
+			"}" +
 			
 			"void main(void){ " +
 				"mediump vec4 color = vVertexColor; " +
@@ -216,21 +222,20 @@ module.exports = {
 				
 				"mediump vec3 phongLightWeight = vec3(0.0); " + 
 				"if (uUseLighting){ " +
-					"mediump float dirLightWeight = max(dot(normal, uLightDirection), 0.0); " +
-					"phongLightWeight += (uLightDirectionColor * dirLightWeight * uLightDirectionIntensity); " +
-					
-					"mediump vec3 lightDist = uLightPointPosition - vPosition; " +
-					"mediump float distance = length(lightDist); " +
-					"if (distance <= uLightPointDistance){ " +
-						"mediump vec3 pointLightDirection = normalize(lightDist); " +
-						"mediump float pointLightWeight = max(dot(normal, pointLightDirection), 0.0); " +
-						"phongLightWeight += (uLightPointColor * pointLightWeight * uLightPointIntensity) / (distance / 2.0); " +
-					"} " +
-					
-					"if (uShininess > 0.0){ " + 
-						"mediump vec3 halfAngle = normalize(cameraDirection + uLightDirection); " +
-						"mediump float specDot = max(dot(halfAngle, normal), 0.0); " +
-						"color += vec4(uSpecularColor, 1.0) * pow(specDot, uShininess); " +
+					"for (int i=0;i<8;i++){ " +
+						"if (i >= usedLights){" +
+							"break; " +
+						"}" +
+						
+						"Light l = lights[i]; " +
+						"mediump vec3 lPos = l.position - vPosition;" +
+						"mediump float lDistance = length(lPos) / 2.0; " +
+						"if (length(l.position) == 0.0){ " +
+							"lDistance = 1.0; " +
+							"lPos = vec3(0.0); " +
+						"} " +
+						"mediump vec3 lightDirection = l.direction + normalize(lPos); " +
+						"phongLightWeight += getLightWeight(normal, lightDirection, l.color, l.intensity) / lDistance; " +
 					"} " +
 				"} " +
 				

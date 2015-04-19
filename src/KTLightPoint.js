@@ -1,7 +1,7 @@
 var Color = require('./KTColor');
 
 function LightPoint(position, intensity, distance, color){
-	this._ktpointlight = true;
+	this.__ktpointlight = true;
 	
 	this.position = position;
 	this.intensity = (intensity)? intensity : 1.0;

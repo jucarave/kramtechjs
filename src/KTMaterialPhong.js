@@ -48,16 +48,45 @@ MaterialPhong.prototype.sendAttribData = function(mesh, camera, scene){
 	return this;
 };
 
+MaterialPhong.prototype.sendLightUniformData = function(light, uniform){
+	var gl = KT.gl;
+	for (var i=0,len=uniform.data.length;i<len;i++){
+		var dat = uniform.data[i];
+		
+		if (dat.name == 'position' && light.__ktpointlight){
+			gl.uniform3f(dat.location, light.position.x, light.position.y, light.position.z);
+		}else if (dat.name == 'direction' && light.__ktdirLight){
+			gl.uniform3f(dat.location, light.direction.x, light.direction.y, light.direction.z);
+		}else if (dat.name == 'color'){
+			var color = light.color.getRGB();
+			gl.uniform3f(dat.location, color[0], color[1], color[2]);
+		}else if (dat.name == 'intensity'){
+			gl.uniform1f(dat.location, light.intensity);
+		}
+	}
+};
+
 MaterialPhong.prototype.sendUniformData = function(mesh, camera, scene){
 	var gl = KT.gl;
 	var geometry = mesh.geometry;
 	var transformationMatrix;
 	var uniforms = this.shader.uniforms;
 	var modelTransformation;
+	var lightsCount = 0;
+	
+	var usedLightUniform = null;
 	for (var i=0,len=uniforms.length;i<len;i++){
 		var uni = uniforms[i];
 		
-		if (uni.name == 'uMVMatrix'){
+		if (uni.multi && uni.type == 'Light'){
+			if (lightsCount == uni.data.length)
+				continue;
+				
+			var lights = scene.lights;
+			for (var j=0,jlen=lights.length;j<jlen;j++){
+				this.sendLightUniformData(lights[j], uni.data[lightsCount++]);
+			}
+		}else if (uni.name == 'uMVMatrix'){
 			modelTransformation = mesh.getTransformationMatrix();
 			transformationMatrix = modelTransformation.clone().multiply(camera.transformationMatrix);
 			gl.uniformMatrix4fv(uni.location, false, transformationMatrix.toFloat32Array());
@@ -88,39 +117,10 @@ MaterialPhong.prototype.sendUniformData = function(mesh, camera, scene){
 			gl.uniform3f(uni.location, color[0], color[1], color[2]);
 		}else if (uni.name == 'uShininess'){
 			gl.uniform1f(uni.location, this.shininess);
-		}
-		
-		
-		else if (uni.name == 'uLightDirection' && scene.useLighting && scene.dirLight){
-			gl.uniform3f(uni.location, scene.dirLight.direction.x, scene.dirLight.direction.y, scene.dirLight.direction.z);
-		}else if (uni.name == 'uLightDirectionColor' && scene.useLighting && scene.dirLight){
-			var color = scene.dirLight.color.getRGB();
-			gl.uniform3f(uni.location, color[0], color[1], color[2]);
-		}else if (uni.name == 'uLightDirectionIntensity' && scene.useLighting && scene.dirLight){
-			gl.uniform1f(uni.location, scene.dirLight.intensity);
-		}
-		
-		
-		else if (uni.name == 'uAmbientLightColor' && scene.useLighting && scene.ambientLight){
+		}else if (uni.name == 'uAmbientLightColor' && scene.useLighting && scene.ambientLight){
 			var color = scene.ambientLight.getRGB();
 			gl.uniform3f(uni.location, color[0], color[1], color[2]);
-		}
-		
-		
-		else if (uni.name == 'uLightPointPosition' && scene.useLighting && scene.pointsLights){
-			var p = scene.pointsLights.position;
-			gl.uniform3f(uni.location, p.x, p.y, p.z);
-		}else if (uni.name == 'uLightPointIntensity' && scene.useLighting && scene.pointsLights){
-			gl.uniform1f(uni.location, scene.pointsLights.intensity);
-		}else if(uni.name == 'uLightPointDistance' && scene.useLighting && scene.pointsLights){
-			gl.uniform1f(uni.location, scene.pointsLights.distance);
-		}else if (uni.name == 'uLightPointColor' && scene.useLighting && scene.pointsLights){
-			var color = scene.pointsLights.color.getRGB();
-			gl.uniform3f(uni.location, color[0], color[1], color[2]);
-		}
-		
-		
-		else if (uni.name == 'uOpacity'){
+		}else if (uni.name == 'uOpacity'){
 			gl.uniform1f(uni.location, mesh.material.opacity);
 		}else if (uni.name == 'uTextureRepeat' && mesh.material.texture){
 			gl.uniform2f(uni.location, mesh.material.texture.repeat.x, mesh.material.texture.repeat.y);
@@ -128,7 +128,13 @@ MaterialPhong.prototype.sendUniformData = function(mesh, camera, scene){
 			gl.uniform4f(uni.location, mesh.geometry.uvRegion.x, mesh.geometry.uvRegion.y, mesh.geometry.uvRegion.z, mesh.geometry.uvRegion.w);
 		}else if (uni.name == 'uTextureOffset' && mesh.material.texture){
 			gl.uniform2f(uni.location, mesh.material.texture.offset.x, mesh.material.texture.offset.y);
+		}else if (uni.name == 'usedLights'){
+			usedLightUniform = uni;
 		}
+	}
+	
+	if (usedLightUniform){
+		gl.uniform1i(usedLightUniform.location, lightsCount);
 	}
 	
 	return this;

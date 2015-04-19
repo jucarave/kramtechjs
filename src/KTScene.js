@@ -5,8 +5,7 @@ function Scene(params){
 	this.__ktscene = true;
 	
 	this.meshes = [];
-	this.dirLight = null;
-	this.pointsLights = null;
+	this.lights = [];
 	this.shadingMode = ['BASIC', 'LAMBERT'];
 	
 	if (!params) params = {};
@@ -19,10 +18,8 @@ module.exports = Scene;
 Scene.prototype.add = function(object){
 	if (object.__ktmesh){
 		this.meshes.push(object);
-	}else if (object.__ktdirLight){
-		this.dirLight = object;
-	}else if (object._ktpointlight){
-		this.pointsLights = object;
+	}else if (object.__ktdirLight || object.__ktpointlight){
+		this.lights.push(object);
 	}else{
 		throw "Can't add the object to the scene";
 	}

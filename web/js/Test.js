@@ -77,7 +77,7 @@ Test.prototype.loopScene = function(){
 	this.texOff += 0.001;
 	if (this.texOff >= 1.0) this.texOff = 0.0;
 	
-	T.box.material.texture.offset.set(this.texOff, 0.0);
+	/*T.box.material.texture.offset.set(this.texOff, 0.0);
 	T.box.rotation.x += KT.Math.degToRad(0.25);
 	T.box.rotation.y += KT.Math.degToRad(0.25);
 	
@@ -85,7 +85,7 @@ Test.prototype.loopScene = function(){
 	T.sphere.rotation.y += KT.Math.degToRad(0.25);
 	
 	T.cylinder.rotation.x += KT.Math.degToRad(0.25);
-	T.cylinder.rotation.y += KT.Math.degToRad(0.25);
+	T.cylinder.rotation.y += KT.Math.degToRad(0.25);*/
 	
 	T.scene.render(T.camera);
 	

@@ -197,7 +197,9 @@ module.exports = {
 			"varying mediump vec3 vPosition; " +
 			
 			"void main(void){ " +
-				"mediump vec4 color = vVertexColor; " + 
+				"mediump vec4 color = vVertexColor; " +
+				"mediump vec3 normal = normalize(vNormal); " +
+				
 				"if (uHasTexture){ " + 
 					"mediump float tx = uGeometryUV.x + mod(uTextureOffset.x + vTextureCoord.s * uTextureRepeat.x - uGeometryUV.x, uGeometryUV.z - uGeometryUV.x);" +
 					"mediump float ty = uGeometryUV.y + mod(uTextureOffset.y + vTextureCoord.t * uTextureRepeat.y - uGeometryUV.y, uGeometryUV.w - uGeometryUV.y);" +
@@ -208,14 +210,14 @@ module.exports = {
 				
 				"mediump vec3 phongLightWeight = vec3(0.0); " + 
 				"if (uUseLighting){ " +
-					"mediump float dirLightWeight = max(dot(vNormal, uLightDirection), 0.0); " +
+					"mediump float dirLightWeight = max(dot(normal, uLightDirection), 0.0); " +
 					"phongLightWeight += (uLightDirectionColor * dirLightWeight * uLightDirectionIntensity); " +
 					
 					"mediump vec3 lightDist = uLightPointPosition - vPosition; " +
 					"mediump float distance = length(lightDist); " +
 					"if (distance <= uLightPointDistance){ " +
 						"mediump vec3 pointLightDirection = normalize(lightDist); " +
-						"mediump float pointLightWeight = max(dot(vNormal, pointLightDirection), 0.0); " +
+						"mediump float pointLightWeight = max(dot(normal, pointLightDirection), 0.0); " +
 						"phongLightWeight += (uLightPointColor * pointLightWeight * uLightPointIntensity) / (distance / 2.0); " +
 					"} " +
 				"} " +

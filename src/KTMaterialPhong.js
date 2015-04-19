@@ -78,6 +78,8 @@ MaterialPhong.prototype.sendUniformData = function(mesh, camera, scene){
 			gl.uniformMatrix3fv(uni.location, false, normalMatrix);
 		}else if (uni.name == 'uModelMatrix'){
 			gl.uniformMatrix4fv(uni.location, false, modelTransformation.toFloat32Array());
+		}else if (uni.name == 'uCameraPosition'){
+			gl.uniform3f(uni.location, camera.position.x, camera.position.y, camera.position.z);
 		}
 		
 		
@@ -98,7 +100,7 @@ MaterialPhong.prototype.sendUniformData = function(mesh, camera, scene){
 		
 		
 		else if (uni.name == 'uLightPointPosition' && scene.useLighting && scene.pointsLights){
-			p = scene.pointsLights.position;
+			var p = scene.pointsLights.position;
 			gl.uniform3f(uni.location, p.x, p.y, p.z);
 		}else if (uni.name == 'uLightPointIntensity' && scene.useLighting && scene.pointsLights){
 			gl.uniform1f(uni.location, scene.pointsLights.intensity);

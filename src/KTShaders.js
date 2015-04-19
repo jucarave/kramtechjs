@@ -180,6 +180,7 @@ module.exports = {
 			"uniform mediump vec2 uTextureRepeat; " +
 			"uniform mediump vec2 uTextureOffset; " +
 			"uniform mediump vec4 uGeometryUV; " +
+			"uniform mediump vec3 uCameraPosition; " +
 			
 			"uniform mediump vec3 uLightDirection; " +
 			"uniform mediump vec3 uLightDirectionColor; " +
@@ -199,6 +200,7 @@ module.exports = {
 			"void main(void){ " +
 				"mediump vec4 color = vVertexColor; " +
 				"mediump vec3 normal = normalize(vNormal); " +
+				"mediump vec3 cameraDirection = normalize(uCameraPosition); " +
 				
 				"if (uHasTexture){ " + 
 					"mediump float tx = uGeometryUV.x + mod(uTextureOffset.x + vTextureCoord.s * uTextureRepeat.x - uGeometryUV.x, uGeometryUV.z - uGeometryUV.x);" +
@@ -209,6 +211,7 @@ module.exports = {
 				"} " + 
 				
 				"mediump vec3 phongLightWeight = vec3(0.0); " + 
+				"mediump vec3 specular = vec3(0.0); " +
 				"if (uUseLighting){ " +
 					"mediump float dirLightWeight = max(dot(normal, uLightDirection), 0.0); " +
 					"phongLightWeight += (uLightDirectionColor * dirLightWeight * uLightDirectionIntensity); " +
@@ -220,9 +223,13 @@ module.exports = {
 						"mediump float pointLightWeight = max(dot(normal, pointLightDirection), 0.0); " +
 						"phongLightWeight += (uLightPointColor * pointLightWeight * uLightPointIntensity) / (distance / 2.0); " +
 					"} " +
+					
+					"mediump vec3 halfAngle = normalize(cameraDirection + uLightDirection); " +
+					"mediump float specDot = max(dot(halfAngle, normal), 0.0); " +
+					"specular = vec3(1.0) * pow(specDot, 16.0); " +
 				"} " +
 				
-				"color.rgb *= vLightWeight + phongLightWeight; " + 
+				"color.rgb *= vLightWeight + phongLightWeight + specular; " + 
 				"gl_FragColor = vec4(color.rgb, color.a * uOpacity); " + 
 			"}"
 	}

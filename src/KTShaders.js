@@ -45,6 +45,16 @@ module.exports = {
 	
 	lambert: {
 		vertexShader: 
+			"struct Light{ " +
+			    "lowp vec3 position; " +
+			    "lowp vec3 color; " +
+			    "lowp vec3 direction; " +
+			    "lowp float intensity; " +
+			"}; " +
+			    
+			"uniform Light lights[8]; " +
+			"uniform int usedLights; " +
+			
 			"attribute mediump vec2 aTextureCoord; " +
 			"attribute mediump vec3 aVertexPosition; " +
 			"attribute lowp vec4 aVertexColor; " +
@@ -62,42 +72,39 @@ module.exports = {
 			
 			"uniform lowp vec3 uAmbientLightColor; " +
 			
-			"uniform mediump vec3 uLightDirection; " +
-			"uniform lowp vec3 uLightDirectionColor; " +
-			"uniform lowp float uLightDirectionIntensity; " +  
-			
-			"uniform mediump vec3 uLightPointPosition; " +
-			"uniform lowp vec3 uLightPointColor; " +
-			"uniform lowp float uLightPointIntensity; " +
-			"uniform lowp float uLightPointDistance; " + 
-
-			
 			"varying mediump vec4 vVertexColor; " +
 			"varying mediump vec2 vTextureCoord;" +  
 			"varying mediump vec3 vLightWeight; " + 
+			
+			"mediump vec3 getLightWeight(mediump vec3 normal, mediump vec3 direction, lowp vec3 color, lowp float intensity){ " +
+				"mediump float lightDot = max(dot(normal, direction), 0.0); " +
+				"mediump vec3 lightWeight = (color * lightDot * intensity); " +
+				"return lightWeight; " +
+			"}" +
 			
 			"void main(void){ " + 
 				"vec4 modelViewPosition = uMVMatrix * vec4(aVertexPosition, 1.0); " +
 				"gl_Position = uPMatrix * modelViewPosition; " +
 			
-				"if (uUseLighting){ " + 
-					"vec3 transformedNormal = uNormalMatrix * aVertexNormal; " +
-					"vLightWeight = uAmbientLightColor; " +
-					
-					"float dirLightWeight = max(dot(transformedNormal, uLightDirection), 0.0); " +
-					"vLightWeight += (uLightDirectionColor * dirLightWeight * uLightDirectionIntensity); " +
-					
+				"vLightWeight = uAmbientLightColor; " +
+				"if (uUseLighting){ " +
 					"vec3 vertexModelPosition = (uModelMatrix * vec4(aVertexPosition, 1.0)).xyz; " +
-					"vec3 lightDist = uLightPointPosition - vertexModelPosition;" +
-					"float distance = length(lightDist); " +
-					"if (distance <= uLightPointDistance){ " +
-						"vec3 pointLightDirection = normalize(lightDist); " +
-						"float pointLightWeight = max(dot(transformedNormal, pointLightDirection), 0.0); " +
-						"vLightWeight += (uLightPointColor * pointLightWeight * uLightPointIntensity) / distance; " +
+					"for (int i=0;i<8;i++){ " +
+						"if (i >= usedLights){" +
+							"break; " +
+						"}" +
+						
+						"Light l = lights[i]; " +
+						"mediump vec3 lPos = l.position - vertexModelPosition;" +
+						"mediump float lDistance = length(lPos) / 2.0; " +
+						"if (length(l.position) == 0.0){ " +
+							"lDistance = 1.0; " +
+							"lPos = vec3(0.0); " +
+						"} " +
+						"mediump vec3 lightDirection = l.direction + normalize(lPos); " +
+						"vLightWeight += getLightWeight(aVertexNormal, lightDirection, l.color, l.intensity) / lDistance; " +
 					"} " +
-				"}else{ " +
-					"vLightWeight = vec3(1.0); " + 
-				"}" +   
+				"} " +
 				 
 				"vVertexColor = aVertexColor * uMaterialColor; " +
 				"vTextureCoord = aTextureCoord; " +  

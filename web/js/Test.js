@@ -48,7 +48,6 @@ Test.prototype.createSimpleScene = function(){
 	var cylGeo  = new KT.GeometryCylinder(1.0, 1.0, 2.0, 16, 16, false, false, {uvRegion: new KT.Vector4(0.0, 0.0, 0.5, 1.0)});
 	var material = new KT.MaterialPhong(null, "#66FF66");
 	material.shininess = 32.0;
-	material.specularColor.set(KT.Color._GREEN);
 	this.cylinder = new KT.Mesh(cylGeo, material);
 	this.cylinder.position.z = -2.0;
 	this.scene.add(this.cylinder);
@@ -71,7 +70,6 @@ Test.prototype.createLights = function(){
 	this.scene.add(this.pLight[0]);
 	
 	this.pLight[1] = new KT.LightPoint(new KT.Vector3(0.0, 0.0, -1.5), 1.0, 30.0, KT.Color._GREEN);
-	var sphGeo = new KT.GeometrySphere(0.1, 8, 8);
 	var material = new KT.MaterialBasic(null, this.pLight[1].color.getHex());
 	var spLight= new KT.Mesh(sphGeo, material);
 	spLight.position = this.pLight[1].position;
@@ -79,7 +77,6 @@ Test.prototype.createLights = function(){
 	this.scene.add(this.pLight[1]);
 	
 	this.pLight[2] = new KT.LightPoint(new KT.Vector3(0.0, 1.5, -1.5), 1.0, 30.0, KT.Color._BLUE);
-	var sphGeo = new KT.GeometrySphere(0.1, 8, 8);
 	var material = new KT.MaterialBasic(null, this.pLight[2].color.getHex());
 	var spLight= new KT.Mesh(sphGeo, material);
 	spLight.position = this.pLight[2].position;
@@ -87,7 +84,6 @@ Test.prototype.createLights = function(){
 	this.scene.add(this.pLight[2]);
 	
 	this.pLight[3] = new KT.LightPoint(new KT.Vector3(0.0, 1.5, 0), 1.0, 30.0, KT.Color._PURPLE);
-	var sphGeo = new KT.GeometrySphere(0.1, 8, 8);
 	var material = new KT.MaterialBasic(null, this.pLight[3].color.getHex());
 	var spLight= new KT.Mesh(sphGeo, material);
 	spLight.position = this.pLight[3].position;
@@ -95,7 +91,6 @@ Test.prototype.createLights = function(){
 	this.scene.add(this.pLight[3]);
 	
 	this.pLight[4] = new KT.LightPoint(new KT.Vector3(0.0, 1.5, 0), 1.0, 30.0, KT.Color._GOLD);
-	var sphGeo = new KT.GeometrySphere(0.1, 8, 8);
 	var material = new KT.MaterialBasic(null, this.pLight[4].color.getHex());
 	var spLight= new KT.Mesh(sphGeo, material);
 	spLight.position = this.pLight[4].position;

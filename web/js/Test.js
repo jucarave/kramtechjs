@@ -52,6 +52,8 @@ Test.prototype.createSimpleScene = function(){
 	this.cylinder.position.z = -2.0;
 	this.scene.add(this.cylinder);
 	
+	var teapotGeo = new KT.Geometry3DModel('models/teapot.obj');
+	
 	this.createLights();
 	
 	this.lightAng = 0;

@@ -5,6 +5,7 @@ var KTMath = require('./KTMath');
 
 function GeometryCylinder(radiusTop, radiusBottom, height, widthSegments, heightSegments, openTop, openBottom, params){
 	this.__ktgeometry = true;
+	this.ready = true;
 	
 	var cylGeo = new Geometry();
 	

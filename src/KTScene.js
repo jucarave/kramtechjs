@@ -28,6 +28,8 @@ Scene.prototype.add = function(object){
 };
 
 Scene.prototype.drawMesh = function(mesh, camera){
+	if (!mesh.geometry.ready) return;
+	
 	var gl = KT.gl;
 	
 	var material = mesh.material;

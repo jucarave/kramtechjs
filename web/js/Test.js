@@ -45,14 +45,15 @@ Test.prototype.createSimpleScene = function(){
 	this.plane.position.y = -1.5;
 	this.scene.add(this.plane);
 	
-	var cylGeo  = new KT.GeometryCylinder(1.0, 1.0, 2.0, 16, 16, false, false, {uvRegion: new KT.Vector4(0.0, 0.0, 0.5, 1.0)});
+	//var cylGeo  = new KT.GeometryCylinder(1.0, 1.0, 2.0, 16, 16, false, false, {uvRegion: new KT.Vector4(0.0, 0.0, 0.5, 1.0)});
+	var cylGeo = new KT.Geometry3DModel('models/teapot.obj');
 	var material = new KT.MaterialPhong(null, "#66FF66");
 	material.shininess = 32.0;
 	this.cylinder = new KT.Mesh(cylGeo, material);
 	this.cylinder.position.z = -2.0;
 	this.scene.add(this.cylinder);
 	
-	var teapotGeo = new KT.Geometry3DModel('models/teapot.obj');
+	
 	
 	this.createLights();
 	

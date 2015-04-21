@@ -4,6 +4,7 @@ var Vector4 = require('./KTVector4');
 
 function GeometryPlane(width, height, params){
 	this.__ktgeometry = true;
+	this.ready = true;
 	
 	var planeGeo = new Geometry();
 	

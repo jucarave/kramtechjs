@@ -4,6 +4,7 @@ var Vector4 = require('./KTVector4');
 
 function GeometryBox(width, length, height, params){
 	this.__ktgeometry = true;
+	this.ready = true;
 	
 	var boxGeo = new Geometry();
 	

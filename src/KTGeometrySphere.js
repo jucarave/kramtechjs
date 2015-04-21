@@ -4,6 +4,7 @@ var Vector4 = require('./KTVector4');
 
 function GeometrySphere(radius, latBands, lonBands, params){
 	this.__ktgeometry = true;
+	this.ready = true;
 	
 	var sphGeo = new Geometry();
 	

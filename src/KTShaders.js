@@ -190,8 +190,12 @@ module.exports = {
 			"uniform Light lights[8]; " +
 			"uniform int usedLights; " +
 			
-			"uniform sampler2D uTextureSampler; " +
 			"uniform bool uHasTexture; " +
+			"uniform sampler2D uTextureSampler; " +
+			
+			"uniform bool uUseSpecularMap; " +
+			"uniform sampler2D uSpecularMapSampler; " +
+			
 			"uniform bool uUseLighting; " +
 			"uniform lowp float uOpacity; " +
 			"uniform lowp vec2 uTextureRepeat; " +
@@ -219,9 +223,12 @@ module.exports = {
 				"mediump vec3 normal = normalize(vNormal); " +
 				"mediump vec3 cameraDirection = normalize(uCameraPosition); " +
 				
+				"mediump float tx; " +
+				"mediump float ty; " +
+				
 				"if (uHasTexture){ " + 
-					"mediump float tx = uGeometryUV.x + mod(uTextureOffset.x + vTextureCoord.s * uTextureRepeat.x - uGeometryUV.x, uGeometryUV.z - uGeometryUV.x);" +
-					"mediump float ty = uGeometryUV.y + mod(uTextureOffset.y + vTextureCoord.t * uTextureRepeat.y - uGeometryUV.y, uGeometryUV.w - uGeometryUV.y);" +
+					"tx = uGeometryUV.x + mod(uTextureOffset.x + vTextureCoord.s * uTextureRepeat.x - uGeometryUV.x, uGeometryUV.z - uGeometryUV.x);" +
+					"ty = uGeometryUV.y + mod(uTextureOffset.y + vTextureCoord.t * uTextureRepeat.y - uGeometryUV.y, uGeometryUV.w - uGeometryUV.y);" +
 					
 					"mediump vec4 texColor = texture2D(uTextureSampler, vec2(tx, ty)); " +
 					"color *= texColor; " +
@@ -244,10 +251,16 @@ module.exports = {
 						"mediump vec3 lightDirection = l.direction + normalize(lPos); " +
 						"phongLightWeight += getLightWeight(normal, lightDirection, l.color, l.intensity) / lDistance; " +
 						
-						"if (uShininess > 0.0){ " +
+						
+						"lowp float shininess = uShininess; " + 
+						"if (uUseSpecularMap){ " +
+							"shininess = texture2D(uSpecularMapSampler, vec2(tx, ty)).r * 255.0; " +
+						"} " +
+						
+						"if (shininess > 0.0 && shininess < 255.0){ " +
 							"mediump vec3 halfAngle = normalize(cameraDirection + lightDirection); " +
 							"mediump float specDot = max(dot(halfAngle, normal), 0.0); " +
-							"color += vec4(uSpecularColor, 1.0) * pow(specDot, uShininess); " + 
+							"color += vec4(uSpecularColor, 1.0) * pow(specDot, shininess); " + 
 						"} " +
 					"} " +
 				"} " +

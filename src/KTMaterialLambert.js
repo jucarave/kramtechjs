@@ -1,16 +1,16 @@
 var Material = require('./KTMaterial');
 
-function MaterialLambert(texture, color, opacity){
+function MaterialLambert(textureMap, color, opacity){
 	this.__ktmaterial = true;
 	
 	var material = new Material({
-		texture: texture,
+		textureMap: textureMap,
 		color: color,
 		opacity: opacity,
 		shader: KT.shaders.lambert
 	});
 	
-	this.texture = material.texture;
+	this.textureMap = material.textureMap;
 	this.color = material.color;
 	this.shader = material.shader;
 	this.opacity = material.opacity;
@@ -92,13 +92,13 @@ MaterialLambert.prototype.sendUniformData = function(mesh, camera, scene){
 			var color = mesh.material.color.getRGBA();
 			gl.uniform4fv(uni.location, new Float32Array(color));
 		}else if (uni.name == 'uTextureSampler'){
-			if (mesh.material.texture){
+			if (mesh.material.textureMap){
 				gl.activeTexture(gl.TEXTURE0);
-				gl.bindTexture(gl.TEXTURE_2D, mesh.material.texture.texture);
+				gl.bindTexture(gl.TEXTURE_2D, mesh.material.textureMap.texture);
 				gl.uniform1i(uni.location, 0);
 			}
 		}else if (uni.name == 'uHasTexture'){
-			gl.uniform1i(uni.location, (mesh.material.texture)? 1 : 0);
+			gl.uniform1i(uni.location, (mesh.material.textureMap)? 1 : 0);
 		}else if (uni.name == 'uUseLighting'){
 			gl.uniform1i(uni.location, (scene.useLighting)? 1 : 0);
 		}else if (uni.name == 'uNormalMatrix'){
@@ -111,12 +111,12 @@ MaterialLambert.prototype.sendUniformData = function(mesh, camera, scene){
 			gl.uniform3f(uni.location, color[0], color[1], color[2]);
 		}else if (uni.name == 'uOpacity'){
 			gl.uniform1f(uni.location, mesh.material.opacity);
-		}else if (uni.name == 'uTextureRepeat' && mesh.material.texture){
-			gl.uniform2f(uni.location, mesh.material.texture.repeat.x, mesh.material.texture.repeat.y);
-		}else if (uni.name == 'uGeometryUV' && mesh.material.texture){
+		}else if (uni.name == 'uTextureRepeat' && mesh.material.textureMap){
+			gl.uniform2f(uni.location, mesh.material.textureMap.repeat.x, mesh.material.textureMap.repeat.y);
+		}else if (uni.name == 'uGeometryUV' && mesh.material.textureMap){
 			gl.uniform4f(uni.location, mesh.geometry.uvRegion.x, mesh.geometry.uvRegion.y, mesh.geometry.uvRegion.z, mesh.geometry.uvRegion.w);
-		}else if (uni.name == 'uTextureOffset' && mesh.material.texture){
-			gl.uniform2f(uni.location, mesh.material.texture.offset.x, mesh.material.texture.offset.y);
+		}else if (uni.name == 'uTextureOffset' && mesh.material.textureMap){
+			gl.uniform2f(uni.location, mesh.material.textureMap.offset.x, mesh.material.textureMap.offset.y);
 		}else if (uni.name == 'usedLights'){
 			usedLightUniform = uni;
 		}

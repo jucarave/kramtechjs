@@ -6,7 +6,7 @@ function Material(parameters){
 	
 	if (!parameters) parameters = {};
 	
-	this.texture = (parameters.texture)? parameters.texture : null;
+	this.textureMap = (parameters.textureMap)? parameters.textureMap : null;
 	this.color = new Color((parameters.color)? parameters.color : Color._WHITE);
 	this.opacity = (parameters.opacity)? parameters.opacity : 1.0;
 	this.drawFaces = (parameters.drawFaces)? parameters.drawFaces : 'FRONT';

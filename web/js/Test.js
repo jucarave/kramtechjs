@@ -32,8 +32,9 @@ Test.prototype.createSimpleScene = function(){
 	
 	
 	var sphGeo = new KT.GeometrySphere(1.0, 16, 16);
-	var texture = new KT.Texture('img/moon.gif');
+	var texture = new KT.Texture('img/earth.jpg');
 	var material = new KT.MaterialPhong(texture, KT.Color._WHITE);
+	material.specularMap = new KT.Texture('img/earth-specular.gif');
 	material.shininess = 32.0;
 	this.sphere = new KT.Mesh(sphGeo, material);
 	this.sphere.position.x = -2.0;
@@ -135,7 +136,7 @@ Test.prototype.loopScene = function(){
 	this.texOff += 0.001;
 	if (this.texOff >= 1.0) this.texOff = 0.0;
 	
-	T.box.material.texture.offset.set(this.texOff, 0.0);
+	T.box.material.textureMap.offset.set(this.texOff, 0.0);
 	T.box.rotation.x += KT.Math.degToRad(0.25);
 	T.box.rotation.y += KT.Math.degToRad(0.25);
 	

@@ -48,14 +48,14 @@ Scene.prototype.drawMesh = function(mesh, camera){
 Scene.prototype.render = function(camera){
 	var gl = KT.gl;
 	
-	var bc = camera.backgroundColor.getRGBA();
-	gl.clearColor(bc[0], bc[1], bc[2], bc[3]);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	
 	gl.disable( gl.BLEND ); 
 	var transparents = [];
 	
 	if (camera.controls) camera.controls.update();
+	
+	this.drawMesh(camera.skybox, camera);
 	
 	for (var i=0,len=this.meshes.length;i<len;i++){
 		var mesh = this.meshes[i];

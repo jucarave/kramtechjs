@@ -2,6 +2,9 @@ var Matrix4 = require('./KTMatrix4');
 var Color = require('./KTColor');
 var Vector3 = require('./KTVector3');
 var KTMath = require('./KTMath');
+var GeometryBox = require('./KTGeometryBox');
+var MaterialBasic = require('./KTMaterialBasic');
+var Mesh = require('./KTMesh');
 
 function CameraPerspective(fov, ratio, znear, zfar){
 	this.__ktcamera = true;
@@ -17,7 +20,12 @@ function CameraPerspective(fov, ratio, znear, zfar){
 	
 	this.controls = null;
 	
-	this.backgroundColor = new Color(Color._BLACK);
+	var geo = new GeometryBox(1.0, 1.0, 1.0, {colorTop: Color._WHITE, colorBottom: '#53AEB9'});
+	var mat = new MaterialBasic(null, Color._WHITE);
+	mat.drawFaces  = 'BOTH';
+	this.skybox = new Mesh(geo, mat);
+	this.skybox.position = this.position;
+	this.skybox.scale.multiply(zfar);
 	
 	this.setPerspective();
 }

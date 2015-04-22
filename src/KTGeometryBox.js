@@ -16,41 +16,43 @@ function GeometryBox(width, length, height, params){
 	this.params = params;
 	
 	this.uvRegion = (params.uvRegion)? params.uvRegion : new Vector4(0.0, 0.0, 1.0, 1.0);
+	this.colorTop = (params.colorTop)? params.colorTop : Color._WHITE;
+	this.colorBottom = (params.colorBottom)? params.colorBottom : Color._WHITE;
 	
 	var xr = this.uvRegion.x;
 	var yr = this.uvRegion.y;
 	var hr = this.uvRegion.z;
 	var vr = this.uvRegion.w;
 	
-	boxGeo.addVertice( w, -h,  l, Color._WHITE, hr, yr);
-	boxGeo.addVertice(-w,  h,  l, Color._WHITE, xr, vr);
-	boxGeo.addVertice(-w, -h,  l, Color._WHITE, xr, yr);
-	boxGeo.addVertice( w,  h,  l, Color._WHITE, hr, vr);
+	boxGeo.addVertice( w, -h,  l, this.colorBottom, hr, yr);
+	boxGeo.addVertice(-w,  h,  l, this.colorTop, xr, vr);
+	boxGeo.addVertice(-w, -h,  l, this.colorBottom, xr, yr);
+	boxGeo.addVertice( w,  h,  l, this.colorTop, hr, vr);
 	
-	boxGeo.addVertice(-w, -h, -l, Color._WHITE, xr, yr);
-	boxGeo.addVertice(-w,  h, -l, Color._WHITE, xr, vr);
-	boxGeo.addVertice( w, -h, -l, Color._WHITE, hr, yr);
-	boxGeo.addVertice( w,  h, -l, Color._WHITE, hr, vr);
+	boxGeo.addVertice(-w, -h, -l, this.colorBottom, xr, yr);
+	boxGeo.addVertice(-w,  h, -l, this.colorTop, xr, vr);
+	boxGeo.addVertice( w, -h, -l, this.colorBottom, hr, yr);
+	boxGeo.addVertice( w,  h, -l, this.colorTop, hr, vr);
 	
-	boxGeo.addVertice( w, -h, -l, Color._WHITE, hr, yr);
-	boxGeo.addVertice( w,  h,  l, Color._WHITE, xr, vr);
-	boxGeo.addVertice( w, -h,  l, Color._WHITE, xr, yr);
-	boxGeo.addVertice( w,  h, -l, Color._WHITE, hr, vr);
+	boxGeo.addVertice( w, -h, -l, this.colorBottom, hr, yr);
+	boxGeo.addVertice( w,  h,  l, this.colorTop, xr, vr);
+	boxGeo.addVertice( w, -h,  l, this.colorBottom, xr, yr);
+	boxGeo.addVertice( w,  h, -l, this.colorTop, hr, vr);
 	
-	boxGeo.addVertice(-w, -h,  l, Color._WHITE, hr, yr);
-	boxGeo.addVertice(-w,  h,  l, Color._WHITE, hr, vr);
-	boxGeo.addVertice(-w, -h, -l, Color._WHITE, xr, yr);
-	boxGeo.addVertice(-w,  h, -l, Color._WHITE, xr, vr);
+	boxGeo.addVertice(-w, -h,  l, this.colorBottom, hr, yr);
+	boxGeo.addVertice(-w,  h,  l, this.colorTop, hr, vr);
+	boxGeo.addVertice(-w, -h, -l, this.colorBottom, xr, yr);
+	boxGeo.addVertice(-w,  h, -l, this.colorTop, xr, vr);
 	
-	boxGeo.addVertice( w,  h,  l, Color._WHITE, hr, yr);
-	boxGeo.addVertice(-w,  h, -l, Color._WHITE, xr, vr);
-	boxGeo.addVertice(-w,  h,  l, Color._WHITE, xr, yr);
-	boxGeo.addVertice( w,  h, -l, Color._WHITE, hr, vr);
+	boxGeo.addVertice( w,  h,  l, this.colorTop, hr, yr);
+	boxGeo.addVertice(-w,  h, -l, this.colorTop, xr, vr);
+	boxGeo.addVertice(-w,  h,  l, this.colorTop, xr, yr);
+	boxGeo.addVertice( w,  h, -l, this.colorTop, hr, vr);
 	
-	boxGeo.addVertice(-w, -h,  l, Color._WHITE, xr, vr);
-	boxGeo.addVertice(-w, -h, -l, Color._WHITE, xr, yr);
-	boxGeo.addVertice( w, -h,  l, Color._WHITE, hr, vr);
-	boxGeo.addVertice( w, -h, -l, Color._WHITE, hr, yr);
+	boxGeo.addVertice(-w, -h,  l, this.colorBottom, xr, vr);
+	boxGeo.addVertice(-w, -h, -l, this.colorBottom, xr, yr);
+	boxGeo.addVertice( w, -h,  l, this.colorBottom, hr, vr);
+	boxGeo.addVertice( w, -h, -l, this.colorBottom, hr, yr);
 	
 	boxGeo.addFace(0, 1, 2);
 	boxGeo.addFace(0, 3, 1);

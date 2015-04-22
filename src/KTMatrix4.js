@@ -240,11 +240,11 @@ Matrix4.getTransformation = function(position, rotation, scale){
 	
 	var matrix;
 	matrix = Matrix4.getIdentity();
+	matrix.multiply(scale);
 	matrix.multiply(rotationX);
 	matrix.multiply(rotationY);
 	matrix.multiply(rotationZ);
 	matrix.multiply(translation);
-	matrix.multiply(scale);
 	
 	return matrix;
 };

@@ -25,7 +25,6 @@ Test.prototype.createSimpleScene = function(){
 	var boxGeo = new KT.GeometryBox(2.0, 2.0, 2.0, {uvRegion: new KT.Vector4(0.0, 0.0, 0.5, 1.0)});
 	var texture = new KT.Texture('img/crate.jpg');
 	var material = new KT.MaterialPhong(texture, KT.Color._WHITE);
-	//material.drawFaces = 'BOTH';
 	this.box = new KT.Mesh(boxGeo, material);
 	this.box.position.x = 2.0;
 	this.scene.add(this.box);
@@ -40,14 +39,15 @@ Test.prototype.createSimpleScene = function(){
 	this.sphere.position.x = -2.0;
 	this.scene.add(this.sphere);
 	
-	var plnGeo = new KT.GeometryPlane(32.0, 32.0);
-	var material = new KT.MaterialPhong(null, "#FFFFFF");
+	var plnGeo = new KT.GeometryPlane(32.0, 32.0, {uvRegion: new KT.Vector4(0.5, 0.0, 1.0, 1.0)});
+	var texture = new KT.Texture('img/grassTile01.jpg');
+	texture.repeat.set(8.0, 8.0);
+	var material = new KT.MaterialPhong(texture, "#FFFFFF");
 	this.plane = new KT.Mesh(plnGeo, material);
 	this.plane.position.y = -1.5;
 	this.scene.add(this.plane);
 	
-	//var cylGeo  = new KT.GeometryCylinder(1.0, 1.0, 2.0, 16, 16, false, false, {uvRegion: new KT.Vector4(0.0, 0.0, 0.5, 1.0)});
-	var cylGeo = new KT.Geometry3DModel('models/teapot.obj');
+	var cylGeo  = new KT.GeometryCylinder(1.0, 1.0, 2.0, 16, 16, false, false, {uvRegion: new KT.Vector4(0.0, 0.0, 0.5, 1.0)});
 	var material = new KT.MaterialPhong(null, "#66FF66");
 	material.shininess = 32.0;
 	this.cylinder = new KT.Mesh(cylGeo, material);
@@ -136,7 +136,7 @@ Test.prototype.loopScene = function(){
 	this.texOff += 0.001;
 	if (this.texOff >= 1.0) this.texOff = 0.0;
 	
-	T.box.material.textureMap.offset.set(this.texOff, 0.0);
+	/*T.box.material.textureMap.offset.set(this.texOff, 0.0);
 	T.box.rotation.x += KT.Math.degToRad(0.25);
 	T.box.rotation.y += KT.Math.degToRad(0.25);
 	
@@ -144,7 +144,7 @@ Test.prototype.loopScene = function(){
 	T.sphere.rotation.y += KT.Math.degToRad(0.25);
 	
 	T.cylinder.rotation.x += KT.Math.degToRad(0.25);
-	T.cylinder.rotation.y += KT.Math.degToRad(0.25);
+	T.cylinder.rotation.y += KT.Math.degToRad(0.25);*/
 	
 	T.scene.render(T.camera);
 	

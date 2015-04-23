@@ -6,6 +6,7 @@ function Texture(src, params){
 	this.__kttexture = true;
 	
 	if (!params) params = {};
+	this.params = params;
 	this.minFilter = (params.minFilter)? params.minFilter : 'LINEAR';
 	this.magFilter = (params.magFilter)? params.magFilter : 'LINEAR';
 	this.wrapS = (params.SWrapping)? params.SWrapping : 'REPEAT';
@@ -15,14 +16,21 @@ function Texture(src, params){
 	
 	this.textue = null;
 	
-	this.image = new Image();
-	this.image.src = src;
-	this.image.ready = false;
-	
-	var T = this;
-	Utils.addEvent(this.image, "load", function(){
-		T.parseTexture(); 
-	});
+	var img = KT.getImage(src);
+	if (img){
+		this.image = img;
+		this.parseTexture();
+	}else{
+		this.image = new Image();
+		this.image.src = src;
+		this.image.ready = false;
+		
+		var T = this;
+		Utils.addEvent(this.image, "load", function(){
+			KT.images.push({src: src, img: T.image});
+			T.parseTexture();
+		});
+	}
 }
 
 module.exports = Texture;
@@ -48,4 +56,8 @@ Texture.prototype.parseTexture = function(){
 	gl.generateMipmap(gl.TEXTURE_2D);
 	
 	gl.bindTexture(gl.TEXTURE_2D, null);
+};
+
+Texture.prototype.clone = function(){
+	return new Texture(this.image.src, this.params);
 };

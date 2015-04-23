@@ -6,6 +6,7 @@ module.exports = {
 		this.canvas = canvas;
 		this.gl = null;
 		this.shaders = {};
+		this.images = [];
 		this.maxAttribLocations = 0;
 		this.lastProgram = null;
 		
@@ -255,6 +256,15 @@ module.exports = {
 				gl.disableVertexAttribArray(i);
 			}
 		}
+	},
+	
+	getImage: function(src){
+		for (var i=0,len=this.images.length;i<len;i++){
+			if (this.images[i].src == src)
+				return this.images[i].img;
+		}
+		
+		return null;
 	}
 };
 

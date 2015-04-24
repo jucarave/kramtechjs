@@ -55,7 +55,10 @@ Scene.prototype.render = function(camera){
 	
 	if (camera.controls) camera.controls.update();
 	
-	this.drawMesh(camera.skybox, camera);
+	var sky = camera.skybox.meshes;
+	for (var i=0,len=sky.length;i<len;i++){
+		this.drawMesh(sky[i], camera);
+	}
 	
 	for (var i=0,len=this.meshes.length;i<len;i++){
 		var mesh = this.meshes[i];

@@ -6,6 +6,7 @@ KT.Geometry3DModel = require('./KTGeometry3DModel');
 KT.GeometryBox = require('./KTGeometryBox');
 KT.GeometryCylinder = require('./KTGeometryCylinder');
 KT.GeometryPlane = require('./KTGeometryPlane');
+KT.GeometrySkybox = require('./KTGeometrySkybox');
 KT.GeometrySphere = require('./KTGeometrySphere');
 KT.LightDirectional = require('./KTLightDirectional');
 KT.LightPoint = require('./KTLightPoint');

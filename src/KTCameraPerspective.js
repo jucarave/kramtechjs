@@ -5,6 +5,7 @@ var KTMath = require('./KTMath');
 var GeometryBox = require('./KTGeometryBox');
 var MaterialBasic = require('./KTMaterialBasic');
 var Mesh = require('./KTMesh');
+var GeometrySkybox = require('./KTGeometrySkybox');
 
 function CameraPerspective(fov, ratio, znear, zfar){
 	this.__ktcamera = true;
@@ -20,12 +21,7 @@ function CameraPerspective(fov, ratio, znear, zfar){
 	
 	this.controls = null;
 	
-	var geo = new GeometryBox(1.0, 1.0, 1.0, {colorTop: Color._WHITE, colorBottom: '#53AEB9'});
-	var mat = new MaterialBasic(null, Color._WHITE);
-	mat.drawFaces  = 'BOTH';
-	this.skybox = new Mesh(geo, mat);
-	this.skybox.position = this.position;
-	this.skybox.scale.multiply(zfar);
+	this.skybox = new GeometrySkybox(100, 100, 100, this.position);
 	
 	this.setPerspective();
 }
@@ -48,6 +44,10 @@ CameraPerspective.prototype.setPerspective = function(){
 
 CameraPerspective.prototype.setBackgroundColor = function(color){
 	this.backgroundColor = new Color(color);
+};
+
+CameraPerspective.prototype.setSkybox = function(textures){
+	this.skybox = new GeometrySkybox(1, 1, 1, this.position, textures);
 };
 
 CameraPerspective.prototype.lookAt = function(vector3){

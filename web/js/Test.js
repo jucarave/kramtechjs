@@ -14,10 +14,18 @@ Test.prototype.createSimpleScene = function(){
 		ambientLight: "#333333"
 	});
 	
+	var skybox = [];
+	skybox[0] = new KT.Texture('img/Brudslojan/negz.jpg');
+	skybox[1] = new KT.Texture('img/Brudslojan/posz.jpg');
+	skybox[2] = new KT.Texture('img/Brudslojan/posx.jpg');
+	skybox[3] = new KT.Texture('img/Brudslojan/negx.jpg');
+	skybox[4] = new KT.Texture('img/Brudslojan/posy.jpg');
+	skybox[5] = new KT.Texture('img/Brudslojan/negy.jpg');
+	
 	this.camera = new KT.CameraPerspective(KT.Math.degToRad(60), this.canvas.width / this.canvas.height, 0.1, 100.0);
 	this.camera.position.set(0,5,7);
 	this.camera.lookAt(new KT.Vector3(0,0,0));
-	this.camera.setBackgroundColor("#B1BDD1");
+	this.camera.setSkybox(skybox);
 	
 	var cameraControls = new KT.OrbitAndPan();
 	this.camera.setControls(cameraControls);

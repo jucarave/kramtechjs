@@ -14,7 +14,7 @@ function Texture(src, params){
 	this.repeat = (params.repeat)? params.repeat : new Vector2(1.0, 1.0);
 	this.offset = (params.offset)? params.offset : new Vector2(0.0, 0.0);
 	
-	this.textue = null;
+	this.texture = null;
 	
 	var img = KT.getImage(src);
 	if (img){

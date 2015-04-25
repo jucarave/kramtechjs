@@ -15,17 +15,18 @@ Test.prototype.createSimpleScene = function(){
 	});
 	
 	var skybox = [];
-	skybox[0] = new KT.Texture('img/Brudslojan/negz.jpg');
-	skybox[1] = new KT.Texture('img/Brudslojan/posz.jpg');
-	skybox[2] = new KT.Texture('img/Brudslojan/posx.jpg');
-	skybox[3] = new KT.Texture('img/Brudslojan/negx.jpg');
-	skybox[4] = new KT.Texture('img/Brudslojan/posy.jpg');
-	skybox[5] = new KT.Texture('img/Brudslojan/negy.jpg');
+	var params = {SWrapping: 'CLAMP_TO_EDGE', TWrapping: 'CLAMP_TO_EDGE'};
+	skybox[0] = new KT.Texture('img/skyboxes/interstellar_skybox/negz.png', params);
+	skybox[1] = new KT.Texture('img/skyboxes/interstellar_skybox/posz.png', params);
+	skybox[2] = new KT.Texture('img/skyboxes/interstellar_skybox/posx.png', params);
+	skybox[3] = new KT.Texture('img/skyboxes/interstellar_skybox/negx.png', params);
+	skybox[4] = new KT.Texture('img/skyboxes/interstellar_skybox/posy.png', params);
+	skybox[5] = new KT.Texture('img/skyboxes/interstellar_skybox/negy.png', params);
 	
-	this.camera = new KT.CameraPerspective(KT.Math.degToRad(60), this.canvas.width / this.canvas.height, 0.1, 100.0);
+	this.camera = new KT.CameraPerspective(KT.Math.degToRad(60), this.canvas.width / this.canvas.height, 0.1, 400.0);
 	this.camera.position.set(0,5,7);
 	this.camera.lookAt(new KT.Vector3(0,0,0));
-	this.camera.setSkybox(skybox);
+	this.camera.setSkybox(400, 400, 400, skybox);
 	
 	var cameraControls = new KT.OrbitAndPan();
 	this.camera.setControls(cameraControls);
@@ -62,6 +63,12 @@ Test.prototype.createSimpleScene = function(){
 	this.cylinder.position.z = -2.0;
 	this.scene.add(this.cylinder);
 	
+	var teapot = new KT.Geometry3DModel('models/teapot.obj');
+	var material = new KT.MaterialPhong(null, "#66FF66");
+	material.shininess = 32.0;
+	this.teapot = new KT.Mesh(teapot, material);
+	this.teapot.position.z = 2.0;
+	this.scene.add(this.teapot);
 	
 	
 	this.createLights();

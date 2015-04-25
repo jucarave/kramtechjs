@@ -3,6 +3,7 @@ var Color = require('./KTColor');
 var Matrix4 = require('./KTMatrix4');
 var Vector2 = require('./KTVector2');
 var Vector3 = require('./KTVector3');
+var Vector4 = require('./KTVector4');
 
 function Geometry(){
 	this.__ktgeometry = true;
@@ -12,6 +13,7 @@ function Geometry(){
 	this.uvCoords = [];
 	this.colors = [];
 	this.normals = [];
+	this.uvRegion = new Vector4(0.0, 0.0, 1.0, 1.0);
 }
 
 module.exports = Geometry;
@@ -79,6 +81,7 @@ Geometry.prototype.build = function(){
 	this.facesBuffer = KT.createArrayBuffer("ELEMENT_ARRAY_BUFFER", new Uint16Array(triangles), 1);
 	this.colorsBuffer = KT.createArrayBuffer("ARRAY_BUFFER", new Float32Array(colors), 4);
 	this.normalsBuffer = KT.createArrayBuffer("ARRAY_BUFFER", new Float32Array(normals), 3);
+	this.ready = true;
 	
 	return this;
 };

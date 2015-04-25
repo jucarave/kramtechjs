@@ -46,8 +46,8 @@ CameraPerspective.prototype.setBackgroundColor = function(color){
 	this.backgroundColor = new Color(color);
 };
 
-CameraPerspective.prototype.setSkybox = function(textures){
-	this.skybox = new GeometrySkybox(1, 1, 1, this.position, textures);
+CameraPerspective.prototype.setSkybox = function(width, height, length, textures){
+	this.skybox = new GeometrySkybox(width, height, length, this.position, textures);
 };
 
 CameraPerspective.prototype.lookAt = function(vector3){

@@ -9,19 +9,20 @@ function Test(){
 }
 
 Test.prototype.createSimpleScene = function(){
+	var gl = KT.gl;
 	this.scene = new KT.Scene({
 		useLighting: true,
 		ambientLight: "#333333"
 	});
 	
 	var skybox = [];
-	var params = {SWrapping: 'CLAMP_TO_EDGE', TWrapping: 'CLAMP_TO_EDGE'};
-	skybox[0] = new KT.Texture('img/skyboxes/interstellar_skybox/negz.png', params);
-	skybox[1] = new KT.Texture('img/skyboxes/interstellar_skybox/posz.png', params);
-	skybox[2] = new KT.Texture('img/skyboxes/interstellar_skybox/posx.png', params);
-	skybox[3] = new KT.Texture('img/skyboxes/interstellar_skybox/negx.png', params);
-	skybox[4] = new KT.Texture('img/skyboxes/interstellar_skybox/posy.png', params);
-	skybox[5] = new KT.Texture('img/skyboxes/interstellar_skybox/negy.png', params);
+	var params = {SWrapping: gl.CLAMP_TO_EDGE, TWrapping: gl.CLAMP_TO_EDGE};
+	skybox[KT.TEXTURE_FRONT] = new KT.Texture('img/skyboxes/interstellar_skybox/negz.png', params);
+	skybox[KT.TEXTURE_BACK] = new KT.Texture('img/skyboxes/interstellar_skybox/posz.png', params);
+	skybox[KT.TEXTURE_RIGHT] = new KT.Texture('img/skyboxes/interstellar_skybox/posx.png', params);
+	skybox[KT.TEXTURE_LEFT] = new KT.Texture('img/skyboxes/interstellar_skybox/negx.png', params);
+	skybox[KT.TEXTURE_UP] = new KT.Texture('img/skyboxes/interstellar_skybox/posy.png', params);
+	skybox[KT.TEXTURE_DOWN] = new KT.Texture('img/skyboxes/interstellar_skybox/negy.png', params);
 	
 	this.camera = new KT.CameraPerspective(KT.Math.degToRad(60), this.canvas.width / this.canvas.height, 0.1, 400.0);
 	this.camera.position.set(0,5,7);
@@ -64,7 +65,7 @@ Test.prototype.createSimpleScene = function(){
 	this.scene.add(this.cylinder);
 	
 	var teapot = new KT.Geometry3DModel('models/teapot.obj');
-	var material = new KT.MaterialPhong(null, "#66FF66");
+	var material = new KT.MaterialPhong(null, "#6666FF");
 	material.shininess = 32.0;
 	this.teapot = new KT.Mesh(teapot, material);
 	this.teapot.position.z = 2.0;
@@ -151,7 +152,7 @@ Test.prototype.loopScene = function(){
 	this.texOff += 0.001;
 	if (this.texOff >= 1.0) this.texOff = 0.0;
 	
-	/*T.box.material.textureMap.offset.set(this.texOff, 0.0);
+	T.box.material.textureMap.offset.set(this.texOff, 0.0);
 	T.box.rotation.x += KT.Math.degToRad(0.25);
 	T.box.rotation.y += KT.Math.degToRad(0.25);
 	
@@ -159,7 +160,7 @@ Test.prototype.loopScene = function(){
 	T.sphere.rotation.y += KT.Math.degToRad(0.25);
 	
 	T.cylinder.rotation.x += KT.Math.degToRad(0.25);
-	T.cylinder.rotation.y += KT.Math.degToRad(0.25);*/
+	T.cylinder.rotation.y += KT.Math.degToRad(0.25);
 	
 	T.scene.render(T.camera);
 	

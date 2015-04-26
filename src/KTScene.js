@@ -65,12 +65,9 @@ Scene.prototype.render = function(camera){
 		if (!mesh.visible) continue;
 		if (mesh.material.opacity == 0.0) continue;
 		
-		var shading = this.shadingMode.indexOf(mesh.material.shading);
-		if (shading == 1){
-			if (mesh.material.opacity != 1.0){
-				transparents.push(mesh);
-				continue;
-			}
+		if (mesh.material.opacity != 1.0){
+			transparents.push(mesh);
+			continue;
 		}
 		
 		this.drawMesh(mesh, camera);

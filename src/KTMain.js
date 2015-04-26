@@ -2,6 +2,13 @@ var Shaders = require('./KTShaders');
 var Input = require('./KTInput');
 
 module.exports = {
+	TEXTURE_FRONT: 0,
+	TEXTURE_BACK: 1,
+	TEXTURE_RIGHT: 2,
+	TEXTURE_LEFT: 3,
+	TEXTURE_UP: 4,
+	TEXTURE_DOWN: 5,
+	
 	init: function(canvas){
 		this.canvas = canvas;
 		this.gl = null;

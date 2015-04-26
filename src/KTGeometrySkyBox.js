@@ -4,6 +4,7 @@ var Vector4 = require('./KTVector4');
 var MaterialBasic = require('./KTMaterialBasic');
 var Mesh = require('./KTMesh');
 var GeometryPlane = require('./KTGeometryPlane');
+var KT = require('./KTMain');
 
 function GeometrySkybox(width, height, length, position, textures){
 	this.meshes = [];
@@ -23,7 +24,7 @@ function GeometrySkybox(width, height, length, position, textures){
 	var cb = Color._WHITE;
 	
 	var geo = new Geometry();
-	var mat = new MaterialBasic(textures[0], Color._WHITE);
+	var mat = new MaterialBasic(textures[KT.TEXTURE_FRONT], Color._WHITE);
 	geo.addVertice(-w -v, -h -v,  l, cb, hr, yr);
 	geo.addVertice( w +v,  h +v,  l, ct, xr, vr);
 	geo.addVertice( w +v, -h -v,  l, cb, xr, yr);
@@ -34,7 +35,7 @@ function GeometrySkybox(width, height, length, position, textures){
 	this.meshes.push(new Mesh(geo, mat));
 	
 	var geo = new Geometry();
-	var mat = new MaterialBasic(textures[1], Color._WHITE);
+	var mat = new MaterialBasic(textures[KT.TEXTURE_BACK], Color._WHITE);
 	geo.addVertice(-w -v, -h -v, -l, cb, xr, yr);
 	geo.addVertice(-w -v,  h +v, -l, ct, xr, vr);
 	geo.addVertice( w +v, -h -v, -l, cb, hr, yr);
@@ -45,7 +46,7 @@ function GeometrySkybox(width, height, length, position, textures){
 	this.meshes.push(new Mesh(geo, mat));
 	
 	var geo = new Geometry();
-	var mat = new MaterialBasic(textures[2], Color._WHITE);
+	var mat = new MaterialBasic(textures[KT.TEXTURE_RIGHT], Color._WHITE);
 	geo.addVertice( w, -h -v,  l +v, cb, hr, yr);
 	geo.addVertice( w,  h +v, -l -v, ct, xr, vr);
 	geo.addVertice( w, -h -v, -l -v, cb, xr, yr);
@@ -56,7 +57,7 @@ function GeometrySkybox(width, height, length, position, textures){
 	this.meshes.push(new Mesh(geo, mat));
 	
 	var geo = new Geometry();
-	var mat = new MaterialBasic(textures[3], Color._WHITE);
+	var mat = new MaterialBasic(textures[KT.TEXTURE_LEFT], Color._WHITE);
 	geo.addVertice(-w, -h -v, -l -v, cb, hr, yr);
 	geo.addVertice(-w,  h +v, -l -v, ct, hr, vr);
 	geo.addVertice(-w, -h -v,  l +v, cb, xr, yr);
@@ -67,7 +68,7 @@ function GeometrySkybox(width, height, length, position, textures){
 	this.meshes.push(new Mesh(geo, mat));
 	
 	var geo = new Geometry();
-	var mat = new MaterialBasic(textures[4], Color._WHITE);
+	var mat = new MaterialBasic(textures[KT.TEXTURE_UP], Color._WHITE);
 	geo.addVertice( w +v,  h, -l -v, ct, hr, yr);
 	geo.addVertice(-w -v,  h,  l +v, ct, xr, vr);
 	geo.addVertice(-w -v,  h, -l -v, ct, xr, yr);
@@ -78,7 +79,7 @@ function GeometrySkybox(width, height, length, position, textures){
 	this.meshes.push(new Mesh(geo, mat));
 	
 	var geo = new Geometry();
-	var mat = new MaterialBasic(textures[5], Color._WHITE);
+	var mat = new MaterialBasic(textures[KT.TEXTURE_DOWN], Color._WHITE);
 	mat.drawFaces = 'BOTH';
 	geo.addVertice( w +v, -h, -l -v, cb, hr, vr);
 	geo.addVertice(-w -v, -h,  l +v, cb, xr, yr);

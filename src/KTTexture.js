@@ -5,14 +5,17 @@ var Vector2 = require('./KTVector2');
 function Texture(src, params){
 	this.__kttexture = true;
 	
+	var gl = KT.gl;
+	
 	if (!params) params = {};
 	this.params = params;
-	this.minFilter = (params.minFilter)? params.minFilter : 'LINEAR';
-	this.magFilter = (params.magFilter)? params.magFilter : 'LINEAR';
-	this.wrapS = (params.SWrapping)? params.SWrapping : 'REPEAT';
-	this.wrapT = (params.TWrapping)? params.TWrapping : 'REPEAT';
+	this.minFilter = (params.minFilter)? params.minFilter : gl.LINEAR;
+	this.magFilter = (params.magFilter)? params.magFilter : gl.LINEAR;
+	this.wrapS = (params.SWrapping)? params.SWrapping : gl.REPEAT;
+	this.wrapT = (params.TWrapping)? params.TWrapping : gl.REPEAT;
 	this.repeat = (params.repeat)? params.repeat : new Vector2(1.0, 1.0);
 	this.offset = (params.offset)? params.offset : new Vector2(0.0, 0.0);
+	this.generateMipmap = (params.generateMipmap)? true : false;
 	
 	this.texture = null;
 	
@@ -48,12 +51,13 @@ Texture.prototype.parseTexture = function(){
 	
 	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.image);
 	
-	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl[this.magFilter]);
-	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl[this.minFilter]);
-	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl[this.wrapS]);
-	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl[this.wrapT]);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, this.magFilter);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, this.minFilter);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, this.wrapS);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, this.wrapT);
 	
-	gl.generateMipmap(gl.TEXTURE_2D);
+	if (this.generateMipmap)
+		gl.generateMipmap(gl.TEXTURE_2D);
 	
 	gl.bindTexture(gl.TEXTURE_2D, null);
 };

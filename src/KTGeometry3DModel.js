@@ -3,12 +3,14 @@ var Geometry = require('./KTGeometry');
 var Utils = require('./KTUtils');
 var Vector2 = require('./KTVector2');
 var Vector3 = require('./KTVector3');
+var Vector4 = require('./KTVector4');
 
 function Geometry3DModel(fileURL){
 	this.__ktgeometry = true;
 	
 	this.fileURL = fileURL;
 	this.ready = false;
+	this.uvRegion = new Vector4(0.0, 0.0, 1.0, 1.0);
 	
 	var T = this;
 	Utils.getFileContent(fileURL, function(file){

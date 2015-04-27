@@ -139,7 +139,7 @@ var Input = {
 	
 	init: function(canvas){
 		Utils.addEvent(document, 'keydown', Input.handleKeyDown);
-		Utils.addEvent(document, 'keyup', Input.handleKeyDown);
+		Utils.addEvent(document, 'keyup', Input.handleKeyUp);
 		Utils.addEvent(canvas, 'mousedown', Input.handleMouseDown);
 		Utils.addEvent(document, 'mouseup', Input.handleMouseUp);
 		Utils.addEvent(canvas, 'mousewheel', Input.handleMouseWheel);

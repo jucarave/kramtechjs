@@ -45,6 +45,15 @@ Scene.prototype.drawMesh = function(mesh, camera){
 	gl.drawElements(gl[material.drawAs], mesh.geometry.facesBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 };
 
+Scene.prototype.renderToFramebuffer = function(camera, framebuffer){
+	if (!framebuffer.__kttextureframebuffer) throw "framebuffer must be an instance of TextureFramebuffer";
+	
+	var gl = KT.gl;
+	gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer.framebuffer);
+	this.render(camera);
+	gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+};
+
 Scene.prototype.render = function(camera){
 	var gl = KT.gl;
 	

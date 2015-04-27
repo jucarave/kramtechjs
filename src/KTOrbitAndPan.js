@@ -18,6 +18,8 @@ function OrbitAndPan(target){
 module.exports = OrbitAndPan;
 
 OrbitAndPan.prototype.update = function(){
+	if (this.camera.locked) return;
+	
 	if (Input.isWheelMoved(Input.vMouse.WHEELUP)){ this.zoom -= 0.3; this.setCameraPosition(); }
 	else if (Input.isWheelMoved(Input.vMouse.WHEELDOWN)){ this.zoom += 0.3; this.setCameraPosition(); }
 	

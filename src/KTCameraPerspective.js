@@ -13,6 +13,7 @@ function CameraPerspective(fov, ratio, znear, zfar){
 	this.position = new Vector3(0.0, 0.0, 0.0);
 	this.upVector = new Vector3(0.0, 1.0, 0.0);
 	this.lookAt(new Vector3(0.0, 0.0, -1.0));
+	this.locked = false;
 	
 	this.fov = fov;
 	this.ratio = ratio;

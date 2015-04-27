@@ -55,10 +55,18 @@ MaterialPhong.prototype.sendLightUniformData = function(light, uniform){
 	for (var i=0,len=uniform.data.length;i<len;i++){
 		var dat = uniform.data[i];
 		
-		if (dat.name == 'position' && light.__ktpointlight){
-			gl.uniform3f(dat.location, light.position.x, light.position.y, light.position.z);
-		}else if (dat.name == 'direction' && light.__ktdirLight){
-			gl.uniform3f(dat.location, light.direction.x, light.direction.y, light.direction.z);
+		if (dat.name == 'position'){
+			if (light.__ktpointlight){
+				gl.uniform3f(dat.location, light.position.x, light.position.y, light.position.z);
+			}else{
+				gl.uniform3f(dat.location, 0.0, 0.0, 0.0);
+			}
+		}else if (dat.name == 'direction'){
+			if (light.__ktdirLight){
+				gl.uniform3f(dat.location, light.direction.x, light.direction.y, light.direction.z);
+			}else{
+				gl.uniform3f(dat.location, 0.0, 0.0, 0.0);
+			}
 		}else if (dat.name == 'color'){
 			var color = light.color.getRGB();
 			gl.uniform3f(dat.location, color[0], color[1], color[2]);

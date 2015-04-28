@@ -16,15 +16,14 @@ Test.prototype.createSimpleScene = function(){
 		ambientLight: "#333333"
 	});
 	
-	this.camera = new KT.CameraPerspective(KT.Math.degToRad(60), this.canvas.width / this.canvas.height, 0.1, 400.0);
-	this.camera.position.set(0,5,7);
+	this.camera = new KT.CameraOrtho(2.0, 2.0, 0.1, 400.0);
+	this.camera.position.set(0,0,1);
 	this.camera.lookAt(new KT.Vector3(0,0,0));
-	this.camera.setSkybox(400, 400, 400, this.skybox);
 	
 	var cameraControls = new KT.OrbitAndPan();
 	this.camera.setControls(cameraControls);
 	
-	var plnGeo = new KT.GeometryPlane(2.67, 2.0, {uvRegion: new KT.Vector4(0.0, 0.0, 1.0, 0.73)});
+	var plnGeo = new KT.GeometryPlane(2.0, 2.0);
 	var material = new KT.MaterialBasic(this.framebuffer, "#FFFFFF");
 	material.drawFaces = 'BOTH';
 	var plane = new KT.Mesh(plnGeo, material);

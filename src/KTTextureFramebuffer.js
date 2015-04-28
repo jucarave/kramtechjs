@@ -10,8 +10,8 @@ function TextureFramebuffer(width, height, params){
 	this.params = params;
 	this.minFilter = (params.minFilter)? params.minFilter : gl.LINEAR;
 	this.magFilter = (params.magFilter)? params.magFilter : gl.LINEAR;
-	this.wrapS = (params.SWrapping)? params.SWrapping : gl.REPEAT;
-	this.wrapT = (params.TWrapping)? params.TWrapping : gl.REPEAT;
+	this.wrapS = (params.SWrapping)? params.SWrapping : gl.CLAMP_TO_EDGE;
+	this.wrapT = (params.TWrapping)? params.TWrapping : gl.CLAMP_TO_EDGE;
 	this.repeat = (params.repeat)? params.repeat : new Vector2(1.0, 1.0);
 	this.offset = (params.offset)? params.offset : new Vector2(0.0, 0.0);
 	this.generateMipmap = (params.generateMipmap)? true : false;

@@ -2,9 +2,8 @@ var Matrix4 = require('./KTMatrix4');
 var Color = require('./KTColor');
 var Vector3 = require('./KTVector3');
 var KTMath = require('./KTMath');
-var GeometrySkybox = require('./KTGeometrySkybox');
 
-function CameraPerspective(fov, ratio, znear, zfar){
+function CameraOrtho(width, height, znear, zfar){
 	this.__ktcamera = true;
 	
 	this.position = new Vector3(0.0, 0.0, 0.0);
@@ -12,39 +11,33 @@ function CameraPerspective(fov, ratio, znear, zfar){
 	this.lookAt(new Vector3(0.0, 0.0, -1.0));
 	this.locked = false;
 	
-	this.fov = fov;
-	this.ratio = ratio;
+	this.width = width;
+	this.height = height;
 	this.znear = znear;
 	this.zfar = zfar;
 	
 	this.controls = null;
 	
-	this.skybox = new GeometrySkybox(100, 100, 100, this.position);
-	
-	this.setPerspective();
+	this.setOrtho();
 }
 
-module.exports = CameraPerspective;
+module.exports = CameraOrtho;
 
-CameraPerspective.prototype.setPerspective = function(){
-	var C = 1 / Math.tan(this.fov / 2);
-	var R = C * this.ratio;
-	var A = (this.znear + this.zfar) / (this.znear - this.zfar);
-	var B = (2 * this.znear * this.zfar) / (this.znear - this.zfar);
+CameraOrtho.prototype.setOrtho = function(){
+	var C = 2.0 / this.width;
+	var R = 2.0 / this.height;
+	var A = -2.0 / (this.zfar - this.znear);
+	var B = -(this.zfar + this.znear) / (this.zfar - this.znear);
 	
 	this.perspectiveMatrix = new Matrix4(
-		C, 0, 0,  0,
-		0, R, 0,  0,
-		0, 0, A,  B,
-		0, 0, -1, 0
+		C, 0, 0, 0,
+		0, R, 0, 0,
+		0, 0, A, B,
+		0, 0, 0, 1
 	);
 };
 
-CameraPerspective.prototype.setSkybox = function(width, height, length, textures){
-	this.skybox = new GeometrySkybox(width, height, length, this.position, textures);
-};
-
-CameraPerspective.prototype.lookAt = function(vector3){
+CameraOrtho.prototype.lookAt = function(vector3){
 	if (!vector3.__ktv3) throw "Can only look to a vector3";
 	
 	var forward = Vector3.vectorsDifference(this.position, vector3).normalize();
@@ -65,7 +58,7 @@ CameraPerspective.prototype.lookAt = function(vector3){
 	return this;
 };
 
-CameraPerspective.prototype.setControls = function(cameraControls){
+CameraOrtho.prototype.setControls = function(cameraControls){
 	if (!cameraControls.__ktCamCtrls) throw "Is not a valid camera controls object";
 	
 	var zoom = Vector3.vectorsDifference(this.position, cameraControls.target).length();

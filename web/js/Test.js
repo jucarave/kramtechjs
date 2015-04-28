@@ -20,11 +20,7 @@ Test.prototype.createSimpleScene = function(){
 	this.camera.position.set(256.0,256.0,1.0);
 	this.camera.lookAt(new KT.Vector3(256.0,256.0,0.0));
 	
-	var guiTex = new KT.GUITexture(200.0, 200.0);
-	var texture = new KT.Texture('img/uiGun.png');
-	var material = new KT.MaterialBasic(texture, "#FFFFFF");
-	material.transparent = true;
-	var weapon = new KT.Mesh(guiTex, material);
+	var weapon = new KT.MeshSprite(200.0, 200.0, 'img/uiGun.png');
 	weapon.position.set(312.0, 0.0, 0.0);
 	this.scene.add(weapon);
 };

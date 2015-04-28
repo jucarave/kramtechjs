@@ -1,5 +1,5 @@
 var Matrix4 = require('./KTMatrix4');
-var Vec3 = require('./KTVector3');
+var Vector3 = require('./KTVector3');
 
 function Mesh(geometry, material){
 	if (!geometry.__ktgeometry) throw "Geometry must be a KTGeometry instance";
@@ -13,9 +13,9 @@ function Mesh(geometry, material){
 	this.parent = null;
 	this.visible = true;
 	
-	this.position = new Vec3(0, 0, 0);
-	this.rotation = new Vec3(0, 0, 0);
-	this.scale = new Vec3(1, 1, 1);
+	this.position = new Vector3(0, 0, 0);
+	this.rotation = new Vector3(0, 0, 0);
+	this.scale = new Vector3(1, 1, 1);
 }
 
 module.exports = Mesh;

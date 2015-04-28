@@ -2,7 +2,7 @@ var Color = require('./KTColor');
 var Geometry = require('./KTGeometry');
 var Vector4 = require('./KTVector4');
 
-function GUITexture(width, height, params){
+function GeometryGUITexture(width, height, params){
 	this.__ktgeometry = true;
 	this.ready = true;
 	
@@ -41,4 +41,4 @@ function GUITexture(width, height, params){
 	this.normalsBuffer = guiTex.normalsBuffer;
 }
 
-module.exports = GUITexture;
+module.exports = GeometryGUITexture;

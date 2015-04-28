@@ -16,19 +16,17 @@ Test.prototype.createSimpleScene = function(){
 		ambientLight: "#333333"
 	});
 	
-	this.camera = new KT.CameraOrtho(2.0, 2.0, 0.1, 400.0);
-	this.camera.position.set(0,0,1);
-	this.camera.lookAt(new KT.Vector3(0,0,0));
+	this.camera = new KT.CameraOrtho(512.0, 512.0, 0.1, 10.0);
+	this.camera.position.set(256.0,256.0,1.0);
+	this.camera.lookAt(new KT.Vector3(256.0,256.0,0.0));
 	
-	var cameraControls = new KT.OrbitAndPan();
-	this.camera.setControls(cameraControls);
-	
-	var plnGeo = new KT.GeometryPlane(2.0, 2.0);
-	var material = new KT.MaterialBasic(this.framebuffer, "#FFFFFF");
-	material.drawFaces = 'BOTH';
-	var plane = new KT.Mesh(plnGeo, material);
-	plane.rotation.x = KT.Math.PI_2;
-	this.scene.add(plane);
+	var guiTex = new KT.GUITexture(200.0, 200.0);
+	var texture = new KT.Texture('img/uiGun.png');
+	var material = new KT.MaterialBasic(texture, "#FFFFFF");
+	material.transparent = true;
+	var weapon = new KT.Mesh(guiTex, material);
+	weapon.position.set(312.0, 0.0, 0.0);
+	this.scene.add(weapon);
 };
 
 Test.prototype.createFrameScene = function(){
@@ -171,14 +169,6 @@ Test.prototype.animateLights = function(){
 Test.prototype.loopScene = function(){
 	var T = this;
 	
-	if (KT.Input.isKeyDown(KT.Input.vKey.A)){
-		this.camera.locked = true;
-		this.fCamera.locked = false;
-	}else{
-		this.camera.locked = false;
-		this.fCamera.locked = true;
-	}
-	
 	this.animateLights();
 	
 	this.texOff += 0.001;
@@ -194,7 +184,8 @@ Test.prototype.loopScene = function(){
 	T.cylinder.rotation.x += KT.Math.degToRad(0.25);
 	T.cylinder.rotation.y += KT.Math.degToRad(0.25);
 	
-	T.frameScene.renderToFramebuffer(T.fCamera, T.framebuffer);
+	T.scene.clear();
+	T.frameScene.render(T.fCamera, T.framebuffer);
 	T.scene.render(T.camera);
 	
 	setTimeout(function(){ T.loopScene(); }, T.fps);

@@ -45,6 +45,10 @@ Scene.prototype.drawMesh = function(mesh, camera){
 	gl.drawElements(gl[material.drawAs], mesh.geometry.facesBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 };
 
+Scene.prototype.clear = function(){
+	KT.gl.clear(KT.gl.COLOR_BUFFER_BIT | KT.gl.DEPTH_BUFFER_BIT);
+};
+
 Scene.prototype.renderToFramebuffer = function(camera, framebuffer){
 	if (!framebuffer.__kttextureframebuffer) throw "framebuffer must be an instance of TextureFramebuffer";
 	
@@ -56,8 +60,6 @@ Scene.prototype.renderToFramebuffer = function(camera, framebuffer){
 
 Scene.prototype.render = function(camera){
 	var gl = KT.gl;
-	
-	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	
 	gl.disable( gl.BLEND ); 
 	var transparents = [];
@@ -76,7 +78,7 @@ Scene.prototype.render = function(camera){
 		if (!mesh.visible) continue;
 		if (mesh.material.opacity == 0.0) continue;
 		
-		if (mesh.material.opacity != 1.0){
+		if (mesh.material.opacity != 1.0 || mesh.material.transparent){
 			transparents.push(mesh);
 			continue;
 		}

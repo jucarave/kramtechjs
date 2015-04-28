@@ -16,6 +16,7 @@ function MaterialBasic(textureMap, color){
 	this.opacity = material.opacity;
 	this.drawFaces = material.drawFaces;
 	this.drawAs = material.drawAs;
+	this.transparent = material.transparent;
 }
 
 module.exports = MaterialBasic;

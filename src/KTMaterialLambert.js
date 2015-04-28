@@ -16,6 +16,7 @@ function MaterialLambert(textureMap, color, opacity){
 	this.opacity = material.opacity;
 	this.drawFaces = material.drawFaces;
 	this.drawAs = material.drawAs;
+	this.transparent = material.transparent;
 }
 
 module.exports = MaterialLambert;

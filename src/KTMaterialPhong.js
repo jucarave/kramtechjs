@@ -21,6 +21,7 @@ function MaterialPhong(textureMap, color, opacity){
 	this.drawAs = material.drawAs;
 	this.specularColor = new Color(Color._WHITE);
 	this.shininess = 0.0;
+	this.transparent = material.transparent;
 }
 
 module.exports = MaterialPhong;

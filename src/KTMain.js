@@ -46,7 +46,7 @@ module.exports = {
 		
 		gl.disable( gl.BLEND );
 		gl.blendEquation( gl.FUNC_ADD );
-		gl.blendFunc( gl.SRC_ALPHA, gl.ONE );
+		gl.blendFunc( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA );
 	},
 	
 	__initShaders: function(){

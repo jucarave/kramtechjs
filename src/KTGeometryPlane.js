@@ -21,10 +21,10 @@ function GeometryPlane(width, height, params){
 	var hr = this.uvRegion.z;
 	var vr = this.uvRegion.w;
 	
-	planeGeo.addVertice( w, 0,  h, Color._WHITE, hr, vr);
-	planeGeo.addVertice(-w, 0, -h, Color._WHITE, xr, yr);
-	planeGeo.addVertice(-w, 0,  h, Color._WHITE, xr, vr);
-	planeGeo.addVertice( w, 0, -h, Color._WHITE, hr, yr);
+	planeGeo.addVertice( w, 0,  h, Color._WHITE, hr, yr);
+	planeGeo.addVertice(-w, 0, -h, Color._WHITE, xr, vr);
+	planeGeo.addVertice(-w, 0,  h, Color._WHITE, xr, yr);
+	planeGeo.addVertice( w, 0, -h, Color._WHITE, hr, vr);
 	
 	planeGeo.addFace(0, 1, 2);
 	planeGeo.addFace(0, 3, 1);

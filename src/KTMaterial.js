@@ -9,6 +9,7 @@ function Material(parameters){
 	this.textureMap = (parameters.textureMap)? parameters.textureMap : null;
 	this.color = new Color((parameters.color)? parameters.color : Color._WHITE);
 	this.opacity = (parameters.opacity)? parameters.opacity : 1.0;
+	this.transparent = (parameters.transparent)? parameters.transparent : false;
 	this.drawFaces = (parameters.drawFaces)? parameters.drawFaces : 'FRONT';
 	this.drawAs = (parameters.drawAs)? parameters.drawAs : 'TRIANGLES';
 	this.shader = (parameters.shader)? parameters.shader : null;

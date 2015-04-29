@@ -25,17 +25,30 @@ function MeshSprite(width, height, textureSrc){
 	this.position = new Vector3(0.0, 0.0, 0.0);
 	this.rotation = new Vector3(0.0, 0.0, 0.0);
 	this.scale = new Vector3(1.0, 1.0, 1.0);
+	
+	this.previousPosition = this.position.clone();
+	this.previousRotation = this.rotation.clone();
+	this.previousScale = this.scale.clone();
+	
+	this.transformationMatrix = null;
+	this.transformationStack = 'SRxRyRzT';
 }
 
 module.exports = MeshSprite;
 
 MeshSprite.prototype.getTransformationMatrix = function(){
-	var matrix = Matrix4.getTransformation(this.position, this.rotation, this.scale);
-	
-	if (this.parent){
-		var m = this.parent.getTransformationMatrix();
-		matrix.multiply(m);
+	if (!this.position.equals(this.previousPosition) || !this.rotation.equals(this.previousRotation) || !this.scale.equals(this.previousScale)){
+		this.transformationMatrix = Matrix4.getTransformation(this.position, this.rotation, this.scale);
+		
+		this.previousPosition.copy(this.position);
+		this.previousRotation.copy(this.rotation);
+		this.previousScale.copy(this.scale);
+		
+		if (this.parent){
+			var m = this.parent.getTransformationMatrix();
+			this.transformationMatrix.multiply(m);
+		}
 	}
 	
-	return matrix;
+	return this.transformationMatrix.clone();
 };

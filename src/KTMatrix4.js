@@ -239,8 +239,7 @@ Matrix4.getTransformation = function(position, rotation, scale){
 	var translation = Matrix4.getTranslation(position);
 	
 	var matrix;
-	matrix = Matrix4.getIdentity();
-	matrix.multiply(scale);
+	matrix = scale;
 	matrix.multiply(rotationX);
 	matrix.multiply(rotationY);
 	matrix.multiply(rotationZ);

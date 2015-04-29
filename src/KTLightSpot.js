@@ -6,8 +6,8 @@ function LightSpot(position, target, innerAngle, outerAngle, intensity, distance
 	
 	this.position = position;
 	this.direction = Vector3.vectorsDifference(position, target).normalize();
-	this.outerAngle = innerAngle;
-	this.innerAngle = outerAngle;
+	this.outerAngle = Math.cos(outerAngle);
+	this.innerAngle = Math.cos(innerAngle);
 	this.intensity = (intensity)? intensity : 1.0;
 	this.distance = (distance)? distance : 1.0;
 	this.color = new Color((color)? color : Color._WHITE);

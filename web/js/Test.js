@@ -99,7 +99,7 @@ Test.prototype.createFrameScene = function(){
 Test.prototype.createLights = function(){
 	this.pLight = [];
 	
-	this.pLight[0] = new KT.LightPoint(new KT.Vector3(0.0, 0.5, 0.0), 1.0, 30.0, KT.Color._RED);
+	/*this.pLight[0] = new KT.LightPoint(new KT.Vector3(0.0, 0.5, 0.0), 1.0, 30.0, KT.Color._RED);
 	var sphGeo = new KT.GeometrySphere(0.1, 8, 8);
 	var material = new KT.MaterialBasic(null, this.pLight[0].color.getHex());
 	var spLight= new KT.Mesh(sphGeo, material);
@@ -135,10 +135,10 @@ Test.prototype.createLights = function(){
 	this.frameScene.add(spLight);
 	this.frameScene.add(this.pLight[4]);
 	
-	this.frameScene.add(new KT.LightDirectional(new KT.Vector3(-1.0, -1.0, -1.0), KT.Color._WHITE, 0.6));
+	this.frameScene.add(new KT.LightDirectional(new KT.Vector3(-1.0, -1.0, -1.0), KT.Color._WHITE, 0.6));*/
 	
-	this.pLight[5] = new KT.LightSpot(new KT.Vector3(0.0, 5.0, 0.0), new KT.Vector3(0.0, 0.0, 2.0), KT.Math.degToRad(45.0), KT.Math.degToRad(55.0), 2.0, 30.0, KT.Color._WHITE);
-	this.frameScene.add(this.pLight[5]);
+	this.pLight[0] = new KT.LightSpot(new KT.Vector3(0.0, 5.0, 0.0), new KT.Vector3(0.0, 0.0, 2.0), KT.Math.degToRad(20.0), KT.Math.degToRad(36.0), 2.0, 30.0, KT.Color._WHITE);
+	this.frameScene.add(this.pLight[0]);
 };
 
 Test.prototype.animateLights = function(){
@@ -168,7 +168,7 @@ Test.prototype.animateLights = function(){
 Test.prototype.loopScene = function(){
 	var T = this;
 	
-	this.animateLights();
+	//this.animateLights();
 	
 	this.texOff += 0.001;
 	if (this.texOff >= 1.0) this.texOff = 0.0;

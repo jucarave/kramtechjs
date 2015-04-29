@@ -57,7 +57,7 @@ MaterialPhong.prototype.sendLightUniformData = function(light, uniform){
 		var dat = uniform.data[i];
 		
 		if (dat.name == 'position'){
-			if (light.__ktpointlight){
+			if (light.__ktpointlight || light.__ktspotlight){
 				gl.uniform3f(dat.location, light.position.x, light.position.y, light.position.z);
 			}else{
 				gl.uniform3f(dat.location, 0.0, 0.0, 0.0);
@@ -68,11 +68,29 @@ MaterialPhong.prototype.sendLightUniformData = function(light, uniform){
 			}else{
 				gl.uniform3f(dat.location, 0.0, 0.0, 0.0);
 			}
+		}else if (dat.name == 'spotDirection'){
+			if (light.__ktspotlight){
+				gl.uniform3f(dat.location, light.direction.x, light.direction.y, light.direction.z);
+			}else{
+				gl.uniform3f(dat.location, 0.0, 0.0, 0.0);
+			}
 		}else if (dat.name == 'color'){
 			var color = light.color.getRGB();
 			gl.uniform3f(dat.location, color[0], color[1], color[2]);
 		}else if (dat.name == 'intensity'){
 			gl.uniform1f(dat.location, light.intensity);
+		}else if (dat.name == 'outerAngle'){
+			if (light.__ktspotlight){
+				gl.uniform1f(dat.location, light.outerAngle);
+			}else{
+				gl.uniform1f(dat.location, 0.0);
+			}
+		}else if (dat.name == 'innerAngle'){
+			if (light.__ktspotlight){
+				gl.uniform1f(dat.location, light.innerAngle);
+			}else{
+				gl.uniform1f(dat.location, 0.0);
+			}
 		}
 	}
 };

@@ -49,7 +49,10 @@ module.exports = {
 			    "lowp vec3 position; " +
 			    "lowp vec3 color; " +
 			    "lowp vec3 direction; " +
+			    "lowp vec3 spotDirection; " +
 			    "lowp float intensity; " +
+			    "lowp float innerAngle; " +
+			    "lowp float outerAngle; " +
 			"}; " +
 			    
 			"uniform Light lights[8]; " +
@@ -101,8 +104,17 @@ module.exports = {
 							"lDistance = 1.0; " +
 							"lPos = vec3(0.0); " +
 						"} " +
+						
 						"mediump vec3 lightDirection = l.direction + normalize(lPos); " +
-						"vLightWeight += getLightWeight(aVertexNormal, lightDirection, l.color, l.intensity) / lDistance; " +
+						
+						"lowp float spotWeight = 1.0; " +
+			            "if (length(l.spotDirection) != 0.0){ " +
+			                "lowp float cosAngle = dot(l.spotDirection, lightDirection); " +
+			            	"spotWeight = clamp((cosAngle - l.outerAngle) / (l.innerAngle - l.outerAngle), 0.0, 1.0); " +
+			                "lDistance = 1.0; " +
+			            "} " +
+			            
+						"vLightWeight += getLightWeight(aVertexNormal, lightDirection, l.color, l.intensity) * spotWeight / lDistance; " + 
 					"} " +
 				"} " +
 				 
@@ -184,7 +196,10 @@ module.exports = {
 			    "lowp vec3 position; " +
 			    "lowp vec3 color; " +
 			    "lowp vec3 direction; " +
+			    "lowp vec3 spotDirection; " +
 			    "lowp float intensity; " +
+			    "lowp float innerAngle; " +
+			    "lowp float outerAngle; " +
 			"}; " +
 			    
 			"uniform Light lights[8]; " +
@@ -249,7 +264,15 @@ module.exports = {
 							"lPos = vec3(0.0); " +
 						"} " +
 						"mediump vec3 lightDirection = l.direction + normalize(lPos); " +
-						"phongLightWeight += getLightWeight(normal, lightDirection, l.color, l.intensity) / lDistance; " +
+						
+						"lowp float spotWeight = 1.0; " +
+			            "if (length(l.spotDirection) != 0.0){ " +
+			                "lowp float cosAngle = dot(l.spotDirection, lightDirection); " +
+			            	"spotWeight = clamp((cosAngle - l.outerAngle) / (l.innerAngle - l.outerAngle), 0.0, 1.0); " +
+			                "lDistance = 1.0; " +
+			            "} " +
+			            
+						"phongLightWeight += getLightWeight(normal, lightDirection, l.color, l.intensity) * spotWeight / lDistance; " + 
 						
 						
 						"lowp float shininess = uShininess; " + 

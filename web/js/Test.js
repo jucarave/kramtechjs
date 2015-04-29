@@ -29,7 +29,7 @@ Test.prototype.createFrameScene = function(){
 	var gl = KT.gl;
 	this.frameScene = new KT.Scene({
 		useLighting: true,
-		ambientLight: "#333333"
+		//ambientLight: "#333333"
 	});
 	this.framebuffer = new KT.TextureFramebuffer(512, 512);
 	
@@ -136,6 +136,9 @@ Test.prototype.createLights = function(){
 	this.frameScene.add(this.pLight[4]);
 	
 	this.frameScene.add(new KT.LightDirectional(new KT.Vector3(-1.0, -1.0, -1.0), KT.Color._WHITE, 0.6));
+	
+	this.pLight[5] = new KT.LightSpot(new KT.Vector3(0.0, 5.0, 0.0), new KT.Vector3(0.0, 0.0, 2.0), KT.Math.degToRad(45.0), KT.Math.degToRad(55.0), 2.0, 30.0, KT.Color._WHITE);
+	this.frameScene.add(this.pLight[5]);
 };
 
 Test.prototype.animateLights = function(){

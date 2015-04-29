@@ -12,6 +12,7 @@ KT.GeometrySphere = require('./KTGeometrySphere');
 KT.GeometryGUITexture = require('./KTGeometryGUITexture');
 KT.LightDirectional = require('./KTLightDirectional');
 KT.LightPoint = require('./KTLightPoint');
+KT.LightSpot = require('./KTLightSpot');
 KT.Input = require('./KTInput');
 KT.Material = require('./KTMaterial');
 KT.MaterialBasic = require('./KTMaterialBasic');

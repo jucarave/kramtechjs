@@ -18,7 +18,7 @@ module.exports = Scene;
 Scene.prototype.add = function(object){
 	if (object.__ktmesh){
 		this.meshes.push(object);
-	}else if (object.__ktdirLight || object.__ktpointlight){
+	}else if (object.__ktdirLight || object.__ktpointlight || object.__ktspotlight){
 		this.lights.push(object);
 	}else{
 		throw "Can't add the object to the scene";

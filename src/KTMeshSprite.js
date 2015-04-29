@@ -4,12 +4,13 @@ var GeometryGUITexture = require('./KTGeometryGUITexture');
 var Texture = require('./KTTexture');
 var MaterialBasic = require('./KTMaterialBasic');
 var Vector3 = require('./KTVector3');
+var Matrix4 = require('./KTMatrix4');
 
 function MeshSprite(width, height, textureSrc){
 	this.__ktmesh = true;
 	
 	this.texture;
-	if (imgURL.__kttexture)
+	if (textureSrc.__kttexture)
 		this.texture = textureSrc;
 	else
 		this.texture = new Texture(textureSrc);
@@ -21,9 +22,9 @@ function MeshSprite(width, height, textureSrc){
 	this.parent = null;
 	this.visible = true;
 	
-	this.position = new Vector3(0, 0, 0);
-	this.rotation = new Vector3(0, 0, 0);
-	this.scale = new Vector3(1, 1, 1);
+	this.position = new Vector3(0.0, 0.0, 0.0);
+	this.rotation = new Vector3(0.0, 0.0, 0.0);
+	this.scale = new Vector3(1.0, 1.0, 1.0);
 }
 
 module.exports = MeshSprite;

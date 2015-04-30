@@ -291,5 +291,22 @@ module.exports = {
 				"color.rgb *= vLightWeight + phongLightWeight; " + 
 				"gl_FragColor = vec4(color.rgb, color.a * uOpacity); " + 
 			"}"
+	},
+	
+	depthMap: {
+		vertexShader: 
+			"attribute mediump vec3 aVertexPosition; " +
+			
+			"uniform mediump mat4 uMVPMatrix; " +
+			
+			"void main(void){ " + 
+				"gl_Position = uMVPMatrix * vec4(aVertexPosition, 1.0); " +
+			"} " ,
+			
+		fragmentShader: 
+			"void main(void){ " +
+			    "lowp float depth = gl_FragCoord.z * 8.0 - 7.0; " +
+			    "gl_FragColor = vec4(depth, depth, depth, 1.0); " +
+			"}"
 	}
 };

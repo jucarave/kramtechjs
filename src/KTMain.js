@@ -54,6 +54,7 @@ module.exports = {
 		this.shaders.basic = this.processShader(Shaders.basic);
 		this.shaders.lambert = this.processShader(Shaders.lambert);
 		this.shaders.phong = this.processShader(Shaders.phong);
+		this.shaders.depth = this.processShader(Shaders.depthMap);
 	},
 	
 	createArrayBuffer: function(type, dataArray, itemSize){

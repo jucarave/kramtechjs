@@ -225,12 +225,19 @@ Matrix4.getScale = function(vector3){
 	);
 };
 
-Matrix4.getTransformation = function(position, rotation, scale){
+Matrix4.getTransformation = function(position, rotation, scale, stack){
 	if (!position.__ktv3) throw "Position must be a Vector3";
 	if (!rotation.__ktv3) throw "Rotation must be a Vector3";
 	if (scale && !scale.__ktv3) throw "Scale must be a Vector3";
+	if (!stack) stack = 'SRxRyRzT';
 	
-	var scale = (scale)? Matrix4.getScale(scale) : Matrix4.getIdentity();
+	var ss = (stack.indexOf("S") != -1);
+	var rx = (stack.indexOf("Rx") != -1);
+	var ry = (stack.indexOf("Ry") != -1);
+	var rz = (stack.indexOf("Rz") != -1);
+	var tt = (stack.indexOf("T") != -1);
+	
+	var scale = (scale && ss)? Matrix4.getScale(scale) : Matrix4.getIdentity();
 	
 	var rotationX = Matrix4.getXRotation(rotation.x);
 	var rotationY = Matrix4.getYRotation(rotation.y);
@@ -240,10 +247,10 @@ Matrix4.getTransformation = function(position, rotation, scale){
 	
 	var matrix;
 	matrix = scale;
-	matrix.multiply(rotationX);
-	matrix.multiply(rotationY);
-	matrix.multiply(rotationZ);
-	matrix.multiply(translation);
+	if (rx) matrix.multiply(rotationX);
+	if (ry) matrix.multiply(rotationY);
+	if (rz) matrix.multiply(rotationZ);
+	if (tt) matrix.multiply(translation);
 	
 	return matrix;
 };

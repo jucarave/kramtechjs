@@ -29,7 +29,7 @@ module.exports = Mesh;
 
 Mesh.prototype.getTransformationMatrix = function(){
 	if (!this.position.equals(this.previousPosition) || !this.rotation.equals(this.previousRotation) || !this.scale.equals(this.previousScale)){
-		this.transformationMatrix = Matrix4.getTransformation(this.position, this.rotation, this.scale);
+		this.transformationMatrix = Matrix4.getTransformation(this.position, this.rotation, this.scale, this.transformationStack);
 		
 		this.previousPosition.copy(this.position);
 		this.previousRotation.copy(this.rotation);

@@ -16,8 +16,8 @@ Test.prototype.createSimpleScene = function(){
 		ambientLight: "#333333"
 	});
 	
-	this.camera = new KT.CameraOrtho(512.0, 512.0, 0.1, 10.0);
-	this.camera.position.set(256.0,256.0,1.0);
+	this.camera = new KT.CameraOrtho(512.0, 512.0, 0.1, 0.2);
+	this.camera.position.set(256.0,256.0,0.1);
 	this.camera.lookAt(new KT.Vector3(256.0,256.0,0.0));
 	
 	var weapon = new KT.MeshSprite(200.0, 200.0, 'img/uiGun.png');

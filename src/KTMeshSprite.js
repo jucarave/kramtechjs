@@ -31,14 +31,14 @@ function MeshSprite(width, height, textureSrc){
 	this.previousScale = this.scale.clone();
 	
 	this.transformationMatrix = null;
-	this.transformationStack = 'SRxRyRzT';
+	this.transformationStack = 'SRzT';
 }
 
 module.exports = MeshSprite;
 
 MeshSprite.prototype.getTransformationMatrix = function(){
 	if (!this.position.equals(this.previousPosition) || !this.rotation.equals(this.previousRotation) || !this.scale.equals(this.previousScale)){
-		this.transformationMatrix = Matrix4.getTransformation(this.position, this.rotation, this.scale);
+		this.transformationMatrix = Matrix4.getTransformation(this.position, this.rotation, this.scale, this.transformationStack);
 		
 		this.previousPosition.copy(this.position);
 		this.previousRotation.copy(this.rotation);

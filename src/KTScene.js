@@ -1,5 +1,6 @@
 var KT = require('./KTMain');
 var Color = require('./KTColor');
+var Material = require('./KTMaterial');
 
 function Scene(params){
 	this.__ktscene = true;
@@ -11,9 +12,43 @@ function Scene(params){
 	if (!params) params = {};
 	this.useLighting = (params.useLighting)? true : false;
 	this.ambientLight = (params.ambientLight)? new Color(params.ambientLight) : null;
+	
+	this.setShadowMaterial();
 }
 
 module.exports = Scene;
+
+Scene.prototype.setShadowMaterial = function(){
+	this.shadowMat = new Material({
+		shader: KT.shaders.depth,
+		sendAttribData: function(mesh, camera, scene){
+			var gl = KT.gl;
+			var geometry = mesh.geometry;
+			var attributes = this.shader.attributes;
+			for (var i=0,len=attributes.length;i<len;i++){
+				var att = attributes[i];
+				
+				if (att.name == "aVertexPosition"){
+					gl.bindBuffer(gl.ARRAY_BUFFER, geometry.vertexBuffer);
+					gl.vertexAttribPointer(att.location, geometry.vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
+				}
+			}
+		},
+		sendUniformData: function(mesh, camera, scene){
+			var gl = KT.gl;
+			var uniforms = this.shader.uniforms;
+			for (var i=0,len=uniforms.length;i<len;i++){
+				var uni = uniforms[i];
+				
+				if (uni.name == 'uMVPMatrix'){
+					var transformationMatrix = mesh.getTransformationMatrix().multiply(camera.transformationMatrix);
+					var mvp = transformationMatrix.clone().multiply(camera.perspectiveMatrix);
+					gl.uniformMatrix4fv(uni.location, false, mvp.toFloat32Array());
+				}
+			}
+		}
+	});
+};
 
 Scene.prototype.add = function(object){
 	if (object.__ktmesh){

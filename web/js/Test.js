@@ -139,10 +139,6 @@ Test.prototype.createLights = function(){
 	
 	this.pLight[5] = new KT.LightSpot(new KT.Vector3(0.0, 5.0, 0.0), new KT.Vector3(0.0, 0.0, 2.0), KT.Math.degToRad(20.0), KT.Math.degToRad(40.0), 2.0, 30.0, KT.Color._WHITE);
 	this.frameScene.add(this.pLight[5]);
-	
-	this.camera2 = new KT.CameraPerspective(KT.Math.degToRad(90.0), this.canvas.width / this.canvas.height, 0.1, 400.0);
-	this.camera2.position.set(0.0,5.0,0.0);
-	this.camera2.lookAt(new KT.Vector3(0.0,0.0,2.0));
 };
 
 Test.prototype.animateLights = function(){
@@ -188,7 +184,7 @@ Test.prototype.loopScene = function(){
 	T.cylinder.rotation.y += KT.Math.degToRad(0.25);
 	
 	T.scene.clear();
-	T.frameScene.render(T.camera2, T.framebuffer);
+	T.frameScene.render(T.fCamera, T.framebuffer);
 	T.scene.render(T.camera);
 	
 	setTimeout(function(){ T.loopScene(); }, T.fps);

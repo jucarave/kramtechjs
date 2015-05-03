@@ -200,9 +200,11 @@ module.exports = {
 			    "lowp float intensity; " +
 			    "lowp float innerAngle; " +
 			    "lowp float outerAngle; " +
+			    "mediump mat4 mvProjection; " +
 			"}; " +
 			    
 			"uniform Light lights[8]; " +
+		    "uniform sampler2D shadowMaps[8]; " +
 			"uniform int usedLights; " +
 			
 			"uniform bool uHasTexture; " +
@@ -248,6 +250,8 @@ module.exports = {
 					"mediump vec4 texColor = texture2D(uTextureSampler, vec2(tx, ty)); " +
 					"color *= texColor; " +
 				"} " + 
+				
+				"mediump float r = texture2D(shadowMaps[0], vec2(0.0, 0.0)).r; " +
 				
 				"mediump vec3 phongLightWeight = vec3(0.0); " + 
 				"if (uUseLighting){ " +

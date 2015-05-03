@@ -172,6 +172,10 @@ module.exports = {
 					data: structUni,
 					type: type
 				});
+			}else{
+				for (var j=0;j<uniLen;j++){
+					uniforms.push({name: name + "[" + j + "]"});
+				}
 			}
 		}
 		

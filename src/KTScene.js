@@ -92,6 +92,7 @@ Scene.prototype.renderToFramebuffer = function(camera, framebuffer){
 	var gl = KT.gl;
 	gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer.framebuffer);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+	gl.clearColor(1.0, 1.0, 1.0, 1.0);
 	this.render(camera);
 	gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 };

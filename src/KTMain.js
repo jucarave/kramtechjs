@@ -71,6 +71,7 @@ module.exports = {
 	getShaderAttributesAndUniforms: function(vertex, fragment){
 		var attributes = [];
 		var uniforms = [];
+		var uniformsNames = [];
 		
 		var structs = [];
 		var uniformsArrays = [];
@@ -93,8 +94,10 @@ module.exports = {
 				
 				var p = line.split(/ /g);
 				var name = p[p.length - 1].trim();
-				if (uniforms.indexOf(name) == -1)
+				if (uniformsNames.indexOf(name) == -1){
 					uniforms.push({name: name});
+					uniformsNames.push(name);
+				}
 			}else if (line.indexOf("struct") == 0){
 				st = { name: line.replace("struct ", ""), data: [] };
 				structs.push(st);
@@ -124,8 +127,10 @@ module.exports = {
 				
 				var p = line.split(/ /g);
 				var name = p[p.length - 1].trim();
-				if (uniforms.indexOf(name) == -1)
+				if (uniformsNames.indexOf(name) == -1){
 					uniforms.push({name: name});
+					uniformsNames.push(name);
+				}
 			}else if (line.indexOf("struct") != -1){
 				st = { name: line.replace("struct ", ""), data: [] };
 				structs.push(st);
@@ -167,14 +172,20 @@ module.exports = {
 					}
 				}
 				
-				uniforms.push({
-					multi: true,
-					data: structUni,
-					type: type
-				});
+				if (uniformsNames.indexOf(name) == -1){
+					uniforms.push({
+						multi: true,
+						data: structUni,
+						type: type
+					});
+					uniformsNames.push(name);
+				}
 			}else{
 				for (var j=0;j<uniLen;j++){
-					uniforms.push({name: name + "[" + j + "]"});
+					if (uniformsNames.indexOf(name) == -1){
+						uniforms.push({name: name + "[" + j + "]", type: name });
+						uniformsNames.push(name);
+					}
 				}
 			}
 		}
@@ -242,7 +253,8 @@ module.exports = {
 			
 				uniforms.push({
 					name: uni.name,
-					location: location
+					location: location,
+					type: (uni.type)? uni.type : uni.name
 				});
 			}
 		}

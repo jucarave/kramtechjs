@@ -90,6 +90,7 @@ Test.prototype.createFrameScene = function(){
 	var teapot = new KT.Geometry3DModel('models/teapot.obj');
 	var material = new KT.MaterialPhong(null, "#6666FF");
 	material.shininess = 32.0;
+	material.drawFaces = 'BOTH';
 	this.teapot = new KT.Mesh(teapot, material);
 	this.teapot.position.z = 2.0;
 	this.teapot.castShadow = true;
@@ -191,6 +192,8 @@ Test.prototype.loopScene = function(){
 	
 	T.cylinder.rotation.x += KT.Math.degToRad(0.25);
 	T.cylinder.rotation.y += KT.Math.degToRad(0.25);
+	
+	T.teapot.rotation.y += KT.Math.degToRad(0.25);
 	
 	T.frameScene.clear();
 	T.frameScene.render(T.fCamera);

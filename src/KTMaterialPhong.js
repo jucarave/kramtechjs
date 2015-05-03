@@ -51,7 +51,7 @@ MaterialPhong.prototype.sendAttribData = function(mesh, camera, scene){
 	return this;
 };
 
-MaterialPhong.prototype.sendLightUniformData = function(light, uniform){
+MaterialPhong.prototype.sendLightUniformData = function(light, uniform, modelTransformation){
 	var gl = KT.gl;
 	for (var i=0,len=uniform.data.length;i<len;i++){
 		var dat = uniform.data[i];
@@ -91,6 +91,15 @@ MaterialPhong.prototype.sendLightUniformData = function(light, uniform){
 			}else{
 				gl.uniform1f(dat.location, 0.0);
 			}
+		}else if (dat.name == 'mvProjection'){
+			if (light.__ktspotlight && light.castShadow){
+				var mvp = modelTransformation.clone().multiply(light.shadowCam.transformationMatrix).multiply(light.shadowCam.perspectiveMatrix);
+				gl.uniformMatrix4fv(dat.location, false, mvp.toFloat32Array());
+			}else{
+				gl.uniformMatrix4fv(dat.location, false, Matrix4.getIdentity().toFloat32Array());
+			}
+		}else if (dat.name == 'castShadow'){
+			gl.uniform1i(dat.location, (light.castShadow)? 1 : 0);
 		}
 	}
 };
@@ -101,9 +110,12 @@ MaterialPhong.prototype.sendUniformData = function(mesh, camera, scene){
 	var transformationMatrix;
 	var uniforms = this.shader.uniforms;
 	var modelTransformation;
+	var lights = scene.lights;
 	var lightsCount = 0;
 	
 	var usedLightUniform = null;
+	var shadowMapsUniform = [];
+	
 	for (var i=0,len=uniforms.length;i<len;i++){
 		var uni = uniforms[i];
 		
@@ -111,10 +123,11 @@ MaterialPhong.prototype.sendUniformData = function(mesh, camera, scene){
 			if (lightsCount == uni.data.length)
 				continue;
 				
-			var lights = scene.lights;
 			for (var j=0,jlen=lights.length;j<jlen;j++){
-				this.sendLightUniformData(lights[j], uni.data[lightsCount++]);
+				this.sendLightUniformData(lights[j], uni.data[lightsCount++], modelTransformation);
 			}
+		}else if (uni.type == 'shadowMaps'){
+			shadowMapsUniform.push(uni);
 		}else if (uni.name == 'uMVMatrix'){
 			modelTransformation = mesh.getTransformationMatrix();
 			transformationMatrix = modelTransformation.clone().multiply(camera.transformationMatrix);
@@ -172,6 +185,16 @@ MaterialPhong.prototype.sendUniformData = function(mesh, camera, scene){
 	
 	if (usedLightUniform){
 		gl.uniform1i(usedLightUniform.location, lightsCount);
+	}
+	
+	if (shadowMapsUniform.length > 0){
+		for (var i=0;i<lightsCount;i++){
+			if (!lights[i].castShadow) continue;
+			
+			gl.activeTexture(gl.TEXTURE10 + i);
+			gl.bindTexture(gl.TEXTURE_2D, lights[i].shadowBuffer.texture);
+			gl.uniform1i(uni.location, 10 + i);
+		}
 	}
 	
 	return this;

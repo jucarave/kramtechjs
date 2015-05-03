@@ -1,3 +1,32 @@
+var structs = {
+	Light: "struct Light{ " +
+	    "lowp vec3 position; " +
+	    "lowp vec3 color; " +
+	    "lowp vec3 direction; " +
+	    "lowp vec3 spotDirection; " +
+	    "lowp float intensity; " +
+	    "lowp float innerAngle; " +
+	    "lowp float outerAngle; " +
+	    "bool castShadow; " +
+	    "mediump mat4 mvProjection; " +
+	"}; "
+};
+
+var functions = {
+	calcShadowFactor : "lowp float calcShadowFactor(mediump vec4 lightSpacePos){ " +
+	    "mediump vec3 projCoords = lightSpacePos.xyz / lightSpacePos.w; " +
+	    "mediump vec2 UVCoords; " +
+	    "UVCoords.x = 0.5 + 0.5 * projCoords.x; " +
+	    "UVCoords.y = 0.5 + 0.5 * projCoords.y; " +
+	    "mediump float z = 1.0 - (1.0 - (0.5 + 0.5 * projCoords.z)) * 25.0; " +
+	    "mediump vec4 texCoord = texture2D(shadowMaps[0], UVCoords); " +
+	    "mediump float depth = texCoord.x; " +
+	    "if (depth < (z - 0.005)) " +
+	        "return 0.5; " + 
+	    "return 1.0; " +
+	"} "
+};
+
 module.exports = {
 	basic: {
 		vertexShader: 
@@ -151,13 +180,17 @@ module.exports = {
 	
 	
 	phong: {
-		vertexShader: 
+		vertexShader:
+			structs.Light + 
+			 
 			"attribute mediump vec2 aTextureCoord; " +
 			"attribute mediump vec3 aVertexPosition; " +
 			"attribute lowp vec4 aVertexColor; " +
 			
 			"attribute mediump vec3 aVertexNormal; " + 
 			
+			
+			"uniform Light lights[8]; " +
 			
 			"uniform mediump mat4 uMVMatrix; " +
 			"uniform mediump mat4 uPMatrix; " +
@@ -174,6 +207,7 @@ module.exports = {
 			"varying mediump vec3 vLightWeight; " +
 			"varying mediump vec3 vNormal; " + 
 			"varying mediump vec3 vPosition; " +
+			"varying mediump vec4 vLightPosition; " +
 			
 			"void main(void){ " + 
 				"vec4 modelViewPosition = uMVMatrix * vec4(aVertexPosition, 1.0); " +
@@ -189,20 +223,15 @@ module.exports = {
 				"vPosition = (uModelMatrix * vec4(aVertexPosition, 1.0)).xyz; " +
 				"vVertexColor = aVertexColor * uMaterialColor; " +
 				"vTextureCoord = aTextureCoord; " +  
+				
+				"if (lights[0].castShadow){ " +
+					"vLightPosition = lights[0].mvProjection * vec4(aVertexPosition, 1.0); " +
+				"} " +
 			"} " ,
 			
 		fragmentShader: 
-			"struct Light{ " +
-			    "lowp vec3 position; " +
-			    "lowp vec3 color; " +
-			    "lowp vec3 direction; " +
-			    "lowp vec3 spotDirection; " +
-			    "lowp float intensity; " +
-			    "lowp float innerAngle; " +
-			    "lowp float outerAngle; " +
-			    "mediump mat4 mvProjection; " +
-			"}; " +
-			    
+			structs.Light + 
+			
 			"uniform Light lights[8]; " +
 		    "uniform sampler2D shadowMaps[8]; " +
 			"uniform int usedLights; " +
@@ -228,12 +257,15 @@ module.exports = {
 			"varying mediump vec3 vLightWeight; " + 
 			"varying mediump vec3 vNormal; " + 
 			"varying mediump vec3 vPosition; " +
+			"varying mediump vec4 vLightPosition; " +
 			
 			"mediump vec3 getLightWeight(mediump vec3 normal, mediump vec3 direction, lowp vec3 color, lowp float intensity){ " +
 				"mediump float lightDot = max(dot(normal, direction), 0.0); " +
 				"mediump vec3 lightWeight = (color * lightDot * intensity); " +
 				"return lightWeight; " +
 			"}" +
+			
+			functions.calcShadowFactor + 
 			
 			"void main(void){ " +
 				"mediump vec4 color = vVertexColor; " +
@@ -276,7 +308,7 @@ module.exports = {
 			                "lDistance = 1.0; " +
 			            "} " +
 			            
-						"phongLightWeight += getLightWeight(normal, lightDirection, l.color, l.intensity) * spotWeight / lDistance; " + 
+						"phongLightWeight += calcShadowFactor(vLightPosition) * getLightWeight(normal, lightDirection, l.color, l.intensity) * spotWeight / lDistance; " + 
 						
 						
 						"lowp float shininess = uShininess; " + 
@@ -309,7 +341,7 @@ module.exports = {
 			
 		fragmentShader: 
 			"void main(void){ " +
-			    "lowp float depth = gl_FragCoord.z * 8.0 - 7.0; " +
+			    "lowp float depth = 1.0 - (1.0 - gl_FragCoord.z) * 25.0; " +
 			    "gl_FragColor = vec4(depth, depth, depth, 1.0); " +
 			"}"
 	}

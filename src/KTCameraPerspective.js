@@ -19,7 +19,7 @@ function CameraPerspective(fov, ratio, znear, zfar){
 	
 	this.controls = null;
 	
-	this.skybox = new GeometrySkybox(100, 100, 100, this.position);
+	this.skybox = null;
 	
 	this.setPerspective();
 }

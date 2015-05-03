@@ -11,17 +11,15 @@ function Test(){
 
 Test.prototype.createSimpleScene = function(){
 	var gl = KT.gl;
-	this.scene = new KT.Scene({
-		useLighting: true,
-		ambientLight: "#333333"
-	});
+	this.scene = new KT.Scene();
 	
 	this.camera = new KT.CameraOrtho(512.0, 512.0, 0.1, 0.2);
 	this.camera.position.set(256.0,256.0,0.1);
 	this.camera.lookAt(new KT.Vector3(256.0,256.0,0.0));
 	
-	var weapon = new KT.MeshSprite(200.0, 200.0, 'img/uiGun.png');
-	weapon.position.set(312.0, 0.0, 0.0);
+	var weapon = new KT.MeshSprite(100.0, 100.0, this.pLight[5].shadowBuffer);
+	weapon.position.set(0.0, 412.0, 0.0);
+	weapon.material.transparent = false;
 	this.scene.add(weapon);
 };
 
@@ -31,7 +29,7 @@ Test.prototype.createFrameScene = function(){
 		useLighting: true,
 		//ambientLight: "#333333"
 	});
-	this.framebuffer = new KT.TextureFramebuffer(512, 512);
+	//this.framebuffer = new KT.TextureFramebuffer(512, 512);
 	
 	this.skybox = [];
 	var params = {SWrapping: gl.CLAMP_TO_EDGE, TWrapping: gl.CLAMP_TO_EDGE};
@@ -55,6 +53,8 @@ Test.prototype.createFrameScene = function(){
 	var material = new KT.MaterialPhong(texture, KT.Color._WHITE);
 	this.box = new KT.Mesh(boxGeo, material);
 	this.box.position.x = 2.0;
+	this.box.castShadow = true;
+	this.box.receiveShadow = true;
 	this.frameScene.add(this.box);
 	
 	
@@ -65,6 +65,8 @@ Test.prototype.createFrameScene = function(){
 	material.shininess = 32.0;
 	this.sphere = new KT.Mesh(sphGeo, material);
 	this.sphere.position.x = -2.0;
+	this.sphere.castShadow = true;
+	this.sphere.receiveShadow = true;
 	this.frameScene.add(this.sphere);
 	
 	var plnGeo = new KT.GeometryPlane(32.0, 32.0, {uvRegion: new KT.Vector4(0.5, 0.0, 1.0, 1.0)});
@@ -73,6 +75,7 @@ Test.prototype.createFrameScene = function(){
 	var material = new KT.MaterialPhong(texture, "#FFFFFF");
 	this.plane = new KT.Mesh(plnGeo, material);
 	this.plane.position.y = -1.5;
+	this.plane.receiveShadow = true;
 	this.frameScene.add(this.plane);
 	
 	var cylGeo  = new KT.GeometryCylinder(1.0, 1.0, 2.0, 16, 16, false, false, {uvRegion: new KT.Vector4(0.0, 0.0, 0.5, 1.0)});
@@ -80,6 +83,8 @@ Test.prototype.createFrameScene = function(){
 	material.shininess = 32.0;
 	this.cylinder = new KT.Mesh(cylGeo, material);
 	this.cylinder.position.z = -2.0;
+	this.cylinder.castShadow = true;
+	this.cylinder.receiveShadow = true;
 	this.frameScene.add(this.cylinder);
 	
 	var teapot = new KT.Geometry3DModel('models/teapot.obj');
@@ -87,6 +92,8 @@ Test.prototype.createFrameScene = function(){
 	material.shininess = 32.0;
 	this.teapot = new KT.Mesh(teapot, material);
 	this.teapot.position.z = 2.0;
+	this.teapot.castShadow = true;
+	this.teapot.receiveShadow = true;
 	this.frameScene.add(this.teapot);
 	
 	
@@ -137,7 +144,8 @@ Test.prototype.createLights = function(){
 
 	this.frameScene.add(new KT.LightDirectional(new KT.Vector3(-1.0, -1.0, -1.0), KT.Color._WHITE, 0.6));*/
 	
-	this.pLight[5] = new KT.LightSpot(new KT.Vector3(0.0, 5.0, 0.0), new KT.Vector3(0.0, 0.0, 2.0), KT.Math.degToRad(20.0), KT.Math.degToRad(40.0), 2.0, 30.0, KT.Color._WHITE);
+	this.pLight[5] = new KT.LightSpot(new KT.Vector3(0.0, 5.0, -4.0), new KT.Vector3(0.0, 0.0, 0.0), KT.Math.degToRad(20.0), KT.Math.degToRad(40.0), 2.0, 30.0, KT.Color._WHITE);
+	this.pLight[5].setCastShadow(true);
 	this.frameScene.add(this.pLight[5]);
 };
 
@@ -165,6 +173,7 @@ Test.prototype.animateLights = function(){
 	if (this.pLight[4].position.y <= -1.35) this.pLight[4].position.y = -1.35;
 };
 
+var count  = 0;
 Test.prototype.loopScene = function(){
 	var T = this;
 	
@@ -183,9 +192,10 @@ Test.prototype.loopScene = function(){
 	T.cylinder.rotation.x += KT.Math.degToRad(0.25);
 	T.cylinder.rotation.y += KT.Math.degToRad(0.25);
 	
-	T.scene.clear();
-	T.frameScene.render(T.fCamera, T.framebuffer);
-	T.scene.render(T.camera);
+	T.frameScene.clear();
+	T.frameScene.render(T.fCamera);
+	T.scene.render(T.camera, true);
+	
 	
 	setTimeout(function(){ T.loopScene(); }, T.fps);
 };

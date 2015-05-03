@@ -1,6 +1,7 @@
 var KT = require('./KTMain');
 var Color = require('./KTColor');
 var Material = require('./KTMaterial');
+var MaterialBasic = require('./KTMaterialBasic');
 
 function Scene(params){
 	this.__ktscene = true;
@@ -19,6 +20,7 @@ function Scene(params){
 module.exports = Scene;
 
 Scene.prototype.setShadowMaterial = function(){
+	this.shadowMapping = false;
 	this.shadowMat = new Material({
 		shader: KT.shaders.depth,
 		sendAttribData: function(mesh, camera, scene){
@@ -41,8 +43,7 @@ Scene.prototype.setShadowMaterial = function(){
 				var uni = uniforms[i];
 				
 				if (uni.name == 'uMVPMatrix'){
-					var transformationMatrix = mesh.getTransformationMatrix().multiply(camera.transformationMatrix);
-					var mvp = transformationMatrix.clone().multiply(camera.perspectiveMatrix);
+					var mvp = mesh.getTransformationMatrix().multiply(camera.transformationMatrix).multiply(camera.perspectiveMatrix);
 					gl.uniformMatrix4fv(uni.location, false, mvp.toFloat32Array());
 				}
 			}
@@ -64,10 +65,11 @@ Scene.prototype.add = function(object){
 
 Scene.prototype.drawMesh = function(mesh, camera){
 	if (!mesh.geometry.ready) return;
+	if (this.shadowMapping && !mesh.castShadow) return;
 	
 	var gl = KT.gl;
 	
-	var material = mesh.material;
+	var material = (this.shadowMapping)? this.shadowMat : mesh.material;
 	var shader = material.shader;
 	
 	KT.switchProgram(shader);
@@ -89,24 +91,39 @@ Scene.prototype.renderToFramebuffer = function(camera, framebuffer){
 	
 	var gl = KT.gl;
 	gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer.framebuffer);
+	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	this.render(camera);
 	gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 };
 
-Scene.prototype.render = function(camera){
+Scene.prototype.render = function(camera, scene){
 	var gl = KT.gl;
+	
+	
+	if (!this.shadowMapping){
+		for (var i=0,len=this.lights.length-1;i<=len;i++){
+			if (this.lights[i].castShadow){
+				this.shadowMapping = true;
+				this.renderToFramebuffer(this.lights[i].shadowCam, this.lights[i].shadowBuffer);
+			}
+			
+			if (i == len){
+				this.shadowMapping = false;
+			}
+		}
+		
+		if (camera.controls) camera.controls.update();
+	
+		if (camera.skybox){
+			var sky = camera.skybox.meshes;
+			for (var i=0,len=sky.length;i<len;i++){
+				this.drawMesh(sky[i], camera);
+			}
+		}
+	}
 	
 	gl.disable( gl.BLEND ); 
 	var transparents = [];
-	
-	if (camera.controls) camera.controls.update();
-	
-	if (camera.skybox){
-		var sky = camera.skybox.meshes;
-		for (var i=0,len=sky.length;i<len;i++){
-			this.drawMesh(sky[i], camera);
-		}
-	}
 	
 	for (var i=0,len=this.meshes.length;i<len;i++){
 		var mesh = this.meshes[i];

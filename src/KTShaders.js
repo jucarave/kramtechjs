@@ -297,11 +297,10 @@ module.exports = {
 		vertexShader: 
 			"attribute mediump vec3 aVertexPosition; " +
 			
-			"uniform mediump mat4 uMVMatrix; " +
-			"uniform mediump mat4 uPMatrix; " +
+			"uniform mediump mat4 uMVPMatrix; " +
 			
 			"void main(void){ " + 
-				"gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0); " +
+				"gl_Position = uMVPMatrix * vec4(aVertexPosition, 1.0); " +
 			"} " ,
 			
 		fragmentShader: 

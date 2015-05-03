@@ -9,11 +9,13 @@ var Matrix4 = require('./KTMatrix4');
 function MeshSprite(width, height, textureSrc){
 	this.__ktmesh = true;
 	
-	this.texture;
-	if (textureSrc.__kttexture)
-		this.texture = textureSrc;
-	else
-		this.texture = new Texture(textureSrc);
+	this.texture = null;
+	if (textureSrc){
+		if (textureSrc.__kttexture || textureSrc.__kttextureframebuffer)
+			this.texture = textureSrc;
+		else
+			this.texture = new Texture(textureSrc);
+	}
 	
 	this.geometry = new GeometryGUITexture(width, height);
 	this.material = new MaterialBasic(this.texture, "#FFFFFF");
@@ -21,6 +23,9 @@ function MeshSprite(width, height, textureSrc){
 		
 	this.parent = null;
 	this.visible = true;
+	
+	this.castShadow = false;
+	this.receiveShadow = false;
 	
 	this.position = new Vector3(0.0, 0.0, 0.0);
 	this.rotation = new Vector3(0.0, 0.0, 0.0);
@@ -37,7 +42,7 @@ function MeshSprite(width, height, textureSrc){
 module.exports = MeshSprite;
 
 MeshSprite.prototype.getTransformationMatrix = function(){
-	if (!this.position.equals(this.previousPosition) || !this.rotation.equals(this.previousRotation) || !this.scale.equals(this.previousScale)){
+	if (!this.transformationMatrix || !this.position.equals(this.previousPosition) || !this.rotation.equals(this.previousRotation) || !this.scale.equals(this.previousScale)){
 		this.transformationMatrix = Matrix4.getTransformation(this.position, this.rotation, this.scale, this.transformationStack);
 		
 		this.previousPosition.copy(this.position);

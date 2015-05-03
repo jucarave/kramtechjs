@@ -13,6 +13,9 @@ function Mesh(geometry, material){
 	this.parent = null;
 	this.visible = true;
 	
+	this.castShadow = false;
+	this.receiveShadow = false;
+	
 	this.position = new Vector3(0, 0, 0);
 	this.rotation = new Vector3(0, 0, 0);
 	this.scale = new Vector3(1, 1, 1);
@@ -28,7 +31,7 @@ function Mesh(geometry, material){
 module.exports = Mesh;
 
 Mesh.prototype.getTransformationMatrix = function(){
-	if (!this.position.equals(this.previousPosition) || !this.rotation.equals(this.previousRotation) || !this.scale.equals(this.previousScale)){
+	if (!this.transformationMatrix || !this.position.equals(this.previousPosition) || !this.rotation.equals(this.previousRotation) || !this.scale.equals(this.previousScale)){
 		this.transformationMatrix = Matrix4.getTransformation(this.position, this.rotation, this.scale, this.transformationStack);
 		
 		this.previousPosition.copy(this.position);

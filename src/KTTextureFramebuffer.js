@@ -6,6 +6,9 @@ function TextureFramebuffer(width, height, params){
 	
 	var gl = KT.gl;
 	
+	this.width = width;
+	this.height = height;
+	
 	if (!params) params = {};
 	this.params = params;
 	this.minFilter = (params.minFilter)? params.minFilter : gl.LINEAR;

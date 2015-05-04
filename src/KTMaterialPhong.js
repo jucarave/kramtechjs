@@ -93,7 +93,10 @@ MaterialPhong.prototype.sendLightUniformData = function(light, uniform, modelTra
 			}
 		}else if (dat.name == 'mvProjection'){
 			if (light.__ktspotlight && light.castShadow){
-				var mvp = modelTransformation.clone().multiply(light.shadowCam.transformationMatrix).multiply(light.shadowCam.perspectiveMatrix);
+				var mvp = modelTransformation.clone()
+							.multiply(light.shadowCam.transformationMatrix)
+							.multiply(light.shadowCam.perspectiveMatrix)
+							.multiply(KT.lightNDCMat);
 				gl.uniformMatrix4fv(dat.location, false, mvp.toFloat32Array());
 			}else{
 				gl.uniformMatrix4fv(dat.location, false, Matrix4.getIdentity().toFloat32Array());
@@ -147,6 +150,8 @@ MaterialPhong.prototype.sendUniformData = function(mesh, camera, scene){
 			gl.uniform1i(uni.location, (mesh.material.textureMap)? 1 : 0);
 		}else if (uni.name == 'uUseLighting'){
 			gl.uniform1i(uni.location, (scene.useLighting)? 1 : 0);
+		}else if (uni.name == 'uReceiveShadow'){
+			gl.uniform1i(uni.location, (mesh.receiveShadow)? 1 : 0);
 		}else if (uni.name == 'uNormalMatrix'){
 			var normalMatrix = modelTransformation.toMatrix3().inverse().toFloat32Array();
 			gl.uniformMatrix3fv(uni.location, false, normalMatrix);

@@ -93,8 +93,10 @@ Scene.prototype.renderToFramebuffer = function(camera, framebuffer){
 	gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer.framebuffer);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	gl.clearColor(1.0, 1.0, 1.0, 1.0);
+	gl.viewport(0,0,framebuffer.width,framebuffer.height);
 	this.render(camera);
 	gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+	gl.viewport(0,0,gl.width,gl.height);
 };
 
 Scene.prototype.render = function(camera, scene){

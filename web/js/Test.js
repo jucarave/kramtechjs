@@ -27,7 +27,7 @@ Test.prototype.createFrameScene = function(){
 	var gl = KT.gl;
 	this.frameScene = new KT.Scene({
 		useLighting: true,
-		//ambientLight: "#333333"
+		ambientLight: "#333333"
 	});
 	//this.framebuffer = new KT.TextureFramebuffer(512, 512);
 	
@@ -197,7 +197,7 @@ Test.prototype.loopScene = function(){
 	
 	T.frameScene.clear();
 	T.frameScene.render(T.fCamera);
-	T.scene.render(T.camera, true);
+	//T.scene.render(T.camera, true);
 	
 	
 	setTimeout(function(){ T.loopScene(); }, T.fps);

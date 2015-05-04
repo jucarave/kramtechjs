@@ -1,5 +1,6 @@
 var Shaders = require('./KTShaders');
 var Input = require('./KTInput');
+var Matrix4 = require('./KTMatrix4');
 
 module.exports = {
 	TEXTURE_FRONT: 0,
@@ -16,6 +17,13 @@ module.exports = {
 		this.images = [];
 		this.maxAttribLocations = 0;
 		this.lastProgram = null;
+		
+		this.lightNDCMat = new Matrix4(
+			0.5, 0.0, 0.0, 0.5,
+			0.0, 0.5, 0.0, 0.5,
+			0.0, 0.0, 0.5, 0.5,
+			0.0, 0.0, 0.0, 1.0
+		);
 		
 		this.__initContext(canvas);
 		this.__initProperties();
@@ -216,9 +224,19 @@ module.exports = {
 		
 		var params = this.getShaderAttributesAndUniforms(vCode.split(/[;{}]+/), fCode.split(/[;{}]+/));
 		
+		if (!gl.getShaderParameter(vShader, gl.COMPILE_STATUS)){
+			console.log(gl.getShaderInfoLog(vShader));
+			throw "Error compiling vertex shader";
+		}
+		
+		if (!gl.getShaderParameter(fShader, gl.COMPILE_STATUS)){
+			console.log(gl.getShaderInfoLog(fShader));
+			throw "Error compiling vertex shader";
+		}
+		
 		if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)){
-			console.error("Error initializing the shader program");
-			throw gl.getShaderInfoLog(shaderProgram);
+			console.log(gl.getProgramInfoLog(shaderProgram));
+			throw "Error initializing the shader program";
 		}
 		
 		var attributes = [];

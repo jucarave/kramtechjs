@@ -13,13 +13,15 @@ var structs = {
 };
 
 var functions = {
-	calcShadowFactor : "lowp float calcShadowFactor(mediump vec4 lightSpacePos){ " +
+	calcShadowFactor : "lowp float calcShadowFactor(sampler2D shadowMap, mediump vec4 lightSpacePos){ " +
+		"if (!uReceiveShadow) " +
+			"return 1.0; " +
 	    "mediump vec3 projCoords = lightSpacePos.xyz / lightSpacePos.w; " +
 	    "mediump vec2 UVCoords; " +
-	    "UVCoords.x = 0.5 + 0.5 * projCoords.x; " +
-	    "UVCoords.y = 0.5 + 0.5 * projCoords.y; " +
-	    "mediump float z = 1.0 - (1.0 - (0.5 + 0.5 * projCoords.z)) * 25.0; " +
-	    "mediump vec4 texCoord = texture2D(shadowMaps[0], UVCoords); " +
+	    "UVCoords.x = projCoords.x; " +
+	    "UVCoords.y = projCoords.y; " +
+	    "mediump float z = 1.0 - (1.0 - (projCoords.z)) * 25.0; " +
+	    "mediump vec4 texCoord = texture2D(shadowMap, UVCoords); " +
 	    "mediump float depth = texCoord.x; " +
 	    "if (depth < (z - 0.005)) " +
 	        "return 0.5; " + 
@@ -191,12 +193,14 @@ module.exports = {
 			
 			
 			"uniform Light lights[8]; " +
+			"uniform lowp int usedLights; " +
 			
 			"uniform mediump mat4 uMVMatrix; " +
 			"uniform mediump mat4 uPMatrix; " +
 			"uniform lowp vec4 uMaterialColor; " +
 			
 			"uniform bool uUseLighting; " +
+			"uniform bool uReceiveShadow; " +
 			"uniform mediump mat4 uModelMatrix; " +
 			"uniform mediump mat3 uNormalMatrix; " +
 			
@@ -216,6 +220,15 @@ module.exports = {
 				"if (uUseLighting){ " + 
 					"vNormal = uNormalMatrix * aVertexNormal; " +
 					"vLightWeight = uAmbientLightColor; " +
+					
+					"for (int i=0;i<8;i++){ " +
+						"if (i >= usedLights) break; " +
+						
+						"if (lights[i].castShadow && uReceiveShadow){ " +
+							"mediump vec4 lightProj = lights[i].mvProjection * vec4(aVertexPosition, 1.0); " +
+							"vLightPosition = lightProj; " +
+						"} " +
+					"} " +
 				"}else{ " +
 					"vLightWeight = vec3(1.0); " + 
 				"}" +   
@@ -223,18 +236,14 @@ module.exports = {
 				"vPosition = (uModelMatrix * vec4(aVertexPosition, 1.0)).xyz; " +
 				"vVertexColor = aVertexColor * uMaterialColor; " +
 				"vTextureCoord = aTextureCoord; " +  
-				
-				"if (lights[0].castShadow){ " +
-					"vLightPosition = lights[0].mvProjection * vec4(aVertexPosition, 1.0); " +
-				"} " +
 			"} " ,
 			
 		fragmentShader: 
 			structs.Light + 
 			
 			"uniform Light lights[8]; " +
-		    "uniform sampler2D shadowMaps[8]; " +
-			"uniform int usedLights; " +
+		    "uniform sampler2D shadowMaps[4]; " +
+			"uniform lowp int usedLights; " +
 			
 			"uniform bool uHasTexture; " +
 			"uniform sampler2D uTextureSampler; " +
@@ -243,6 +252,7 @@ module.exports = {
 			"uniform sampler2D uSpecularMapSampler; " +
 			
 			"uniform bool uUseLighting; " +
+			"uniform bool uReceiveShadow; " +
 			"uniform lowp float uOpacity; " +
 			"uniform lowp vec2 uTextureRepeat; " +
 			"uniform lowp vec2 uTextureOffset; " +
@@ -308,19 +318,23 @@ module.exports = {
 			                "lDistance = 1.0; " +
 			            "} " +
 			            
-						"phongLightWeight += calcShadowFactor(vLightPosition) * getLightWeight(normal, lightDirection, l.color, l.intensity) * spotWeight / lDistance; " + 
+			            "lowp float shadowWeight = 1.0; " +
+			            "if (l.castShadow)" +
+			            	"shadowWeight = calcShadowFactor(shadowMaps[i], vLightPosition); " +
+						"phongLightWeight += shadowWeight * getLightWeight(normal, lightDirection, l.color, l.intensity) * spotWeight / lDistance; " + 
 						
-						
-						"lowp float shininess = uShininess; " + 
-						"if (uUseSpecularMap){ " +
-							"shininess = texture2D(uSpecularMapSampler, vec2(tx, ty)).r * 255.0; " +
-						"} " +
-						
-						"if (shininess > 0.0 && shininess < 255.0){ " +
-							"mediump vec3 halfAngle = normalize(cameraDirection + lightDirection); " +
-							"mediump float specDot = max(dot(halfAngle, normal), 0.0); " +
-							"color += vec4(uSpecularColor, 1.0) * pow(specDot, shininess); " + 
-						"} " +
+						"if (shadowWeight == 1.0){ " +
+							"lowp float shininess = uShininess; " + 
+							"if (uUseSpecularMap){ " +
+								"shininess = texture2D(uSpecularMapSampler, vec2(tx, ty)).r * 255.0; " +
+							"} " +
+							
+							"if (shininess > 0.0 && shininess < 255.0){ " +
+								"mediump vec3 halfAngle = normalize(cameraDirection + lightDirection); " +
+								"mediump float specDot = max(dot(halfAngle, normal), 0.0); " +
+								"color += vec4(uSpecularColor, 1.0) * pow(specDot, shininess); " + 
+							"} " +
+						"}" + 
 					"} " +
 				"} " +
 				

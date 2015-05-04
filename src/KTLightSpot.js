@@ -1,6 +1,7 @@
 var KT = require('./KTMain');
 var Color = require('./KTColor');
 var Vector3 = require('./KTVector3');
+var Vector2 = require('./KTVector2');
 var TextureFramebuffer = require('./KTTextureFramebuffer');
 
 function LightSpot(position, target, innerAngle, outerAngle, intensity, distance, color){
@@ -21,7 +22,7 @@ function LightSpot(position, target, innerAngle, outerAngle, intensity, distance
 
 module.exports = LightSpot;
 
-LightSpot.prototype.setCastShadow = function(castShadow){
+LightSpot.prototype.setCastShadow = function(castShadow, resolution){
 	this.castShadow = castShadow;
 	
 	if (castShadow){
@@ -30,7 +31,12 @@ LightSpot.prototype.setCastShadow = function(castShadow){
 		this.shadowCam.position = this.position;
 		this.shadowCam.lookAt(this.target);
 		
-		this.shadowBuffer = new TextureFramebuffer(512.0, 512.0);
+		if (!resolution) resolution = new Vector2(512.0, 512.0);
+		
+		var w = (resolution.x > resolution.y)? resolution.x : resolution.y;
+		w = Math.ceil(w / 512.0) * 512.0;
+		
+		this.shadowBuffer = new TextureFramebuffer(w, w);
 	}else{
 		this.shadowCam = null;
 		this.shadowBuffer = null;

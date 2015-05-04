@@ -18,16 +18,10 @@ module.exports = {
 		this.maxAttribLocations = 0;
 		this.lastProgram = null;
 		
-		this.lightNDCMat = new Matrix4(
-			0.5, 0.0, 0.0, 0.5,
-			0.0, 0.5, 0.0, 0.5,
-			0.0, 0.0, 0.5, 0.5,
-			0.0, 0.0, 0.0, 1.0
-		);
-		
 		this.__initContext(canvas);
 		this.__initProperties();
 		this.__initShaders();
+		this.__initParams();
 		
 		Input.init(canvas);
 	},
@@ -63,6 +57,15 @@ module.exports = {
 		this.shaders.lambert = this.processShader(Shaders.lambert);
 		this.shaders.phong = this.processShader(Shaders.phong);
 		this.shaders.depth = this.processShader(Shaders.depthMap);
+	},
+	
+	__initParams: function(){
+		this.lightNDCMat = new Matrix4(
+			0.5, 0.0, 0.0, 0.5,
+			0.0, 0.5, 0.0, 0.5,
+			0.0, 0.0, 0.5, 0.5,
+			0.0, 0.0, 0.0, 1.0
+		);
 	},
 	
 	createArrayBuffer: function(type, dataArray, itemSize){

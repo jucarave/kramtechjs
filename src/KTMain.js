@@ -190,7 +190,7 @@ module.exports = {
 				}
 			}else{
 				for (var j=0;j<uniLen;j++){
-					if (uniformsNames.indexOf(name) == -1){
+					if (uniformsNames.indexOf(name + "[" + j + "]") == -1){
 						uniforms.push({name: name + "[" + j + "]", type: name });
 						uniformsNames.push(name);
 					}

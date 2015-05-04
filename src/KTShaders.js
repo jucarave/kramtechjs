@@ -26,6 +26,21 @@ var functions = {
 	    "if (depth < (z - 0.005)) " +
 	        "return 0.5; " + 
 	    "return 1.0; " +
+	"} ",
+	
+	setLightPosition: "void setLightPosition(int index, mediump vec4 position){ " +
+		"if (index == 0){ vLightPosition[0] = position; return; }" +
+		"if (index == 1){ vLightPosition[1] = position; return; }" +
+		"if (index == 2){ vLightPosition[2] = position; return; }" +
+		"if (index == 3){ vLightPosition[3] = position; return; }" +
+	"} ",
+	
+	getLightPosition: "mediump vec4 getLightPosition(int index){ " +
+		"if (index == 0){ return vLightPosition[0]; }" +
+		"if (index == 1){ return vLightPosition[1]; }" +
+		"if (index == 2){ return vLightPosition[2]; }" +
+		"if (index == 3){ return vLightPosition[3]; }" +
+		"return vec4(0.0); " +
 	"} "
 };
 
@@ -211,7 +226,9 @@ module.exports = {
 			"varying mediump vec3 vLightWeight; " +
 			"varying mediump vec3 vNormal; " + 
 			"varying mediump vec3 vPosition; " +
-			"varying mediump vec4 vLightPosition; " +
+			"varying mediump vec4 vLightPosition[4]; " +
+			
+			functions.setLightPosition +
 			
 			"void main(void){ " + 
 				"vec4 modelViewPosition = uMVMatrix * vec4(aVertexPosition, 1.0); " +
@@ -221,12 +238,13 @@ module.exports = {
 					"vNormal = uNormalMatrix * aVertexNormal; " +
 					"vLightWeight = uAmbientLightColor; " +
 					
+					"int shadowIndex = 0; " +
 					"for (int i=0;i<8;i++){ " +
 						"if (i >= usedLights) break; " +
 						
 						"if (lights[i].castShadow && uReceiveShadow){ " +
 							"mediump vec4 lightProj = lights[i].mvProjection * vec4(aVertexPosition, 1.0); " +
-							"vLightPosition = lightProj; " +
+							"setLightPosition(shadowIndex++, lightProj); " +
 						"} " +
 					"} " +
 				"}else{ " +
@@ -242,7 +260,7 @@ module.exports = {
 			structs.Light + 
 			
 			"uniform Light lights[8]; " +
-		    "uniform sampler2D shadowMaps[4]; " +
+		    "uniform sampler2D shadowMaps[8]; " +
 			"uniform lowp int usedLights; " +
 			
 			"uniform bool uHasTexture; " +
@@ -267,7 +285,7 @@ module.exports = {
 			"varying mediump vec3 vLightWeight; " + 
 			"varying mediump vec3 vNormal; " + 
 			"varying mediump vec3 vPosition; " +
-			"varying mediump vec4 vLightPosition; " +
+			"varying mediump vec4 vLightPosition[4]; " +
 			
 			"mediump vec3 getLightWeight(mediump vec3 normal, mediump vec3 direction, lowp vec3 color, lowp float intensity){ " +
 				"mediump float lightDot = max(dot(normal, direction), 0.0); " +
@@ -276,6 +294,8 @@ module.exports = {
 			"}" +
 			
 			functions.calcShadowFactor + 
+			
+			functions.getLightPosition +
 			
 			"void main(void){ " +
 				"mediump vec4 color = vVertexColor; " +
@@ -293,10 +313,9 @@ module.exports = {
 					"color *= texColor; " +
 				"} " + 
 				
-				"mediump float r = texture2D(shadowMaps[0], vec2(0.0, 0.0)).r; " +
-				
 				"mediump vec3 phongLightWeight = vec3(0.0); " + 
 				"if (uUseLighting){ " +
+					"int shadowIndex = 0; " +
 					"for (int i=0;i<8;i++){ " +
 						"if (i >= usedLights){" +
 							"break; " +
@@ -320,7 +339,7 @@ module.exports = {
 			            
 			            "lowp float shadowWeight = 1.0; " +
 			            "if (l.castShadow)" +
-			            	"shadowWeight = calcShadowFactor(shadowMaps[i], vLightPosition); " +
+			            	"shadowWeight = calcShadowFactor(shadowMaps[i], getLightPosition(shadowIndex++)); " +
 						"phongLightWeight += shadowWeight * getLightWeight(normal, lightDirection, l.color, l.intensity) * spotWeight / lDistance; " + 
 						
 						"if (shadowWeight == 1.0){ " +

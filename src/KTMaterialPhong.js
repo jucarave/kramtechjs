@@ -192,13 +192,13 @@ MaterialPhong.prototype.sendUniformData = function(mesh, camera, scene){
 		gl.uniform1i(usedLightUniform.location, lightsCount);
 	}
 	
-	if (shadowMapsUniform.length > 0){
+	if (shadowMapsUniform && shadowMapsUniform.length > 0){
 		for (var i=0;i<lightsCount;i++){
 			if (!lights[i].castShadow) continue;
 			
 			gl.activeTexture(gl.TEXTURE10 + i);
 			gl.bindTexture(gl.TEXTURE_2D, lights[i].shadowBuffer.texture);
-			gl.uniform1i(uni.location, 10 + i);
+			gl.uniform1i(shadowMapsUniform[i].location, 10 + i);
 		}
 	}
 	

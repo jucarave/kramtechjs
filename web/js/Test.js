@@ -149,9 +149,9 @@ Test.prototype.createLights = function(){
 	this.pLight[5].setCastShadow(true);
 	this.frameScene.add(this.pLight[5]);
 	
-	this.pLight[4] = new KT.LightSpot(new KT.Vector3(4.0, 5.0, 0.0), new KT.Vector3(0.0, 0.0, 0.0), KT.Math.degToRad(20.0), KT.Math.degToRad(40.0), 2.0, 30.0, KT.Color._WHITE);
+	/*this.pLight[4] = new KT.LightSpot(new KT.Vector3(4.0, 5.0, 0.0), new KT.Vector3(0.0, 0.0, 0.0), KT.Math.degToRad(20.0), KT.Math.degToRad(40.0), 2.0, 30.0, KT.Color._WHITE);
 	this.pLight[4].setCastShadow(true);
-	this.frameScene.add(this.pLight[4]);
+	this.frameScene.add(this.pLight[4]);*/
 };
 
 Test.prototype.animateLights = function(){

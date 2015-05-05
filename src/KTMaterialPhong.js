@@ -47,8 +47,6 @@ MaterialPhong.prototype.sendAttribData = function(mesh, camera, scene){
 			gl.vertexAttribPointer(att.location, geometry.normalsBuffer.itemSize, gl.FLOAT, false, 0, 0);
 		}
 	}
-	
-	return this;
 };
 
 MaterialPhong.prototype.sendLightUniformData = function(light, uniform, modelTransformation){
@@ -129,7 +127,7 @@ MaterialPhong.prototype.sendUniformData = function(mesh, camera, scene){
 			for (var j=0,jlen=lights.length;j<jlen;j++){
 				this.sendLightUniformData(lights[j], uni.data[lightsCount++], modelTransformation);
 			}
-		}else if (uni.type == 'shadowMaps'){
+		}else if (uni.type == 'uShadowMaps'){
 			shadowMapsUniform.push(uni);
 		}else if (uni.name == 'uMVMatrix'){
 			modelTransformation = mesh.getTransformationMatrix();
@@ -175,7 +173,7 @@ MaterialPhong.prototype.sendUniformData = function(mesh, camera, scene){
 			gl.uniform4f(uni.location, mesh.geometry.uvRegion.x, mesh.geometry.uvRegion.y, mesh.geometry.uvRegion.z, mesh.geometry.uvRegion.w);
 		}else if (uni.name == 'uTextureOffset' && mesh.material.textureMap){
 			gl.uniform2f(uni.location, mesh.material.textureMap.offset.x, mesh.material.textureMap.offset.y);
-		}else if (uni.name == 'usedLights'){
+		}else if (uni.name == 'uUsedLights'){
 			usedLightUniform = uni;
 		}else if (uni.name == 'uUseSpecularMap'){
 			gl.uniform1i(uni.location, (mesh.material.specularMap)? 1 : 0);
@@ -201,6 +199,4 @@ MaterialPhong.prototype.sendUniformData = function(mesh, camera, scene){
 			gl.uniform1i(shadowMapsUniform[i].location, 10 + i);
 		}
 	}
-	
-	return this;
 };

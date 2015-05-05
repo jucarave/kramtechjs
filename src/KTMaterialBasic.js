@@ -39,8 +39,6 @@ MaterialBasic.prototype.sendAttribData = function(mesh, camera, scene){
 			gl.vertexAttribPointer(att.location, geometry.texBuffer.itemSize, gl.FLOAT, false, 0, 0);
 		}
 	}
-	
-	return this;
 };
 
 MaterialBasic.prototype.sendUniformData = function(mesh, camera, scene){
@@ -74,6 +72,4 @@ MaterialBasic.prototype.sendUniformData = function(mesh, camera, scene){
 			gl.uniform2f(uni.location, mesh.material.textureMap.offset.x, mesh.material.textureMap.offset.y);
 		}
 	}
-	
-	return this;
 };

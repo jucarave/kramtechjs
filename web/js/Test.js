@@ -70,9 +70,7 @@ Test.prototype.createFrameScene = function(){
 	this.frameScene.add(this.sphere);
 	
 	var plnGeo = new KT.GeometryPlane(32.0, 32.0, {uvRegion: new KT.Vector4(0.5, 0.0, 1.0, 1.0)});
-	var texture = new KT.Texture('img/grassTile01.jpg');
-	texture.repeat.set(8.0, 8.0);
-	var material = new KT.MaterialPhong(texture, "#FFFFFF");
+	var material = new KT.MaterialLambert(null, "#FFFFFF");
 	this.plane = new KT.Mesh(plnGeo, material);
 	this.plane.position.y = -1.5;
 	this.plane.receiveShadow = true;

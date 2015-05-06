@@ -18,27 +18,34 @@ function LightSpot(position, target, innerAngle, outerAngle, intensity, distance
 	this.castShadow = false;
 	this.shadowCam = null;
 	this.shadowBuffer = null;
+	
+	this.shadowFov = KT.Math.degToRad(90.0);
+	this.shadowNear = 0.1;
+	this.shadowFar = 500.0;
+	this.shadowResolution = new Vector2(512, 512);
 }
 
 module.exports = LightSpot;
 
-LightSpot.prototype.setCastShadow = function(castShadow, resolution){
+LightSpot.prototype.setCastShadow = function(castShadow){
 	this.castShadow = castShadow;
 	
 	if (castShadow){
-		var rel = KT.canvas.width / KT.canvas.height;
-		this.shadowCam = new KT.CameraPerspective(KT.Math.degToRad(90.0), rel, 0.1, this.distance);
+		var rel = this.shadowResolution.x / this.shadowResolution.y;
+		this.shadowCam = new KT.CameraPerspective(this.shadowFov, rel, this.shadowNear, this.shadowFar);
 		this.shadowCam.position = this.position;
 		this.shadowCam.lookAt(this.target);
 		
-		if (!resolution) resolution = new Vector2(512.0, 512.0);
-		
-		var w = (resolution.x > resolution.y)? resolution.x : resolution.y;
-		w = Math.ceil(w / 512.0) * 512.0;
-		
-		this.shadowBuffer = new TextureFramebuffer(w, w);
+		this.shadowBuffer = new TextureFramebuffer(this.shadowResolution.x, this.shadowResolution.y);
 	}else{
 		this.shadowCam = null;
 		this.shadowBuffer = null;
 	}
+};
+
+LightSpot.prototype.setShadowProperties = function(fov, near, far, resolution){
+	this.shadowFov = fov;
+	this.shadowNear = near;
+	this.shadowFar = far;
+	this.shadowResolution = resolution;
 };

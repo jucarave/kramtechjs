@@ -17,8 +17,8 @@ Test.prototype.createSimpleScene = function(){
 	this.camera.position.set(256.0,256.0,0.1);
 	this.camera.lookAt(new KT.Vector3(256.0,256.0,0.0));
 	
-	var weapon = new KT.MeshSprite(100.0, 100.0, this.pLight[5].shadowBuffer);
-	weapon.position.set(0.0, 412.0, 0.0);
+	var weapon = new KT.MeshSprite(512.0, 512.0, this.pLight[6].shadowBuffer);
+	weapon.position.set(0.0, 0.0, 0.0);
 	weapon.material.transparent = false;
 	this.scene.add(weapon);
 };
@@ -139,14 +139,19 @@ Test.prototype.createLights = function(){
 	var spLight= new KT.Mesh(sphGeo, material);
 	spLight.position = this.pLight[4].position;
 	this.frameScene.add(spLight);
-	this.frameScene.add(this.pLight[4]);
+	this.frameScene.add(this.pLight[4]);*/
 
-	this.frameScene.add(new KT.LightDirectional(new KT.Vector3(-1.0, -1.0, -1.0), KT.Color._WHITE, 0.6));*/
-	
 	this.pLight[5] = new KT.LightSpot(new KT.Vector3(0.0, 5.0, -4.0), new KT.Vector3(0.0, 0.0, 0.0), KT.Math.degToRad(20.0), KT.Math.degToRad(40.0), 2.0, 30.0, KT.Color._WHITE);
 	this.pLight[5].setCastShadow(true);
-	this.frameScene.add(this.pLight[5]);
+	//this.frameScene.add(this.pLight[5]);
 	
+	this.pLight[6] = new KT.LightDirectional(new KT.Vector3(-1.0, -1.0, -1.0), KT.Color._WHITE, 0.6);
+	this.pLight[6].shadowCamWidth = 50;
+	this.pLight[6].shadowCamHeight = 50;
+	this.pLight[6].setCastShadow(true);
+	this.frameScene.add(this.pLight[6]);
+	
+	//this.fCamera = this.pLight[6].shadowCam;
 	/*this.pLight[4] = new KT.LightSpot(new KT.Vector3(4.0, 5.0, 0.0), new KT.Vector3(0.0, 0.0, 0.0), KT.Math.degToRad(20.0), KT.Math.degToRad(40.0), 2.0, 30.0, KT.Color._WHITE);
 	this.pLight[4].setCastShadow(true);
 	this.frameScene.add(this.pLight[4]);*/
@@ -199,7 +204,7 @@ Test.prototype.loopScene = function(){
 	
 	T.frameScene.clear();
 	T.frameScene.render(T.fCamera);
-	//T.scene.render(T.camera, true);
+	T.scene.render(T.camera, true);
 	
 	
 	setTimeout(function(){ T.loopScene(); }, T.fps);

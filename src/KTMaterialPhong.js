@@ -1,5 +1,6 @@
 var Material = require('./KTMaterial');
 var Color = require('./KTColor');
+var Matrix4 = require('./KTMatrix4');
 
 function MaterialPhong(textureMap, color, opacity){
 	this.__ktmaterial = true;
@@ -90,11 +91,15 @@ MaterialPhong.prototype.sendLightUniformData = function(light, uniform, modelTra
 				gl.uniform1f(dat.location, 0.0);
 			}
 		}else if (dat.name == 'mvProjection'){
-			if (light.__ktspotlight && light.castShadow){
+			if (light.castShadow){
 				var mvp = modelTransformation.clone()
 							.multiply(light.shadowCam.transformationMatrix)
-							.multiply(light.shadowCam.perspectiveMatrix)
-							.multiply(KT.lightNDCMat);
+							.multiply(light.shadowCam.perspectiveMatrix);
+				
+				if (!light.__ktdirLight){
+					mvp.multiply(KT.lightNDCMat);
+				}
+				
 				gl.uniformMatrix4fv(dat.location, false, mvp.toFloat32Array());
 			}else{
 				gl.uniformMatrix4fv(dat.location, false, Matrix4.getIdentity().toFloat32Array());

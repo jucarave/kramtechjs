@@ -103,6 +103,8 @@ MaterialLambert.prototype.sendLightUniformData = function(light, uniform, modelT
 			}
 		}else if (dat.name == 'castShadow'){
 			gl.uniform1i(dat.location, (light.castShadow)? 1 : 0);
+		}else if (dat.name == 'shadowStrength'){
+			gl.uniform1f(dat.location, light.shadowStrength);
 		}
 	}
 };

@@ -20,6 +20,7 @@ function DirectionalLight(direction, color, intensity){
 	this.shadowNear = 0.1;
 	this.shadowFar = 500.0;
 	this.shadowResolution = new Vector2(512, 512);
+	this.shadowStrength = 0.2;
 }
 
 module.exports = DirectionalLight;

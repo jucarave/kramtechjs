@@ -7,13 +7,14 @@ var structs = {
 	    "lowp float intensity; " +
 	    "lowp float innerAngle; " +
 	    "lowp float outerAngle; " +
+	    "lowp float shadowStrength; " + 
 	    "bool castShadow; " +
 	    "mediump mat4 mvProjection; " +
 	"}; "
 };
 
 var functions = {
-	calcShadowFactor : "lowp float calcShadowFactor(sampler2D shadowMap, mediump vec4 lightSpacePos){ " +
+	calcShadowFactor : "lowp float calcShadowFactor(sampler2D shadowMap, mediump vec4 lightSpacePos, lowp float shadowStrength){ " +
 		"if (!uReceiveShadow) " +
 			"return 1.0; " +
 	    "mediump vec3 projCoords = lightSpacePos.xyz / lightSpacePos.w; " +
@@ -27,7 +28,7 @@ var functions = {
 	    "mediump vec4 texCoord = texture2D(shadowMap, UVCoords); " +
 	    "mediump float depth = texCoord.x; " +
 	    "if (depth < (z - 0.005)) " +
-	        "return 0.2; " + 
+	        "return shadowStrength; " + 
 	    "return 1.0; " +
 	"} ",
 	
@@ -215,7 +216,7 @@ module.exports = {
 						
 						"lowp float shadowWeight = 1.0; " +
 			            "if (uLights[i].castShadow)" +
-			            	"shadowWeight = calcShadowFactor(uShadowMaps[i], getLightPosition(shadowIndex++)); " +
+			            	"shadowWeight = calcShadowFactor(uShadowMaps[i], getLightPosition(shadowIndex++), uLights[i].shadowStrength); " +
 			            "lightWeight *= shadowWeight; " +
 					"} " + 
 				"} " +
@@ -358,7 +359,7 @@ module.exports = {
 			            
 			            "lowp float shadowWeight = 1.0; " +
 			            "if (l.castShadow)" +
-			            	"shadowWeight = calcShadowFactor(uShadowMaps[i], getLightPosition(shadowIndex++)); " +
+			            	"shadowWeight = calcShadowFactor(uShadowMaps[i], getLightPosition(shadowIndex++), l.shadowStrength); " +
 			            	
 						"phongLightWeight += shadowWeight * getLightWeight(normal, lightDirection, l.color, l.intensity) * spotWeight / lDistance; " + 
 						

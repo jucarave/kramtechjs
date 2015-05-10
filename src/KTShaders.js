@@ -7,26 +7,34 @@ var structs = {
 	    "lowp float intensity; " +
 	    "lowp float innerAngle; " +
 	    "lowp float outerAngle; " +
-	    "lowp float shadowStrength; " + 
+	    "lowp float shadowStrength; " +
+	    "lowp float lightMult; " + 
 	    "bool castShadow; " +
 	    "mediump mat4 mvProjection; " +
 	"}; "
 };
 
 var functions = {
-	calcShadowFactor : "lowp float calcShadowFactor(sampler2D shadowMap, mediump vec4 lightSpacePos, lowp float shadowStrength){ " +
+	calcShadowFactor : "lowp float calcShadowFactor(sampler2D shadowMap, mediump vec4 lightSpacePos, lowp float shadowStrength, lowp float lightMult){ " +
 		"if (!uReceiveShadow) " +
 			"return 1.0; " +
 	    "mediump vec3 projCoords = lightSpacePos.xyz / lightSpacePos.w; " +
 	    "mediump vec2 UVCoords; " +
 	    "UVCoords.x = projCoords.x; " +
 	    "UVCoords.y = projCoords.y; " +
+	    "projCoords.z *= lightMult; " +
 	    
-	    "if (UVCoords.x > 1.0 || UVCoords.y > 1.0) return 1.0; " +
+	    "bvec4 inTexture = bvec4(UVCoords.x >= 0.0, UVCoords.y >= 0.0, UVCoords.x < 1.0, UVCoords.y < 1.0); " +
+	    "if (!all(inTexture)) " +
+	    	"return 1.0; " +
 	    
-	    "mediump float z = 1.0 - (1.0 - (projCoords.z)) * 15.0; " +
+	    "mediump float z = (1.0 - projCoords.z) * 15.0; " +
+	    "if (lightMult == 1.0) z = 1.0 - z; " +
+	    "z = min(z, 1.0); " +
+			    	
 	    "mediump vec4 texCoord = texture2D(shadowMap, UVCoords);" +
 	    "mediump float depth = texCoord.x; " +
+	    	
 	    "if (depth < (z - 0.005)) " +
 	        "return shadowStrength; " + 
 	    "return 1.0; " +
@@ -216,7 +224,7 @@ module.exports = {
 						
 						"lowp float shadowWeight = 1.0; " +
 			            "if (uLights[i].castShadow)" +
-			            	"shadowWeight = calcShadowFactor(uShadowMaps[i], getLightPosition(shadowIndex++), uLights[i].shadowStrength); " +
+			            	"shadowWeight = calcShadowFactor(uShadowMaps[i], getLightPosition(shadowIndex++), uLights[i].shadowStrength, uLights[i].lightMult); " +
 			            "lightWeight *= shadowWeight; " +
 					"} " + 
 				"} " +
@@ -359,10 +367,11 @@ module.exports = {
 			            
 			            "lowp float shadowWeight = 1.0; " +
 			            "if (l.castShadow){ " +
-			            	"shadowWeight = calcShadowFactor(uShadowMaps[i], getLightPosition(shadowIndex++), l.shadowStrength); " +
+			            	"shadowWeight = calcShadowFactor(uShadowMaps[i], getLightPosition(shadowIndex++), l.shadowStrength, l.lightMult); " +
 			            "} " +
 			            	
-						"phongLightWeight += shadowWeight * getLightWeight(normal, lightDirection, l.color, l.intensity) * spotWeight / lDistance; " + 
+			            "mediump vec3 lWeight = getLightWeight(normal, lightDirection, l.color, l.intensity); " +
+						"phongLightWeight += shadowWeight * lWeight * spotWeight / lDistance; " + 
 						
 						"if (shadowWeight == 1.0){ " +
 							"lowp float shininess = uShininess; " + 
@@ -404,7 +413,10 @@ module.exports = {
 			
 			"void main(void){ " +
 				"lowp float depth = uDepthMult * vVertexDepth.z / vVertexDepth.w; " +
-			    "depth = 1.0 - (1.0 - depth) * 15.0; " +
+			    "depth =  (1.0 - depth) * 15.0; " +
+			    
+			    "if (uDepthMult == 1.0) " +
+			    	"depth = 1.0 - depth; " +
 			    
 			    "gl_FragColor = vec4(depth, depth, depth, 1.0); " +
 			"}"

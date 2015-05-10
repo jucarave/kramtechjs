@@ -17,7 +17,7 @@ Test.prototype.createSimpleScene = function(){
 	this.camera.position.set(256.0,256.0,0.1);
 	this.camera.lookAt(new KT.Vector3(256.0,256.0,0.0));
 	
-	var weapon = new KT.MeshSprite(100.0, 100.0, this.pLight[5].shadowBuffer);
+	var weapon = new KT.MeshSprite(100.0, 100.0, this.pLight[6].shadowBuffer);
 	weapon.position.set(0.0, 0.0, 0.0);
 	weapon.material.transparent = false;
 	this.scene.add(weapon);
@@ -149,7 +149,7 @@ Test.prototype.createLights = function(){
 	this.pLight[6].shadowCamWidth = 10;
 	this.pLight[6].shadowCamHeight = 10;
 	this.pLight[6].setCastShadow(true);
-	//this.frameScene.add(this.pLight[6]);
+	this.frameScene.add(this.pLight[6]);
 	
 	//this.fCamera = this.pLight[6].shadowCam;
 	/*this.pLight[4] = new KT.LightSpot(new KT.Vector3(4.0, 5.0, 0.0), new KT.Vector3(0.0, 0.0, 0.0), KT.Math.degToRad(20.0), KT.Math.degToRad(40.0), 2.0, 30.0, KT.Color._WHITE);

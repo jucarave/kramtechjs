@@ -91,11 +91,8 @@ MaterialLambert.prototype.sendLightUniformData = function(light, uniform, modelT
 			if (light.castShadow){
 				var mvp = modelTransformation.clone()
 							.multiply(light.shadowCam.transformationMatrix)
-							.multiply(light.shadowCam.perspectiveMatrix);
-				
-				if (!light.__ktdirLight){
-					mvp.multiply(KT.lightNDCMat);
-				}
+							.multiply(light.shadowCam.perspectiveMatrix)
+							.multiply(KT.lightNDCMat);
 				
 				gl.uniformMatrix4fv(dat.location, false, mvp.toFloat32Array());
 			}else{
@@ -105,6 +102,8 @@ MaterialLambert.prototype.sendLightUniformData = function(light, uniform, modelT
 			gl.uniform1i(dat.location, (light.castShadow)? 1 : 0);
 		}else if (dat.name == 'shadowStrength'){
 			gl.uniform1f(dat.location, light.shadowStrength);
+		}else if (dat.name == 'lightMult'){
+			gl.uniform1f(dat.location, (light.__ktdirLight)? -1 : 1);
 		}
 	}
 };

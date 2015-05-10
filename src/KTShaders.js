@@ -24,8 +24,8 @@ var functions = {
 	    
 	    "if (UVCoords.x > 1.0 || UVCoords.y > 1.0) return 1.0; " +
 	    
-	    "mediump float z = 1.0 - (1.0 - (projCoords.z)) * 25.0; " +
-	    "mediump vec4 texCoord = texture2D(shadowMap, UVCoords); " +
+	    "mediump float z = 1.0 - (1.0 - (projCoords.z)) * 15.0; " +
+	    "mediump vec4 texCoord = texture2D(shadowMap, UVCoords);" +
 	    "mediump float depth = texCoord.x; " +
 	    "if (depth < (z - 0.005)) " +
 	        "return shadowStrength; " + 
@@ -358,8 +358,9 @@ module.exports = {
 			            "} " +
 			            
 			            "lowp float shadowWeight = 1.0; " +
-			            "if (l.castShadow)" +
+			            "if (l.castShadow){ " +
 			            	"shadowWeight = calcShadowFactor(uShadowMaps[i], getLightPosition(shadowIndex++), l.shadowStrength); " +
+			            "} " +
 			            	
 						"phongLightWeight += shadowWeight * getLightWeight(normal, lightDirection, l.color, l.intensity) * spotWeight / lDistance; " + 
 						
@@ -389,13 +390,22 @@ module.exports = {
 			
 			"uniform mediump mat4 uMVPMatrix; " +
 			
+			"varying mediump vec4 vVertexDepth; " + 
+			
 			"void main(void){ " + 
 				"gl_Position = uMVPMatrix * vec4(aVertexPosition, 1.0); " +
-			"} " ,
+				"vVertexDepth = gl_Position; " +
+			"} ",
 			
-		fragmentShader: 
+		fragmentShader:
+			"uniform lowp float uDepthMult; " +
+			
+			"varying mediump vec4 vVertexDepth; " +  
+			
 			"void main(void){ " +
-			    "lowp float depth = 1.0 - (1.0 - gl_FragCoord.z) * 25.0; " +
+				"lowp float depth = uDepthMult * vVertexDepth.z / vVertexDepth.w; " +
+			    "depth = 1.0 - (1.0 - depth) * 15.0; " +
+			    
 			    "gl_FragColor = vec4(depth, depth, depth, 1.0); " +
 			"}"
 	}

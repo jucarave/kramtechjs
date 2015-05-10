@@ -146,8 +146,8 @@ Test.prototype.createLights = function(){
 	this.frameScene.add(this.pLight[5]);
 	
 	this.pLight[6] = new KT.LightDirectional(new KT.Vector3(-1.0, -1.0, -1.0), KT.Color._WHITE, 0.6);
-	this.pLight[6].shadowCamWidth = 50;
-	this.pLight[6].shadowCamHeight = 50;
+	this.pLight[6].shadowCamWidth = 10;
+	this.pLight[6].shadowCamHeight = 10;
 	this.pLight[6].setCastShadow(true);
 	//this.frameScene.add(this.pLight[6]);
 	

@@ -31,7 +31,7 @@ DirectionalLight.prototype.setCastShadow = function(castShadow){
 	if (castShadow){
 		var rel = this.shadowResolution.x / this.shadowResolution.y;
 		this.shadowCam = new CameraOrtho(this.shadowCamWidth, this.shadowCamHeight, this.shadowNear, this.shadowFar);
-		this.shadowCam.position = this.direction.clone().multiply(100);
+		this.shadowCam.position = this.direction.clone().multiply(10);
 		this.shadowCam.lookAt(this.direction.clone().multiply(-1));
 		
 		this.shadowBuffer = new TextureFramebuffer(this.shadowResolution.x, this.shadowResolution.y);

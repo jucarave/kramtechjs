@@ -63,7 +63,7 @@ module.exports = {
 		this.lightNDCMat = new Matrix4(
 			0.5, 0.0, 0.0, 0.5,
 			0.0, 0.5, 0.0, 0.5,
-			0.0, 0.0, 0.5, 0.5,
+			0.0, 0.0, 1.0, 0.0,
 			0.0, 0.0, 0.0, 1.0
 		);
 	},
@@ -234,7 +234,7 @@ module.exports = {
 		
 		if (!gl.getShaderParameter(fShader, gl.COMPILE_STATUS)){
 			console.log(gl.getShaderInfoLog(fShader));
-			throw "Error compiling vertex shader";
+			throw "Error compiling fragment shader";
 		}
 		
 		if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)){

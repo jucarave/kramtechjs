@@ -2,6 +2,7 @@ var KT = require('./KTMain');
 var Color = require('./KTColor');
 var Material = require('./KTMaterial');
 var MaterialBasic = require('./KTMaterialBasic');
+var Matrix4 = require('./KTMatrix4');
 
 function Scene(params){
 	this.__ktscene = true;
@@ -20,7 +21,9 @@ function Scene(params){
 module.exports = Scene;
 
 Scene.prototype.setShadowMaterial = function(){
-	this.shadowMapping = false;
+	var T = this;
+	
+	this.shadowMapping = null;
 	this.shadowMat = new Material({
 		shader: KT.shaders.depth,
 		sendAttribData: function(mesh, camera, scene){
@@ -45,6 +48,8 @@ Scene.prototype.setShadowMaterial = function(){
 				if (uni.name == 'uMVPMatrix'){
 					var mvp = mesh.getTransformationMatrix().multiply(camera.transformationMatrix).multiply(camera.perspectiveMatrix);
 					gl.uniformMatrix4fv(uni.location, false, mvp.toFloat32Array());
+				}else if (uni.name == 'uDepthMult'){
+					gl.uniform1f(uni.location, (T.shadowMapping.__ktdirLight)? -1 : 1);
 				}
 			}
 		}
@@ -106,12 +111,12 @@ Scene.prototype.render = function(camera, scene){
 	if (!this.shadowMapping){
 		for (var i=0,len=this.lights.length-1;i<=len;i++){
 			if (this.lights[i].castShadow){
-				this.shadowMapping = true;
+				this.shadowMapping = this.lights[i];
 				this.renderToFramebuffer(this.lights[i].shadowCam, this.lights[i].shadowBuffer);
 			}
 			
 			if (i == len){
-				this.shadowMapping = false;
+				this.shadowMapping = null;
 			}
 		}
 		

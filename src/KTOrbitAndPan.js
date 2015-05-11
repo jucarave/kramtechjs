@@ -86,3 +86,13 @@ OrbitAndPan.prototype.setCameraPosition = function(){
 	this.camera.position.set(x, y, z);
 	this.camera.lookAt(this.target);
 };
+
+OrbitAndPan.prototype.setCamera = function(camera){
+	var zoom = Vector3.vectorsDifference(camera.position, this.target).length();
+	this.camera = camera;
+	this.zoom = zoom;
+	this.angle.x = KTMath.get2DAngle(this.target.x, this.target.z, camera.position.x, camera.position.z);
+	this.angle.y = KTMath.get2DAngle(0, camera.position.y, zoom, this.target.y);
+	
+	this.setCameraPosition();
+};

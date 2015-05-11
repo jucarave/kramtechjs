@@ -366,11 +366,12 @@ module.exports = {
 			            "} " +
 			            
 			            "lowp float shadowWeight = 1.0; " +
+			            "mediump vec3 lWeight = getLightWeight(normal, lightDirection, l.color, l.intensity); " +
+			            
 			            "if (l.castShadow){ " +
 			            	"shadowWeight = calcShadowFactor(uShadowMaps[i], getLightPosition(shadowIndex++), l.shadowStrength, l.lightMult); " +
-			            "} " +
-			            	
-			            "mediump vec3 lWeight = getLightWeight(normal, lightDirection, l.color, l.intensity); " +
+			            "} " + 
+			            
 						"phongLightWeight += shadowWeight * lWeight * spotWeight / lDistance; " + 
 						
 						"if (shadowWeight == 1.0){ " +

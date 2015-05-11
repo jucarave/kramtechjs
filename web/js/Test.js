@@ -45,7 +45,8 @@ Test.prototype.createFrameScene = function(){
 	this.fCamera.lookAt(new KT.Vector3(0,0,0));
 	this.fCamera.setSkybox(400, 400, 400, this.skybox);
 	
-	var cameraControls = new KT.OrbitAndPan();
+	//var cameraControls = new KT.OrbitAndPan();
+	var cameraControls = new KT.CameraFly();
 	this.fCamera.setControls(cameraControls);
 	
 	var boxGeo = new KT.GeometryBox(2.0, 2.0, 2.0, {uvRegion: new KT.Vector4(0.0, 0.0, 0.5, 1.0)});
@@ -70,7 +71,7 @@ Test.prototype.createFrameScene = function(){
 	this.frameScene.add(this.sphere);
 	
 	var plnGeo = new KT.GeometryPlane(32.0, 32.0, {uvRegion: new KT.Vector4(0.5, 0.0, 1.0, 1.0)});
-	var material = new KT.MaterialLambert(null, "#FFFFFF");
+	var material = new KT.MaterialPhong(null, "#FFFFFF");
 	this.plane = new KT.Mesh(plnGeo, material);
 	this.plane.position.y = -1.5;
 	this.plane.receiveShadow = true;
@@ -141,7 +142,7 @@ Test.prototype.createLights = function(){
 	this.frameScene.add(spLight);
 	this.frameScene.add(this.pLight[4]);*/
 
-	this.pLight[5] = new KT.LightSpot(new KT.Vector3(0.0, 5.0, -4.0), new KT.Vector3(0.0, 0.0, 0.0), KT.Math.degToRad(20.0), KT.Math.degToRad(40.0), 2.0, 30.0, KT.Color._WHITE);
+	this.pLight[5] = new KT.LightSpot(new KT.Vector3(0.0, 5.0, -4.0), new KT.Vector3(0.0, 0.0, 0.0), KT.Math.degToRad(20.0), KT.Math.degToRad(40.0), 1.0, 30.0, KT.Color._WHITE);
 	this.pLight[5].setCastShadow(true);
 	this.frameScene.add(this.pLight[5]);
 	

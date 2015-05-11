@@ -68,16 +68,8 @@ CameraPerspective.prototype.lookAt = function(vector3){
 CameraPerspective.prototype.setControls = function(cameraControls){
 	if (!cameraControls.__ktCamCtrls) throw "Is not a valid camera controls object";
 	
-	var zoom = Vector3.vectorsDifference(this.position, cameraControls.target).length();
-	
 	this.controls = cameraControls;
-	
-	cameraControls.camera = this;
-	cameraControls.zoom = zoom;
-	cameraControls.angle.x = KTMath.get2DAngle(cameraControls.target.x, cameraControls.target.z,this.position.x, this.position.z);
-	cameraControls.angle.y = KTMath.get2DAngle(0, this.position.y, zoom, cameraControls.target.y);
-	
-	cameraControls.setCameraPosition();
+	cameraControls.setCamera(this);
 	
 	return this;
 };

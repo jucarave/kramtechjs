@@ -37,6 +37,9 @@ var Input = {
 		WHEELDOWN: -1,
 	},
 	
+	useLockPointer: false,
+	mouseLocked: false,
+	
 	isKeyDown: function(keyCode){
 		return (Input._keys[keyCode] == 1);
 	},
@@ -85,8 +88,11 @@ var Input = {
 		Input._keys[ev.keyCode] = 0;
 	},
 	
-	handleMouseDown: function(ev){
+	handleMouseDown: function(ev, canvas){
 		if (window.event) ev = window.event;
+		
+		if (Input.useLockPointer)
+			canvas.requestPointerLock();
 		
 		if (ev.which == 1){
 			if (Input._mouse.left != 2)
@@ -129,6 +135,7 @@ var Input = {
 	},
 	
 	handleMouseMove: function(ev){
+		if (Input.mouseLocked) return;
 		if (window.event) ev = window.event;
 		
 		var elX = ev.clientX - ev.target.offsetLeft;
@@ -137,10 +144,37 @@ var Input = {
 		Input._mouse.position.set(elX, elY);
 	},
 	
+	moveCallback: function(e){
+		var elX = e.movementX ||
+				e.mozMovementX ||
+				e.webkitMovementX ||
+				0;
+						
+		var elY = e.movementY ||
+				e.mozMovementY ||
+				e.webkitMovementY ||
+				0;
+		
+		Input._mouse.position.add(new Vector2(elX, elY));
+	},
+	
+	pointerlockchange: function(e, canvas){
+		if (document.pointerLockElement === canvas ||
+			document.mozPointerLockElement === canvas ||
+			document.webkitPointerLockElement === canvas){
+				
+			Input.mouseLocked = true;
+			Utils.addEvent(document, "mousemove", Input.moveCallback);
+		}else{
+			Input.mouseLocked = false;
+			document.removeEventListener("mousemove", Input.moveCallback);
+		}
+	},
+	
 	init: function(canvas){
 		Utils.addEvent(document, 'keydown', Input.handleKeyDown);
 		Utils.addEvent(document, 'keyup', Input.handleKeyUp);
-		Utils.addEvent(canvas, 'mousedown', Input.handleMouseDown);
+		Utils.addEvent(canvas, 'mousedown', function(e){ Input.handleMouseDown(e, canvas); });
 		Utils.addEvent(document, 'mouseup', Input.handleMouseUp);
 		Utils.addEvent(canvas, 'mousewheel', Input.handleMouseWheel);
 		Utils.addEvent(canvas, 'mousemove', Input.handleMouseMove);
@@ -159,6 +193,10 @@ var Input = {
 			
 			return true;
 		});
+		
+		Utils.addEvent(document, "pointerlockchange", function(e){ Input.pointerlockchange(e, canvas); });
+		Utils.addEvent(document, "mozpointerlockchange", function(e){ Input.pointerlockchange(e, canvas); });
+		Utils.addEvent(document, "webkitpointerlockchange", function(e){ Input.pointerlockchange(e, canvas); });
 		
 		for (var i=0;i<=9;i++){
 			Input.vKey['N' + i] = 48 + i;

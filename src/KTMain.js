@@ -10,7 +10,7 @@ module.exports = {
 	TEXTURE_UP: 4,
 	TEXTURE_DOWN: 5,
 	
-	init: function(canvas){
+	init: function(canvas, params){
 		this.canvas = canvas;
 		this.gl = null;
 		this.shaders = {};

@@ -3,6 +3,7 @@ function Test(){
 	this.fps = 1000 / 30;
 	
 	KT.init(this.canvas);
+	KT.Input.useLockPointer = true;
 	
 	this.createFrameScene();
 	this.createSimpleScene();

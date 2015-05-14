@@ -2,8 +2,8 @@ var Matrix4 = require('./KTMatrix4');
 var Vector3 = require('./KTVector3');
 
 function Mesh(geometry, material){
-	if (!geometry.__ktgeometry) throw "Geometry must be a KTGeometry instance";
-	if (!material.__ktmaterial) throw "Material must be a KTMaterial instance";
+	if (!geometry || !geometry.__ktgeometry) throw "Geometry must be a KTGeometry instance";
+	if (!material || !material.__ktmaterial) throw "Material must be a KTMaterial instance";
 	
 	this.__ktmesh = true;
 	

@@ -40,8 +40,8 @@ CameraPerspective.prototype.setPerspective = function(){
 	);
 };
 
-CameraPerspective.prototype.setSkybox = function(width, height, length, textures){
-	this.skybox = new GeometrySkybox(width, height, length, this.position, textures);
+CameraPerspective.prototype.setSkybox = function(width, height, length, texture){
+	this.skybox = new GeometrySkybox(width, height, length, this.position, texture);
 };
 
 CameraPerspective.prototype.lookAt = function(vector3){

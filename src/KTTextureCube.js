@@ -11,8 +11,8 @@ function TextureCube(posX, negX, posY, negY, posZ, negZ, params){
 	this.params = params;
 	this.minFilter = (params.minFilter)? params.minFilter : gl.LINEAR;
 	this.magFilter = (params.magFilter)? params.magFilter : gl.LINEAR;
-	this.wrapS = (params.SWrapping)? params.SWrapping : gl.REPEAT;
-	this.wrapT = (params.TWrapping)? params.TWrapping : gl.REPEAT;	
+	this.wrapS = (params.SWrapping)? params.SWrapping : gl.CLAMP_TO_EDGE;
+	this.wrapT = (params.TWrapping)? params.TWrapping : gl.CLAMP_TO_EDGE;	
 	this.generateMipmap = (params.generateMipmap)? true : false;
 	
 	this.images = [];
@@ -57,9 +57,9 @@ TextureCube.prototype.parseTexture = function(){
 	}
 	
 	var gl = KT.gl;
-	var types = [gl.TEXTURE_CUBE_MAP_POSITIVE_X, TEXTURE_CUBE_MAP_NEGATIVE_X,
-				 gl.TEXTURE_CUBE_MAP_POSITIVE_Y, TEXTURE_CUBE_MAP_NEGATIVE_Y,
-				 gl.TEXTURE_CUBE_MAP_POSITIVE_Z, TEXTURE_CUBE_MAP_NEGATIVE_Z];
+	var types = [gl.TEXTURE_CUBE_MAP_POSITIVE_X, gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
+				 gl.TEXTURE_CUBE_MAP_POSITIVE_Y, gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
+				 gl.TEXTURE_CUBE_MAP_POSITIVE_Z, gl.TEXTURE_CUBE_MAP_NEGATIVE_Z];
 	
 	
 	this.texture = gl.createTexture();
@@ -67,8 +67,16 @@ TextureCube.prototype.parseTexture = function(){
 	
 	gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 	
+	var color = [
+		new Uint8Array([255, 0, 0]),
+		new Uint8Array([0, 255, 0]),
+		new Uint8Array([0, 0, 255]),
+		new Uint8Array([255, 255, 0]),
+		new Uint8Array([255, 0, 255]),
+		new Uint8Array([0, 255, 255]),
+	];
 	for (var i=0;i<6;i++){
-		gl.texImage2D(types[i], 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.images[i]);
+		gl.texImage2D(types[i], 0, gl.RGB, 1, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, color[i]);
 	}
 	
 	gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, this.magFilter);

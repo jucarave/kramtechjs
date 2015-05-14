@@ -3,6 +3,7 @@ var Color = require('./KTColor');
 var Material = require('./KTMaterial');
 var MaterialBasic = require('./KTMaterialBasic');
 var Matrix4 = require('./KTMatrix4');
+var GeometrySkybox = require('./KTGeometrySkybox');
 
 function Scene(params){
 	this.__ktscene = true;
@@ -121,13 +122,6 @@ Scene.prototype.render = function(camera, scene){
 		}
 		
 		if (camera.controls) camera.controls.update();
-	
-		if (camera.skybox){
-			var sky = camera.skybox.meshes;
-			for (var i=0,len=sky.length;i<len;i++){
-				this.drawMesh(sky[i], camera);
-			}
-		}
 	}
 	
 	gl.disable( gl.BLEND ); 
@@ -152,9 +146,27 @@ Scene.prototype.render = function(camera, scene){
 		this.drawMesh(mesh, camera);
 	}
 	
+	if (!this.shadowMapping && camera.skybox){
+		this.drawSkybox(camera.skybox, camera);
+	}
+	
 	return this;
 };
 
+Scene.prototype.drawSkybox = function(skybox, camera){
+	var gl = KT.gl;
+	
+	KT.switchProgram(GeometrySkybox.material.shader);
+	
+	gl.enable(gl.CULL_FACE);
+	gl.cullFace(gl.FRONT);
+    gl.depthFunc(gl.LEQUAL);
+	
+	skybox.render(camera, this);
+	
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, skybox.boxGeo.facesBuffer);
+	gl.drawElements(gl.TRIANGLES, skybox.boxGeo.facesBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+};
 
 Scene.prototype.setMaterialAttributes = function(material){
 	var gl = KT.gl;

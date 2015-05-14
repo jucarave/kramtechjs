@@ -57,6 +57,7 @@ module.exports = {
 		this.shaders.lambert = this.processShader(Shaders.lambert);
 		this.shaders.phong = this.processShader(Shaders.phong);
 		this.shaders.depth = this.processShader(Shaders.depthMap);
+		this.shaders.skybox = this.processShader(Shaders.skybox);
 	},
 	
 	__initParams: function(){

@@ -1,100 +1,68 @@
 var Color = require('./KTColor');
 var Geometry = require('./KTGeometry');
 var Vector4 = require('./KTVector4');
+var Material = require('./KTMaterial');
 var MaterialBasic = require('./KTMaterialBasic');
 var Mesh = require('./KTMesh');
 var GeometryPlane = require('./KTGeometryPlane');
 var KT = require('./KTMain');
 
-function GeometrySkybox(width, height, length, position, textures){
+function GeometrySkybox(width, height, length, position, texture){
 	this.meshes = [];
-	if (!textures) textures = [];
+	this.texture = texture;
 	
-	var w = width / 2;
-	var l = length / 2;
-	var h = height / 2;
-	var v = 1.0;
+	this.boxGeo = new KT.GeometryBox(width, height, length);
+	this.box = new KT.Mesh(this.boxGeo, new MaterialBasic());
+	this.box.position = position;
 	
-	var xr = 0.0;
-	var yr = 0.0;
-	var hr = 1.0;
-	var vr = 1.0;
-	
-	var ct = Color._WHITE;
-	var cb = Color._WHITE;
-	
-	var geo = new Geometry();
-	var mat = new MaterialBasic(textures[KT.TEXTURE_FRONT], Color._WHITE);
-	geo.addVertice(-w -v, -h -v,  l, cb, hr, yr);
-	geo.addVertice( w +v,  h +v,  l, ct, xr, vr);
-	geo.addVertice( w +v, -h -v,  l, cb, xr, yr);
-	geo.addVertice(-w -v,  h +v,  l, ct, hr, vr);
-	geo.addFace(0, 1, 2);
-	geo.addFace(0, 3, 1);
-	geo.build();
-	this.meshes.push(new Mesh(geo, mat));
-	
-	var geo = new Geometry();
-	var mat = new MaterialBasic(textures[KT.TEXTURE_BACK], Color._WHITE);
-	geo.addVertice(-w -v, -h -v, -l, cb, xr, yr);
-	geo.addVertice(-w -v,  h +v, -l, ct, xr, vr);
-	geo.addVertice( w +v, -h -v, -l, cb, hr, yr);
-	geo.addVertice( w +v,  h +v, -l, ct, hr, vr);
-	geo.addFace(0, 2, 1);
-	geo.addFace(2, 3, 1);
-	geo.build();
-	this.meshes.push(new Mesh(geo, mat));
-	
-	var geo = new Geometry();
-	var mat = new MaterialBasic(textures[KT.TEXTURE_RIGHT], Color._WHITE);
-	geo.addVertice( w, -h -v,  l +v, cb, hr, yr);
-	geo.addVertice( w,  h +v, -l -v, ct, xr, vr);
-	geo.addVertice( w, -h -v, -l -v, cb, xr, yr);
-	geo.addVertice( w,  h +v,  l +v, ct, hr, vr);
-	geo.addFace(0, 1, 2);
-	geo.addFace(0, 3, 1);
-	geo.build();
-	this.meshes.push(new Mesh(geo, mat));
-	
-	var geo = new Geometry();
-	var mat = new MaterialBasic(textures[KT.TEXTURE_LEFT], Color._WHITE);
-	geo.addVertice(-w, -h -v, -l -v, cb, hr, yr);
-	geo.addVertice(-w,  h +v, -l -v, ct, hr, vr);
-	geo.addVertice(-w, -h -v,  l +v, cb, xr, yr);
-	geo.addVertice(-w,  h +v,  l +v, ct, xr, vr);
-	geo.addFace(0, 1, 2);
-	geo.addFace(1, 3, 2);
-	geo.build();
-	this.meshes.push(new Mesh(geo, mat));
-	
-	var geo = new Geometry();
-	var mat = new MaterialBasic(textures[KT.TEXTURE_UP], Color._WHITE);
-	geo.addVertice( w +v,  h, -l -v, ct, hr, yr);
-	geo.addVertice(-w -v,  h,  l +v, ct, xr, vr);
-	geo.addVertice(-w -v,  h, -l -v, ct, xr, yr);
-	geo.addVertice( w +v,  h,  l +v, ct, hr, vr);
-	geo.addFace(0, 1, 2);
-	geo.addFace(0, 3, 1);
-	geo.build();
-	this.meshes.push(new Mesh(geo, mat));
-	
-	var geo = new Geometry();
-	var mat = new MaterialBasic(textures[KT.TEXTURE_DOWN], Color._WHITE);
-	mat.drawFaces = 'BOTH';
-	geo.addVertice( w +v, -h, -l -v, cb, hr, vr);
-	geo.addVertice(-w -v, -h,  l +v, cb, xr, yr);
-	geo.addVertice(-w -v, -h, -l -v, cb, xr, vr);
-	geo.addVertice( w +v, -h,  l +v, cb, hr, yr);
-	geo.addFace(0, 2, 1);
-	geo.addFace(0, 1, 3);
-	geo.computeFacesNormals();
-	geo.build();
-	this.meshes.push(new Mesh(geo, mat));
-	
-	
-	for (var i=0;i<6;i++){
-		this.meshes[i].position = position;
-	}
+	this.setMaterial();
 }
 
 module.exports = GeometrySkybox;
+
+GeometrySkybox.material = null;
+GeometrySkybox.prototype.setMaterial = function(){
+	if (GeometrySkybox.material) return;
+	
+	var material = new Material({
+		shader: KT.shaders.skybox,
+		sendAttribData: function(mesh, camera, scene){
+			var gl = KT.gl;
+			var geometry = mesh.geometry;
+			var attributes = this.shader.attributes;
+			for (var i=0,len=attributes.length;i<len;i++){
+				var att = attributes[i];
+				
+				if (att.name == "aVertexPosition"){
+					gl.bindBuffer(gl.ARRAY_BUFFER, geometry.vertexBuffer);
+					gl.vertexAttribPointer(att.location, geometry.vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
+				}
+			}
+		},
+		sendUniformData: function(mesh, camera, scene, texture){
+			var gl = KT.gl;
+			var uniforms = this.shader.uniforms;
+			for (var i=0,len=uniforms.length;i<len;i++){
+				var uni = uniforms[i];
+				
+				if (uni.name == 'uMVPMatrix'){
+					var mvp = mesh.getTransformationMatrix().multiply(camera.transformationMatrix).multiply(camera.perspectiveMatrix);
+					gl.uniformMatrix4fv(uni.location, false, mvp.toFloat32Array());
+				}else if (uni.name == 'uCubemap'){
+					gl.activeTexture(gl.TEXTURE0);
+					gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture.texture);
+					gl.uniform1i(uni.location, 0);
+				}
+			}
+		}
+	});
+	
+	GeometrySkybox.material = material;
+};
+
+GeometrySkybox.prototype.render = function(camera, scene){
+	var material = GeometrySkybox.material;
+	
+	material.sendAttribData(this.box, camera, scene);
+	material.sendUniformData(this.box, camera, scene, this.texture);
+};

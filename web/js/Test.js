@@ -32,19 +32,21 @@ Test.prototype.createFrameScene = function(){
 	});
 	//this.framebuffer = new KT.TextureFramebuffer(512, 512);
 	
-	this.skybox = [];
+	/*this.skybox = [];
 	var params = {SWrapping: gl.CLAMP_TO_EDGE, TWrapping: gl.CLAMP_TO_EDGE};
 	this.skybox[KT.TEXTURE_FRONT] = new KT.Texture('img/skyboxes/interstellar_skybox/negz.png', params);
 	this.skybox[KT.TEXTURE_BACK] = new KT.Texture('img/skyboxes/interstellar_skybox/posz.png', params);
 	this.skybox[KT.TEXTURE_RIGHT] = new KT.Texture('img/skyboxes/interstellar_skybox/posx.png', params);
 	this.skybox[KT.TEXTURE_LEFT] = new KT.Texture('img/skyboxes/interstellar_skybox/negx.png', params);
 	this.skybox[KT.TEXTURE_UP] = new KT.Texture('img/skyboxes/interstellar_skybox/posy.png', params);
-	this.skybox[KT.TEXTURE_DOWN] = new KT.Texture('img/skyboxes/interstellar_skybox/negy.png', params);
+	this.skybox[KT.TEXTURE_DOWN] = new KT.Texture('img/skyboxes/interstellar_skybox/negy.png', params);*/
+	var bp = 'img/skyboxes/interstellar_skybox/';
+	this.skybox = new KT.TextureCube(bp + 'posx.png', bp + 'negx.png',  bp + 'posy.png',  bp + 'negy.png',  bp + 'posz.png',  bp + 'negz.png');
 	
 	this.fCamera = new KT.CameraPerspective(KT.Math.degToRad(60), this.canvas.width / this.canvas.height, 0.1, 400.0);
 	this.fCamera.position.set(0,5,7);
 	this.fCamera.lookAt(new KT.Vector3(0,0,0));
-	this.fCamera.setSkybox(400, 400, 400, this.skybox);
+	this.fCamera.setSkybox(1, 1, 1, this.skybox);
 	
 	//var cameraControls = new KT.OrbitAndPan();
 	var cameraControls = new KT.CameraFly();

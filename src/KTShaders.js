@@ -421,5 +421,29 @@ module.exports = {
 			    
 			    "gl_FragColor = vec4(depth, depth, depth, 1.0); " +
 			"}"
+	},
+	
+	skybox: {
+		vertexShader: 
+			"attribute mediump vec3 aVertexPosition; " +
+			
+			"uniform mediump mat4 uMVPMatrix; " +
+			
+			"varying mediump vec3 vTextureCoord;" +
+			
+			"void main(void){ " + 
+				"mediump vec4 vPos = uMVPMatrix * vec4(aVertexPosition, 1.0); " +
+				"gl_Position = vPos.xyww; " +
+				"vTextureCoord = aVertexPosition; " +
+			"} ",
+			
+		fragmentShader:
+			"uniform samplerCube uCubemap; " +
+			
+			"varying mediump vec3 vTextureCoord;" +  
+			
+			"void main(void){ " +
+			    "gl_FragColor = textureCube(uCubemap, vTextureCoord); " +
+			"}"
 	}
 };

@@ -65,18 +65,8 @@ TextureCube.prototype.parseTexture = function(){
 	this.texture = gl.createTexture();
 	gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.texture);
 	
-	gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-	
-	var color = [
-		new Uint8Array([255, 0, 0]),
-		new Uint8Array([0, 255, 0]),
-		new Uint8Array([0, 0, 255]),
-		new Uint8Array([255, 255, 0]),
-		new Uint8Array([255, 0, 255]),
-		new Uint8Array([0, 255, 255]),
-	];
 	for (var i=0;i<6;i++){
-		gl.texImage2D(types[i], 0, gl.RGB, 1, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, color[i]);
+		gl.texImage2D(types[i], 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, this.images[i]);
 	}
 	
 	gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, this.magFilter);

@@ -7,11 +7,11 @@ var Mesh = require('./KTMesh');
 var GeometryPlane = require('./KTGeometryPlane');
 var KT = require('./KTMain');
 
-function GeometrySkybox(width, height, length, position, texture){
+function GeometrySkybox(position, texture){
 	this.meshes = [];
 	this.texture = texture;
 	
-	this.boxGeo = new KT.GeometryBox(width, height, length);
+	this.boxGeo = new KT.GeometryBox(1.0, 1.0, 1.0);
 	this.box = new KT.Mesh(this.boxGeo, new MaterialBasic());
 	this.box.position = position;
 	

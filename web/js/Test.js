@@ -46,7 +46,7 @@ Test.prototype.createFrameScene = function(){
 	this.fCamera = new KT.CameraPerspective(KT.Math.degToRad(60), this.canvas.width / this.canvas.height, 0.1, 400.0);
 	this.fCamera.position.set(0,5,7);
 	this.fCamera.lookAt(new KT.Vector3(0,0,0));
-	this.fCamera.setSkybox(1, 1, 1, this.skybox);
+	this.fCamera.setSkybox(this.skybox);
 	
 	//var cameraControls = new KT.OrbitAndPan();
 	var cameraControls = new KT.CameraFly();

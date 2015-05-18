@@ -18,6 +18,7 @@ module.exports = {
 		this.maxAttribLocations = 0;
 		this.lastProgram = null;
 		
+		this.__initModules(params);
 		this.__initContext(canvas);
 		this.__initProperties();
 		this.__initShaders();
@@ -56,8 +57,10 @@ module.exports = {
 		this.shaders.basic = this.processShader(Shaders.basic);
 		this.shaders.lambert = this.processShader(Shaders.lambert);
 		this.shaders.phong = this.processShader(Shaders.phong);
-		this.shaders.depth = this.processShader(Shaders.depthMap);
 		this.shaders.skybox = this.processShader(Shaders.skybox);
+		
+		if (this.modules.shadowMapping)
+			this.shaders.depth = this.processShader(Shaders.depthMap);
 	},
 	
 	__initParams: function(){
@@ -67,6 +70,15 @@ module.exports = {
 			0.0, 0.0, 1.0, 0.0,
 			0.0, 0.0, 0.0, 1.0
 		);
+	},
+	
+	__initModules: function(params){
+		if (!params) params = {};
+		
+		this.modules = {
+			specularLight: (params.specularLight !== undefined)? params.specularLight : true,
+			shadowMapping: (params.shadowMapping !== undefined)? params.shadowMapping : true
+		};
 	},
 	
 	createArrayBuffer: function(type, dataArray, itemSize){
@@ -208,15 +220,31 @@ module.exports = {
 		};
 	},
 	
+	precompileShader: function(shaderCode){
+		var modulars = Shaders.modulars;
+		
+		var ret = shaderCode;
+		
+		var sl = (this.modules.specularLight);
+		ret = ret.replace("#kt_require(specular_in)", (sl)? modulars.specular_in : '');
+		ret = ret.replace("#kt_require(specular_main)", (sl)? modulars.specular_main : '');
+		
+		var sm = (this.modules.shadowMapping);
+		ret = ret.replace("#kt_require(shadowmap_in)", (sm)? modulars.shadowmap_in : '');
+		ret = ret.replace("#kt_require(shadowmap_main)", (sm)? modulars.shadowmap_main : '');
+		
+		return ret;
+	},
+	
 	processShader: function(shader){
 		var gl = this.gl;
 		
-		var vCode = shader.vertexShader;
+		var vCode = this.precompileShader(shader.vertexShader);
 		var vShader = gl.createShader(gl.VERTEX_SHADER);
 		gl.shaderSource(vShader, vCode);
 		gl.compileShader(vShader);
 		
-		var fCode = shader.fragmentShader;
+		var fCode = this.precompileShader(shader.fragmentShader);
 		var fShader = gl.createShader(gl.FRAGMENT_SHADER);
 		gl.shaderSource(fShader, fCode);
 		gl.compileShader(fShader);

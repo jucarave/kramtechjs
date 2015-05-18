@@ -298,18 +298,13 @@ module.exports = {
 			"uniform bool uReceiveShadow; " +
 			"uniform lowp int uUsedLights; " +
 			"uniform Light uLights[8]; " +
-		    "uniform sampler2D uShadowMaps[8]; " +
 			
 			"uniform bool uHasTexture; " +
 			"uniform sampler2D uTextureSampler; " +
 			
-			"uniform bool uUseSpecularMap; " +
-			"uniform sampler2D uSpecularMapSampler; " +
-			
 			"uniform lowp float uOpacity; " +
 			"uniform lowp vec2 uTextureRepeat; " +
 			"uniform lowp vec2 uTextureOffset; " +
-			"uniform lowp vec3 uSpecularColor; " +
 			"uniform lowp float uShininess; " +
 			"uniform mediump vec4 uGeometryUV; " +
 			
@@ -321,10 +316,10 @@ module.exports = {
 			"varying mediump vec3 vNormal; " + 
 			"varying mediump vec3 vPosition; " +
 			"varying mediump vec4 vLightPosition[4]; " +
-			
+
+			"#kt_require(specular_in) " +
+			"#kt_require(shadowmap_in) " +			
 			functions.getLightWeight + 
-			functions.calcShadowFactor + 
-			functions.getLightPosition +
 			
 			"void main(void){ " +
 				"mediump vec4 color = vVertexColor; " +
@@ -368,23 +363,12 @@ module.exports = {
 			            "lowp float shadowWeight = 1.0; " +
 			            "mediump vec3 lWeight = getLightWeight(normal, lightDirection, l.color, l.intensity); " +
 			            
-			            "if (l.castShadow){ " +
-			            	"shadowWeight = calcShadowFactor(uShadowMaps[i], getLightPosition(shadowIndex++), l.shadowStrength, l.lightMult); " +
-			            "} " + 
+			            "#kt_require(shadowmap_main) " +
 			            
 						"phongLightWeight += shadowWeight * lWeight * spotWeight / lDistance; " + 
 						
 						"if (shadowWeight == 1.0){ " +
-							"lowp float shininess = uShininess; " + 
-							"if (uUseSpecularMap){ " +
-								"shininess = texture2D(uSpecularMapSampler, vec2(tx, ty)).r * 255.0; " +
-							"} " +
-							
-							"if (shininess > 0.0 && shininess < 255.0){ " +
-								"mediump vec3 halfAngle = normalize(cameraDirection + lightDirection); " +
-								"mediump float specDot = max(dot(halfAngle, normal), 0.0); " +
-								"color += vec4(uSpecularColor, 1.0) * pow(specDot, shininess); " + 
-							"} " +
+							"#kt_require(specular_main) " +
 						"}" + 
 					"} " +
 				"} " +
@@ -445,5 +429,34 @@ module.exports = {
 			"void main(void){ " +
 			    "gl_FragColor = textureCube(uCubemap, vTextureCoord); " +
 			"}"
+	},
+	
+	modulars: {
+		specular_in: 
+			"uniform bool uUseSpecularMap; " +
+			"uniform sampler2D uSpecularMapSampler; " +
+			"uniform lowp vec3 uSpecularColor; ",
+			
+		specular_main: 
+			"lowp float shininess = uShininess; " + 
+			"if (uUseSpecularMap){ " +
+				"shininess = texture2D(uSpecularMapSampler, vec2(tx, ty)).r * 255.0; " +
+			"} " +
+			
+			"if (shininess > 0.0 && shininess < 255.0){ " +
+				"mediump vec3 halfAngle = normalize(cameraDirection + lightDirection); " +
+				"mediump float specDot = max(dot(halfAngle, normal), 0.0); " +
+				"color += vec4(uSpecularColor, 1.0) * pow(specDot, shininess); " + 
+			"} ",
+			
+		shadowmap_in: 
+			"uniform sampler2D uShadowMaps[8]; " +
+			functions.calcShadowFactor +
+			functions.getLightPosition,
+		
+		shadowmap_main:
+			"if (l.castShadow){ " +
+            	"shadowWeight = calcShadowFactor(uShadowMaps[i], getLightPosition(shadowIndex++), l.shadowStrength, l.lightMult); " +
+            "} " 
 	}
 };

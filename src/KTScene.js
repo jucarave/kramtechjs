@@ -110,14 +110,16 @@ Scene.prototype.render = function(camera, scene){
 	
 	
 	if (!this.shadowMapping){
-		for (var i=0,len=this.lights.length-1;i<=len;i++){
-			if (this.lights[i].castShadow){
-				this.shadowMapping = this.lights[i];
-				this.renderToFramebuffer(this.lights[i].shadowCam, this.lights[i].shadowBuffer);
-			}
-			
-			if (i == len){
-				this.shadowMapping = null;
+		if (KT.modules.shadowMapping){
+			for (var i=0,len=this.lights.length-1;i<=len;i++){
+				if (this.lights[i].castShadow){
+					this.shadowMapping = this.lights[i];
+					this.renderToFramebuffer(this.lights[i].shadowCam, this.lights[i].shadowBuffer);
+				}
+				
+				if (i == len){
+					this.shadowMapping = null;
+				}
 			}
 		}
 		

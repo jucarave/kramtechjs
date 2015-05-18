@@ -2,7 +2,12 @@ function Test(){
 	this.canvas = document.getElementById("cnvKramTech");
 	this.fps = 1000 / 30;
 	
-	KT.init(this.canvas);
+	var params = {
+		shadowMapping: false,
+		specularLight: false
+	};
+	
+	KT.init(this.canvas, params);
 	KT.Input.useLockPointer = true;
 	
 	this.createFrameScene();

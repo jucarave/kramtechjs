@@ -230,8 +230,10 @@ module.exports = {
 		ret = ret.replace("#kt_require(specular_main)", (sl)? modulars.specular_main : '');
 		
 		var sm = (this.modules.shadowMapping);
-		ret = ret.replace("#kt_require(shadowmap_in)", (sm)? modulars.shadowmap_in : '');
-		ret = ret.replace("#kt_require(shadowmap_main)", (sm)? modulars.shadowmap_main : '');
+		ret = ret.replace("#kt_require(shadowmap_vert_in)", (sm)? modulars.shadowmap_vert_in : '');
+		ret = ret.replace("#kt_require(shadowmap_vert_main)", (sm)? modulars.shadowmap_vert_main : '');
+		ret = ret.replace("#kt_require(shadowmap_frag_in)", (sm)? modulars.shadowmap_frag_in : '');
+		ret = ret.replace("#kt_require(shadowmap_frag_main)", (sm)? modulars.shadowmap_frag_main : '');
 		
 		return ret;
 	},

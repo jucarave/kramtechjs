@@ -184,10 +184,8 @@ module.exports = {
 			structs.Light +
 			
 			"uniform bool uUseLighting; " +
-			"uniform bool uReceiveShadow; " +
 			"uniform lowp int uUsedLights; " +
 			"uniform Light uLights[8]; " +
-		    "uniform sampler2D uShadowMaps[8]; " +
 		     
 			"uniform sampler2D uTextureSampler; " +
 			"uniform bool uHasTexture; " +
@@ -199,10 +197,8 @@ module.exports = {
 			"varying mediump vec2 vTextureCoord; " + 
 			"varying mediump vec4 vVertexColor; " + 
 			"varying mediump vec3 vLightWeight; " + 
-			"varying mediump vec4 vLightPosition[4]; " +
 			
-			functions.calcShadowFactor + 
-			functions.getLightPosition +
+			"#kt_require(shadowmap_frag_in) " +
 			
 			"void main(void){ " +
 				"mediump vec4 color = vVertexColor; " + 
@@ -223,8 +219,8 @@ module.exports = {
 						"}" +
 						
 						"lowp float shadowWeight = 1.0; " +
-			            "if (uLights[i].castShadow)" +
-			            	"shadowWeight = calcShadowFactor(uShadowMaps[i], getLightPosition(shadowIndex++), uLights[i].shadowStrength, uLights[i].lightMult); " +
+			            "#kt_require(shadowmap_frag_main) " +
+			            
 			            "lightWeight *= shadowWeight; " +
 					"} " + 
 				"} " +
@@ -252,7 +248,6 @@ module.exports = {
 			"uniform lowp vec3 uAmbientLightColor; " +
 			
 			"uniform bool uUseLighting; " +
-			"uniform bool uReceiveShadow; " +
 			"uniform lowp int uUsedLights; " +
 			"uniform Light uLights[8]; " +
 			
@@ -261,9 +256,8 @@ module.exports = {
 			"varying mediump vec3 vLightWeight; " +
 			"varying mediump vec3 vNormal; " + 
 			"varying mediump vec3 vPosition; " +
-			"varying mediump vec4 vLightPosition[4]; " +
 			
-			functions.setLightPosition +
+			"#kt_require(shadowmap_vert_in) " +
 			
 			"void main(void){ " + 
 				"vec4 modelViewPosition = uMVMatrix * vec4(aVertexPosition, 1.0); " +
@@ -273,15 +267,7 @@ module.exports = {
 					"vNormal = uNormalMatrix * aVertexNormal; " +
 					"vLightWeight = uAmbientLightColor; " +
 					
-					"int shadowIndex = 0; " +
-					"for (int i=0;i<8;i++){ " +
-						"if (i >= uUsedLights) break; " +
-						
-						"if (uLights[i].castShadow && uReceiveShadow){ " +
-							"mediump vec4 lightProj = uLights[i].mvProjection * vec4(aVertexPosition, 1.0); " +
-							"setLightPosition(shadowIndex++, lightProj); " +
-						"} " +
-					"} " +
+					"#kt_require(shadowmap_vert_main) " +
 				"}else{ " +
 					"vLightWeight = vec3(1.0); " + 
 				"}" +   
@@ -295,7 +281,6 @@ module.exports = {
 			structs.Light + 
 			
 			"uniform bool uUseLighting; " +
-			"uniform bool uReceiveShadow; " +
 			"uniform lowp int uUsedLights; " +
 			"uniform Light uLights[8]; " +
 			
@@ -315,10 +300,9 @@ module.exports = {
 			"varying mediump vec3 vLightWeight; " + 
 			"varying mediump vec3 vNormal; " + 
 			"varying mediump vec3 vPosition; " +
-			"varying mediump vec4 vLightPosition[4]; " +
 
 			"#kt_require(specular_in) " +
-			"#kt_require(shadowmap_in) " +			
+			"#kt_require(shadowmap_frag_in) " +			
 			functions.getLightWeight + 
 			
 			"void main(void){ " +
@@ -363,7 +347,7 @@ module.exports = {
 			            "lowp float shadowWeight = 1.0; " +
 			            "mediump vec3 lWeight = getLightWeight(normal, lightDirection, l.color, l.intensity); " +
 			            
-			            "#kt_require(shadowmap_main) " +
+			            "#kt_require(shadowmap_frag_main) " +
 			            
 						"phongLightWeight += shadowWeight * lWeight * spotWeight / lDistance; " + 
 						
@@ -448,13 +432,34 @@ module.exports = {
 				"mediump float specDot = max(dot(halfAngle, normal), 0.0); " +
 				"color += vec4(uSpecularColor, 1.0) * pow(specDot, shininess); " + 
 			"} ",
+		
+		
 			
-		shadowmap_in: 
+		shadowmap_vert_in:
+			"uniform bool uReceiveShadow; " +
+			"varying mediump vec4 vLightPosition[4]; " +
+			functions.setLightPosition,
+		
+		shadowmap_vert_main:
+			"int shadowIndex = 0; " +
+			"for (int i=0;i<8;i++){ " +
+				"if (i >= uUsedLights) break; " +
+				
+				"if (uLights[i].castShadow && uReceiveShadow){ " +
+					"mediump vec4 lightProj = uLights[i].mvProjection * vec4(aVertexPosition, 1.0); " +
+					"setLightPosition(shadowIndex++, lightProj); " +
+				"} " +
+			"} ",
+		
+			
+		shadowmap_frag_in:
+			"uniform bool uReceiveShadow; " +
 			"uniform sampler2D uShadowMaps[8]; " +
+			"varying mediump vec4 vLightPosition[4]; " +
 			functions.calcShadowFactor +
 			functions.getLightPosition,
 		
-		shadowmap_main:
+		shadowmap_frag_main:
 			"if (l.castShadow){ " +
             	"shadowWeight = calcShadowFactor(uShadowMaps[i], getLightPosition(shadowIndex++), l.shadowStrength, l.lightMult); " +
             "} " 

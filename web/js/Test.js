@@ -3,7 +3,7 @@ function Test(){
 	this.fps = 1000 / 30;
 	
 	var params = {
-		shadowMapping: false,
+		//shadowMapping: false,
 		specularLight: false
 	};
 	

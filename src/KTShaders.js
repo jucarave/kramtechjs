@@ -125,17 +125,14 @@ module.exports = {
 			
 			"uniform Light uLights[8]; " +
 			"uniform lowp int uUsedLights; " +
-			"uniform bool uReceiveShadow; " +
 			"uniform bool uUseLighting; " +
 			
 			"varying mediump vec4 vVertexColor; " +
 			"varying mediump vec2 vTextureCoord;" +  
 			"varying mediump vec3 vLightWeight; " + 
-			"varying mediump vec4 vLightPosition[4]; " +
 			
+			"#kt_require(shadowmap_vert_in) " +
 			functions.getLightWeight + 
-			
-			functions.setLightPosition +
 			
 			"void main(void){ " + 
 				"vec4 modelViewPosition = uMVMatrix * vec4(aVertexPosition, 1.0); " +
@@ -169,10 +166,7 @@ module.exports = {
 			            
 						"vLightWeight += getLightWeight(aVertexNormal, lightDirection, l.color, l.intensity) * spotWeight / lDistance; " + 
 						
-						"if (l.castShadow && uReceiveShadow){ " +
-							"mediump vec4 lightProj = l.mvProjection * vec4(aVertexPosition, 1.0); " +
-							"setLightPosition(shadowIndex++, lightProj); " +
-						"} " +
+						"#kt_require(shadowmap_vert_main) " +
 					"} " +
 				"} " +
 				 
@@ -214,6 +208,7 @@ module.exports = {
 				"if (uUseLighting){ " +
 					"lowp int shadowIndex = 0; " +
 					"for (int i=0;i<8;i++){ " +
+						"Light l = uLights[i]; " +
 						"if (i >= uUsedLights){" +
 							"break; " +
 						"}" +
@@ -267,7 +262,12 @@ module.exports = {
 					"vNormal = uNormalMatrix * aVertexNormal; " +
 					"vLightWeight = uAmbientLightColor; " +
 					
-					"#kt_require(shadowmap_vert_main) " +
+					"int shadowIndex = 0; " +
+					"for (int i=0;i<8;i++){ " +
+						"if (i >= uUsedLights) break; " +
+						
+						"#kt_require(shadowmap_vert_main) " +
+					"} " +
 				"}else{ " +
 					"vLightWeight = vec3(1.0); " + 
 				"}" +   
@@ -441,14 +441,9 @@ module.exports = {
 			functions.setLightPosition,
 		
 		shadowmap_vert_main:
-			"int shadowIndex = 0; " +
-			"for (int i=0;i<8;i++){ " +
-				"if (i >= uUsedLights) break; " +
-				
-				"if (uLights[i].castShadow && uReceiveShadow){ " +
-					"mediump vec4 lightProj = uLights[i].mvProjection * vec4(aVertexPosition, 1.0); " +
-					"setLightPosition(shadowIndex++, lightProj); " +
-				"} " +
+			"if (uLights[i].castShadow && uReceiveShadow){ " +
+				"mediump vec4 lightProj = uLights[i].mvProjection * vec4(aVertexPosition, 1.0); " +
+				"setLightPosition(shadowIndex++, lightProj); " +
 			"} ",
 		
 			

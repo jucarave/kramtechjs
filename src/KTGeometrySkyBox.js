@@ -46,7 +46,7 @@ GeometrySkybox.prototype.setMaterial = function(){
 				var uni = uniforms[i];
 				
 				if (uni.name == 'uMVPMatrix'){
-					var mvp = mesh.getTransformationMatrix().multiply(camera.transformationMatrix).multiply(camera.perspectiveMatrix);
+					var mvp = mesh.getTransformationMatrix(camera).multiply(camera.transformationMatrix).multiply(camera.perspectiveMatrix);
 					gl.uniformMatrix4fv(uni.location, false, mvp.toFloat32Array());
 				}else if (uni.name == 'uCubemap'){
 					gl.activeTexture(gl.TEXTURE0);

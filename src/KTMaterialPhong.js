@@ -136,7 +136,7 @@ MaterialPhong.prototype.sendUniformData = function(mesh, camera, scene){
 		}else if (uni.type == 'uShadowMaps'){
 			shadowMapsUniform.push(uni);
 		}else if (uni.name == 'uMVMatrix'){
-			modelTransformation = mesh.getTransformationMatrix();
+			modelTransformation = mesh.getTransformationMatrix(camera);
 			transformationMatrix = modelTransformation.clone().multiply(camera.transformationMatrix);
 			gl.uniformMatrix4fv(uni.location, false, transformationMatrix.toFloat32Array());
 		}else if (uni.name == 'uPMatrix'){

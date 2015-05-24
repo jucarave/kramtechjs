@@ -254,3 +254,20 @@ Matrix4.getTransformation = function(position, rotation, scale, stack){
 	
 	return matrix;
 };
+
+Matrix4.clearToSphericalBillboard = function(matrix4){
+	if (!matrix4.__ktm4) throw "Can only transform a matrix 4";
+	
+	var ret = matrix4.clone();
+	for (var i=0;i<3;i++){
+		for (var j=0;j<3;j++){
+			ret[i * 4 + j] = 0;
+		}
+	}
+	
+	ret[0] = 1;
+	ret[5] = 1;
+	ret[10] = 1;
+	
+	return ret;
+};

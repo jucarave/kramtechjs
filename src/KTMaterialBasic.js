@@ -1,4 +1,5 @@
 var Material = require('./KTMaterial');
+var Matrix4 = require('./KTMatrix4');
 var KT = require('./KTMain');
 
 function MaterialBasic(textureMap, color){
@@ -50,7 +51,7 @@ MaterialBasic.prototype.sendUniformData = function(mesh, camera, scene){
 		var uni = uniforms[i];
 		
 		if (uni.name == 'uMVPMatrix'){
-			transformationMatrix = mesh.getTransformationMatrix().multiply(camera.transformationMatrix);
+			transformationMatrix = mesh.getTransformationMatrix(camera).multiply(camera.transformationMatrix);
 			var mvp = transformationMatrix.clone().multiply(camera.perspectiveMatrix);
 			gl.uniformMatrix4fv(uni.location, false, mvp.toFloat32Array());
 		}else if (uni.name == 'uMaterialColor'){

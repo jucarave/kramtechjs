@@ -4,7 +4,7 @@ function Test(){
 	
 	var params = {
 		//shadowMapping: false,
-		specularLight: false
+		//specularLight: false
 	};
 	
 	KT.init(this.canvas, params);
@@ -37,14 +37,6 @@ Test.prototype.createFrameScene = function(){
 	});
 	//this.framebuffer = new KT.TextureFramebuffer(512, 512);
 	
-	/*this.skybox = [];
-	var params = {SWrapping: gl.CLAMP_TO_EDGE, TWrapping: gl.CLAMP_TO_EDGE};
-	this.skybox[KT.TEXTURE_FRONT] = new KT.Texture('img/skyboxes/interstellar_skybox/negz.png', params);
-	this.skybox[KT.TEXTURE_BACK] = new KT.Texture('img/skyboxes/interstellar_skybox/posz.png', params);
-	this.skybox[KT.TEXTURE_RIGHT] = new KT.Texture('img/skyboxes/interstellar_skybox/posx.png', params);
-	this.skybox[KT.TEXTURE_LEFT] = new KT.Texture('img/skyboxes/interstellar_skybox/negx.png', params);
-	this.skybox[KT.TEXTURE_UP] = new KT.Texture('img/skyboxes/interstellar_skybox/posy.png', params);
-	this.skybox[KT.TEXTURE_DOWN] = new KT.Texture('img/skyboxes/interstellar_skybox/negy.png', params);*/
 	var bp = 'img/skyboxes/interstellar_skybox/';
 	this.skybox = new KT.TextureCube(bp + 'posx.png', bp + 'negx.png',  bp + 'posy.png',  bp + 'negy.png',  bp + 'posz.png',  bp + 'negz.png');
 	
@@ -65,6 +57,13 @@ Test.prototype.createFrameScene = function(){
 	this.box.castShadow = true;
 	this.box.receiveShadow = true;
 	this.frameScene.add(this.box);
+	
+	var billGeo = new KT.GeometryBillboard(2.0, 2.0, {uvRegion: new KT.Vector4(0.5, 0.0, 1.0, 1.0), spherical: false});
+	var texture = new KT.Texture('img/crate.jpg');
+	var material = new KT.MaterialBasic(texture, KT.Color._WHITE);
+	this.billboard = new KT.Mesh(billGeo, material);
+	this.billboard.position.y = 2.0;
+	this.frameScene.add(this.billboard);
 	
 	
 	var sphGeo = new KT.GeometrySphere(1.0, 16, 16);
@@ -213,7 +212,7 @@ Test.prototype.loopScene = function(){
 	
 	T.frameScene.clear();
 	T.frameScene.render(T.fCamera);
-	T.scene.render(T.camera, true);
+	//T.scene.render(T.camera, true);
 	
 	
 	setTimeout(function(){ T.loopScene(); }, T.fps);

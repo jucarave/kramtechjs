@@ -1,16 +1,10 @@
+var Clock = require('./KTClock');
 var Shaders = require('./KTShaders');
 var Input = require('./KTInput');
 var Matrix4 = require('./KTMatrix4');
 var Utils = require('./KTUtils');
 
-module.exports = {
-	TEXTURE_FRONT: 0,
-	TEXTURE_BACK: 1,
-	TEXTURE_RIGHT: 2,
-	TEXTURE_LEFT: 3,
-	TEXTURE_UP: 4,
-	TEXTURE_DOWN: 5,
-	
+var KT = {
 	init: function(canvas, params){
 		this.canvas = canvas;
 		this.gl = null;
@@ -24,6 +18,9 @@ module.exports = {
 		this.__initProperties();
 		this.__initShaders();
 		this.__initParams();
+		
+		this.clock = new Clock();
+		this.looping = true;
 		
 		Input.init(canvas);
 	},
@@ -80,6 +77,8 @@ module.exports = {
 			specularLight: (params.specularLight !== undefined)? params.specularLight : true,
 			shadowMapping: (params.shadowMapping !== undefined)? params.shadowMapping : true
 		};
+		
+		this.fps = (params.limitFPS)? params.limitFPS : 1000 / 60;
 	},
 	
 	createArrayBuffer: function(type, dataArray, itemSize){
@@ -372,7 +371,35 @@ module.exports = {
 		}
 		
 		return null;
+	},
+	
+	setLoopMethod: function(callback){
+		var delta = this.clock.getDelta();
+		if (delta > this.fps){
+			this.clock.update(this.fps);
+			callback();
+		}
+		
+		if (!this.looping){
+			this.looping = true; 
+			return;
+		}
+		
+		var T  = this;
+		requestAnimFrame(function(){ T.setLoopMethod(callback); });
+	},
+	
+	stopLoopMethod: function(){
+		this.looping = false;
 	}
 };
 
-
+module.exports = KT;
+var requestAnimFrame = (function(){
+  return  window.requestAnimationFrame       ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame    ||
+          function( callback ){
+            window.setTimeout(callback, KT.fps);
+          };
+})();

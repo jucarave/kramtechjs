@@ -4,7 +4,8 @@ function Test(){
 	
 	var params = {
 		//shadowMapping: false,
-		//specularLight: false
+		//specularLight: false,
+		limitFPS: this.fps
 	};
 	
 	KT.init(this.canvas, params);
@@ -12,7 +13,9 @@ function Test(){
 	
 	this.createFrameScene();
 	this.createSimpleScene();
-	this.loopScene();
+	
+	var T = this;
+	KT.setLoopMethod(function(){ T.loopScene(); });
 }
 
 Test.prototype.createSimpleScene = function(){
@@ -23,7 +26,7 @@ Test.prototype.createSimpleScene = function(){
 	this.camera.position.set(256.0,256.0,0.1);
 	this.camera.lookAt(new KT.Vector3(256.0,256.0,0.0));
 	
-	var weapon = new KT.MeshSprite(100.0, 100.0, this.pLight[6].shadowBuffer);
+	var weapon = new KT.MeshSprite(100.0, 100.0, this.pLight[1].shadowBuffer);
 	weapon.position.set(0.0, 0.0, 0.0);
 	weapon.material.transparent = false;
 	this.scene.add(weapon);
@@ -35,7 +38,6 @@ Test.prototype.createFrameScene = function(){
 		useLighting: true,
 		ambientLight: "#333333"
 	});
-	//this.framebuffer = new KT.TextureFramebuffer(512, 512);
 	
 	var bp = 'img/skyboxes/interstellar_skybox/';
 	this.skybox = new KT.TextureCube(bp + 'posx.png', bp + 'negx.png',  bp + 'posy.png',  bp + 'negy.png',  bp + 'posz.png',  bp + 'negz.png');
@@ -45,7 +47,6 @@ Test.prototype.createFrameScene = function(){
 	this.fCamera.lookAt(new KT.Vector3(0,0,0));
 	this.fCamera.setSkybox(this.skybox);
 	
-	//var cameraControls = new KT.OrbitAndPan();
 	var cameraControls = new KT.CameraFly();
 	this.fCamera.setControls(cameraControls);
 	
@@ -112,88 +113,21 @@ Test.prototype.createFrameScene = function(){
 
 Test.prototype.createLights = function(){
 	this.pLight = [];
-	
-	/*this.pLight[0] = new KT.LightPoint(new KT.Vector3(0.0, 0.5, 0.0), 1.0, 30.0, KT.Color._RED);
-	var sphGeo = new KT.GeometrySphere(0.1, 8, 8);
-	var material = new KT.MaterialBasic(null, this.pLight[0].color.getHex());
-	var spLight= new KT.Mesh(sphGeo, material);
-	spLight.position = this.pLight[0].position;
-	this.frameScene.add(spLight);
+
+	this.pLight[0] = new KT.LightSpot(new KT.Vector3(0.0, 5.0, -4.0), new KT.Vector3(0.0, 0.0, 0.0), KT.Math.degToRad(20.0), KT.Math.degToRad(40.0), 1.0, 30.0, KT.Color._WHITE);
+	this.pLight[0].setCastShadow(true);
 	this.frameScene.add(this.pLight[0]);
 	
-	this.pLight[1] = new KT.LightPoint(new KT.Vector3(0.0, 0.0, -1.5), 1.0, 30.0, KT.Color._GREEN);
-	var material = new KT.MaterialBasic(null, this.pLight[1].color.getHex());
-	var spLight= new KT.Mesh(sphGeo, material);
-	spLight.position = this.pLight[1].position;
-	this.frameScene.add(spLight);
+	this.pLight[1] = new KT.LightDirectional(new KT.Vector3(-1.0, -1.0, -1.0), KT.Color._WHITE, 0.6);
+	this.pLight[1].shadowCamWidth = 10;
+	this.pLight[1].shadowCamHeight = 10;
+	this.pLight[1].setCastShadow(true);
 	this.frameScene.add(this.pLight[1]);
-	
-	this.pLight[2] = new KT.LightPoint(new KT.Vector3(0.0, 1.5, -1.5), 1.0, 30.0, KT.Color._BLUE);
-	var material = new KT.MaterialBasic(null, this.pLight[2].color.getHex());
-	var spLight= new KT.Mesh(sphGeo, material);
-	spLight.position = this.pLight[2].position;
-	this.frameScene.add(spLight);
-	this.frameScene.add(this.pLight[2]);
-	
-	this.pLight[3] = new KT.LightPoint(new KT.Vector3(0.0, 1.5, 0), 1.0, 30.0, KT.Color._PURPLE);
-	var material = new KT.MaterialBasic(null, this.pLight[3].color.getHex());
-	var spLight= new KT.Mesh(sphGeo, material);
-	spLight.position = this.pLight[3].position;
-	this.frameScene.add(spLight);
-	this.frameScene.add(this.pLight[3]);
-	
-	this.pLight[4] = new KT.LightPoint(new KT.Vector3(0.0, 1.5, 0), 1.0, 30.0, KT.Color._GOLD);
-	var material = new KT.MaterialBasic(null, this.pLight[4].color.getHex());
-	var spLight= new KT.Mesh(sphGeo, material);
-	spLight.position = this.pLight[4].position;
-	this.frameScene.add(spLight);
-	this.frameScene.add(this.pLight[4]);*/
-
-	this.pLight[5] = new KT.LightSpot(new KT.Vector3(0.0, 5.0, -4.0), new KT.Vector3(0.0, 0.0, 0.0), KT.Math.degToRad(20.0), KT.Math.degToRad(40.0), 1.0, 30.0, KT.Color._WHITE);
-	this.pLight[5].setCastShadow(true);
-	this.frameScene.add(this.pLight[5]);
-	
-	this.pLight[6] = new KT.LightDirectional(new KT.Vector3(-1.0, -1.0, -1.0), KT.Color._WHITE, 0.6);
-	this.pLight[6].shadowCamWidth = 10;
-	this.pLight[6].shadowCamHeight = 10;
-	this.pLight[6].setCastShadow(true);
-	this.frameScene.add(this.pLight[6]);
-	
-	//this.fCamera = this.pLight[6].shadowCam;
-	/*this.pLight[4] = new KT.LightSpot(new KT.Vector3(4.0, 5.0, 0.0), new KT.Vector3(0.0, 0.0, 0.0), KT.Math.degToRad(20.0), KT.Math.degToRad(40.0), 2.0, 30.0, KT.Color._WHITE);
-	this.pLight[4].setCastShadow(true);
-	this.frameScene.add(this.pLight[4]);*/
-};
-
-Test.prototype.animateLights = function(){
-	this.lightAng += KT.Math.degToRad(1);
-	this.pLight[0].position.x = Math.cos(this.lightAng) * 3.5;
-	this.pLight[0].position.y = Math.sin(this.lightAng) * 3.5;
-	if (this.pLight[0].position.y <= -1.35) this.pLight[0].position.y = -1.35;
-	
-	this.pLight[1].position.x = Math.cos(this.lightAng) * 3.5;
-	this.pLight[1].position.z = Math.sin(this.lightAng) * 3.5;
-	
-	this.pLight[2].position.z = Math.cos(this.lightAng) * 3.5;
-	this.pLight[2].position.y = Math.sin(this.lightAng) * 3.5;
-	if (this.pLight[2].position.y <= -1.35) this.pLight[2].position.y = -1.35;
-	
-	this.pLight[3].position.x = Math.cos(this.lightAng) * 3.5;
-	this.pLight[3].position.y = Math.sin(this.lightAng) * 3.5;
-	this.pLight[3].position.z = -Math.sin(this.lightAng) * 3.5;
-	if (this.pLight[3].position.y <= -1.35) this.pLight[3].position.y = -1.35;
-	
-	this.pLight[4].position.x = -Math.cos(this.lightAng) * 3.5;
-	this.pLight[4].position.y = Math.sin(this.lightAng) * 3.5;
-	this.pLight[4].position.z = Math.sin(this.lightAng) * 3.5;
-	if (this.pLight[4].position.y <= -1.35) this.pLight[4].position.y = -1.35;
 };
 
 var count  = 0;
 Test.prototype.loopScene = function(){
 	var T = this;
-	
-	//this.animateLights();
 	
 	this.texOff += 0.001;
 	if (this.texOff >= 1.0) this.texOff = 0.0;
@@ -214,8 +148,7 @@ Test.prototype.loopScene = function(){
 	T.frameScene.render(T.fCamera);
 	//T.scene.render(T.camera, true);
 	
-	
-	setTimeout(function(){ T.loopScene(); }, T.fps);
+	document.getElementById("fpsMeter").innerHTML = 'FPS: ' + KT.clock.fps;
 };
 
 var test;

@@ -265,7 +265,46 @@ CameraPerspective.prototype.setControls = function(cameraControls){
 	return this;
 };
 
-},{"./KTColor":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTColor.js","./KTGeometrySkybox":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTGeometrySkybox.js","./KTMath":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTMath.js","./KTMatrix4":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTMatrix4.js","./KTVector3":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTVector3.js"}],"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTColor.js":[function(require,module,exports){
+},{"./KTColor":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTColor.js","./KTGeometrySkybox":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTGeometrySkybox.js","./KTMath":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTMath.js","./KTMatrix4":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTMatrix4.js","./KTVector3":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTVector3.js"}],"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTClock.js":[function(require,module,exports){
+var Utils = require('./KTUtils');
+
+function Clock(){
+	this.lastF = Date.now();
+	this.currentF = this.lastF;
+	
+	this.startF = this.lastF;
+	this.frames = 0;
+	
+	this.fps = 0;
+	this.delta = 0;
+	
+	var T = this;
+	Utils.addEvent(window, "focus", function(){
+		T.reset();
+	});
+}
+
+module.exports = Clock;
+
+Clock.prototype.update = function(fps){
+	this.lastF = this.currentF - (this.delta % fps);
+	
+	this.fps = Math.floor(1000 * (++this.frames / (this.currentF - this.startF)));
+};
+
+Clock.prototype.getDelta = function(){
+	this.currentF = Date.now();
+	this.delta = this.currentF - this.lastF;
+	
+	return this.delta;
+};
+
+Clock.prototype.reset = function(){
+	this.startF = Date.now();
+	this.frames = 0;
+};
+
+},{"./KTUtils":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTUtils.js"}],"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTColor.js":[function(require,module,exports){
 function Color(hexColor){
 	var str = hexColor.substring(1);
 	
@@ -1347,19 +1386,13 @@ LightSpot.prototype.setShadowProperties = function(fov, near, far, resolution){
 };
 
 },{"./KTColor":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTColor.js","./KTMain":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTMain.js","./KTTextureFramebuffer":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTTextureFramebuffer.js","./KTVector2":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTVector2.js","./KTVector3":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTVector3.js"}],"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTMain.js":[function(require,module,exports){
+var Clock = require('./KTClock');
 var Shaders = require('./KTShaders');
 var Input = require('./KTInput');
 var Matrix4 = require('./KTMatrix4');
 var Utils = require('./KTUtils');
 
-module.exports = {
-	TEXTURE_FRONT: 0,
-	TEXTURE_BACK: 1,
-	TEXTURE_RIGHT: 2,
-	TEXTURE_LEFT: 3,
-	TEXTURE_UP: 4,
-	TEXTURE_DOWN: 5,
-	
+var KT = {
 	init: function(canvas, params){
 		this.canvas = canvas;
 		this.gl = null;
@@ -1373,6 +1406,9 @@ module.exports = {
 		this.__initProperties();
 		this.__initShaders();
 		this.__initParams();
+		
+		this.clock = new Clock();
+		this.looping = true;
 		
 		Input.init(canvas);
 	},
@@ -1429,6 +1465,8 @@ module.exports = {
 			specularLight: (params.specularLight !== undefined)? params.specularLight : true,
 			shadowMapping: (params.shadowMapping !== undefined)? params.shadowMapping : true
 		};
+		
+		this.fps = (params.limitFPS)? params.limitFPS : 1000 / 60;
 	},
 	
 	createArrayBuffer: function(type, dataArray, itemSize){
@@ -1721,12 +1759,39 @@ module.exports = {
 		}
 		
 		return null;
+	},
+	
+	setLoopMethod: function(callback){
+		var delta = this.clock.getDelta();
+		if (delta > this.fps){
+			this.clock.update(this.fps);
+			callback();
+		}
+		
+		if (!this.looping){
+			this.looping = true; 
+			return;
+		}
+		
+		var T  = this;
+		requestAnimFrame(function(){ T.setLoopMethod(callback); });
+	},
+	
+	stopLoopMethod: function(){
+		this.looping = false;
 	}
 };
 
-
-
-},{"./KTInput":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTInput.js","./KTMatrix4":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTMatrix4.js","./KTShaders":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTShaders.js","./KTUtils":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTUtils.js"}],"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTMaterial.js":[function(require,module,exports){
+module.exports = KT;
+var requestAnimFrame = (function(){
+  return  window.requestAnimationFrame       ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame    ||
+          function( callback ){
+            window.setTimeout(callback, KT.fps);
+          };
+})();
+},{"./KTClock":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTClock.js","./KTInput":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTInput.js","./KTMatrix4":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTMatrix4.js","./KTShaders":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTShaders.js","./KTUtils":"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTUtils.js"}],"c:\\Users\\Ramirez\\My Documents\\Aptana Studio 3 Workspace\\kramtechjs\\src\\KTMaterial.js":[function(require,module,exports){
 var Color = require('./KTColor');
 var KT = require('./KTMain');
 

@@ -14,6 +14,7 @@ function Geometry(){
 	this.colors = [];
 	this.normals = [];
 	this.uvRegion = new Vector4(0.0, 0.0, 1.0, 1.0);
+	this.boundingBox = null;
 }
 
 module.exports = Geometry;
@@ -107,6 +108,37 @@ Geometry.prototype.computeFacesNormals = function(){
 		
 		normalizedVertices.push(face.x, face.y, face.z);
 	}
+	
+	return this;
+};
+
+Geometry.prototype.computeBoundingBox = function(){
+	var x1, x2, y1, y2, z1, z2;
+	
+	for (var i=0,len=this.vertices.length;i<len;i++){
+		var v = this.vertices[i];
+		
+		if (i == 0){
+			x1 = v.x; y1 = v.y; z1 = v.z;
+			x2 = v.x; y2 = v.y; z2 = v.z;
+		}else{
+			x1 = Math.min(x1, v.x);
+			y1 = Math.min(y1, v.y);
+			z1 = Math.min(z1, v.z);
+			x2 = Math.max(x2, v.x);
+			y2 = Math.max(y2, v.y);
+			z2 = Math.max(z2, v.z);
+		}
+	}
+	
+	this.boundingBox = {
+		x1: x1,
+		y1: y1,
+		z1: z1,
+		x2: x2,
+		y2: y2,
+		z2: z2,
+	}; 
 	
 	return this;
 };

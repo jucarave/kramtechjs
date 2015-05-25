@@ -73,6 +73,7 @@ function GeometryBox(width, length, height, params){
 	boxGeo.addFace(21, 23, 22);
 	
 	boxGeo.computeFacesNormals();
+	boxGeo.computeBoundingBox();
 	boxGeo.build();
 	
 	this.vertexBuffer = boxGeo.vertexBuffer;
@@ -80,6 +81,7 @@ function GeometryBox(width, length, height, params){
 	this.facesBuffer = boxGeo.facesBuffer;
 	this.colorsBuffer = boxGeo.colorsBuffer;
 	this.normalsBuffer = boxGeo.normalsBuffer;
+	this.boundingBox = boxGeo.boundingBox;
 }
 
 module.exports = GeometryBox;

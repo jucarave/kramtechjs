@@ -1,6 +1,7 @@
 var Shaders = require('./KTShaders');
 var Input = require('./KTInput');
 var Matrix4 = require('./KTMatrix4');
+var Utils = require('./KTUtils');
 
 module.exports = {
 	TEXTURE_FRONT: 0,
@@ -332,6 +333,36 @@ module.exports = {
 				gl.disableVertexAttribArray(i);
 			}
 		}
+	},
+	
+	loadImage: function(src, onLoad){
+		var img = this.getImage(src);
+		if (img){
+			if (img.ready){
+				onLoad(img);
+			}else{
+				img.callers.push(onLoad);
+			}
+			
+			return img;
+		}
+		
+		var image = new Image();
+		image.src = src;
+		image.ready = false;
+		image.callers = [onLoad];
+		this.images.push({src: src, img: image});
+		
+		Utils.addEvent(image, "load", function(){
+			image.ready = true;
+			for (var i=0,len=image.callers.length;i<len;i++){
+				image.callers[i](image);
+			}
+			
+			image.callers = null;
+		});
+		
+		return image;
 	},
 	
 	getImage: function(src){

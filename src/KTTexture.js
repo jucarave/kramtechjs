@@ -19,29 +19,15 @@ function Texture(src, params){
 	
 	this.texture = null;
 	
-	var img = KT.getImage(src);
-	if (img){
-		this.image = img;
-		this.parseTexture();
-	}else{
-		this.image = new Image();
-		this.image.src = src;
-		this.image.ready = false;
-		
-		var T = this;
-		Utils.addEvent(this.image, "load", function(){
-			KT.images.push({src: src, img: T.image});
-			T.parseTexture();
-		});
-	}
+	var T = this;
+	this.image = KT.loadImage(src, function(image){
+		T.parseTexture();
+	});
 }
 
 module.exports = Texture;
 
 Texture.prototype.parseTexture = function(){
-	if (this.image.ready) return;
-	
-	this.image.ready = true;
 	var gl = KT.gl;
 	
 	this.texture = gl.createTexture();

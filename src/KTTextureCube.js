@@ -29,23 +29,10 @@ function TextureCube(posX, negX, posY, negY, posZ, negZ, params){
 module.exports = TextureCube;
 
 TextureCube.prototype.loadImage = function(src){
-	var img = KT.getImage(src);
-	var image;
-	if (img){
-		image = img;
-		parseTexture();
-	}else{
-		image = new Image();
-		image.src = src;
-		image.ready = false;
-		
-		var T = this;
-		Utils.addEvent(image, "load", function(){
-			image.ready = true;
-			KT.images.push({src: src, img: image});
-			T.parseTexture();
-		});
-	}
+	var T = this;
+	var image = KT.loadImage(src, function(image){
+		T.parseTexture();
+	});
 	
 	return image;
 };

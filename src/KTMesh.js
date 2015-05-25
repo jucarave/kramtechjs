@@ -34,7 +34,7 @@ function Mesh(geometry, material){
 
 module.exports = Mesh;
 
-Mesh.prototype.lookToObject = function(camera){
+Mesh.prototype.lookAtObject = function(camera){
 	var angle = KTMath.get2DAngle(this.position.x, this.position.z, camera.position.x, camera.position.z) + KTMath.PI_2;
 	this.rotation.y = angle;
 	
@@ -46,9 +46,7 @@ Mesh.prototype.lookToObject = function(camera){
 };
 
 Mesh.prototype.getTransformationMatrix = function(camera){
-	if (this.isBillboard){
-		this.lookToObject(camera);
-	}
+	if (this.isBillboard){ this.lookAtObject(camera); }
 		
 	if (!this.transformationMatrix || !this.position.equals(this.previousPosition) || !this.rotation.equals(this.previousRotation) || !this.scale.equals(this.previousScale)){
 		this.transformationMatrix = Matrix4.getTransformation(this.position, this.rotation, this.scale, this.transformationStack);

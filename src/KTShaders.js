@@ -99,6 +99,8 @@ module.exports = {
 					"mediump float ty = uGeometryUV.y + mod(uTextureOffset.y + vTextureCoord.t * uTextureRepeat.y - uGeometryUV.y, uGeometryUV.w - uGeometryUV.y);" +
 					
 					"mediump vec4 texColor = texture2D(uTextureSampler, vec2(tx, ty)); " +
+					"if (texColor.w != 0.0) " +
+						"texColor.rgb = vec3(1.0, 0.0, 0.0); " +
 					"color *= texColor; " +
 				"} " + 
 				

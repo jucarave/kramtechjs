@@ -11,12 +11,21 @@ function Test(){
 	KT.init(this.canvas, params);
 	KT.Input.useLockPointer = true;
 	
-	this.createFrameScene();
-	this.createSimpleScene();
-	
-	var T = this;
-	KT.setLoopMethod(function(){ T.loopScene(); });
+	this.font = new KT.TextureFont('img/fonts/arial_32.png', 32, 32, ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}');
+	this.waitFont();
 }
+
+Test.prototype.waitFont = function(){
+	var T = this;
+	if (this.font.image.ready){
+		this.createFrameScene();
+		this.createSimpleScene();
+		
+		KT.setLoopMethod(function(){ T.loopScene(); });
+	}else{
+		setTimeout(function(){ T.waitFont(); }, this.fps);
+	}
+};
 
 Test.prototype.createSimpleScene = function(){
 	var gl = KT.gl;
@@ -64,7 +73,7 @@ Test.prototype.createFrameScene = function(){
 	var material = new KT.MaterialBasic(texture, KT.Color._WHITE);
 	this.billboard = new KT.Mesh(billGeo, material);
 	this.billboard.position.y = 2.0;
-	this.frameScene.add(this.billboard);
+	//this.frameScene.add(this.billboard);
 	
 	
 	var sphGeo = new KT.GeometrySphere(1.0, 16, 16);
@@ -104,7 +113,13 @@ Test.prototype.createFrameScene = function(){
 	this.teapot.receiveShadow = true;
 	this.frameScene.add(this.teapot);
 	
-	this.font = new KT.TextureFont('img/fonts/arial_32.png', 32, 32, ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}');
+	var textGeo = new KT.GeometryText(this.font, 'A', 2);
+	var material = new KT.MaterialBasic(this.font, "#FFFFFF");
+	material.transparent = true;
+	material.drawFaces = 'BOTH';
+	this.text = new KT.Mesh(textGeo, material);
+	this.text.position.set(-3.0, 3.0, -3.0);
+	this.frameScene.add(this.text);
 	
 	
 	this.createLights();

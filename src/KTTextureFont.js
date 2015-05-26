@@ -1,4 +1,6 @@
 var KT = require('./KTMain');
+var Vector2 = require('./KTVector2');
+var Vector4 = require('./KTVector4');
 
 function TextureFont(imageSrc, charWidth, charHeight, charList){
 	this.__ktfontspr = true;
@@ -10,6 +12,8 @@ function TextureFont(imageSrc, charWidth, charHeight, charList){
 	this.hCharNum = 0;
 	
 	this.texture = null;
+	this.repeat = new Vector2(1.0, 1.0);
+	this.offset = new Vector2(0.0, 0.0);
 	
 	var T = this;
 	this.image = KT.loadImage(imageSrc, function(sprite){
@@ -39,18 +43,15 @@ TextureFont.prototype.parseTexture = function(){
 };
 
 TextureFont.prototype.getUVCoords = function(character){
+	if (!this.image.ready) throw "Texture Font is not ready!";
+	
 	var ind = this.charList.indexOf(character);
 	if (ind == -1) ind = 0;
 	
 	var xPos = ((ind * this.charWidth) % this.image.width) / this.image.width;
 	var yPos = (Math.floor(ind / this.hCharNum) * this.charHeight) / this.image.height;
 	var width = xPos + (this.charWidth / this.image.width);
-	var height = yPos + (this.charHeight / this.image.height);
+	var height = yPos - (this.charHeight / this.image.height);
 	
-	return {
-		x1: xPos,
-		y1: yPos,
-		x2: width,
-		y2: height
-	};
+	return new Vector4(xPos, height, width, yPos);
 };

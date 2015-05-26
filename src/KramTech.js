@@ -28,6 +28,7 @@ KT.MeshSprite = require('./KTMeshSprite');
 KT.OrbitAndPan = require('./KTOrbitAndPan');
 KT.Texture = require('./KTTexture');
 KT.TextureCube = require('./KTTextureCube');
+KT.TextureFont = require('./KTTextureFont');
 KT.TextureFramebuffer = require('./KTTextureFramebuffer');
 KT.Utils = require('./KTUtils');
 KT.Vector2 = require('./KTVector2');

@@ -172,6 +172,8 @@ var Input = {
 	},
 	
 	init: function(canvas){
+		canvas.requestPointerLock = canvas.requestPointerLock || canvas.webkitRequestPointerLock || canvas.mozRequestPointerLock;
+		
 		Utils.addEvent(document, 'keydown', Input.handleKeyDown);
 		Utils.addEvent(document, 'keyup', Input.handleKeyUp);
 		Utils.addEvent(canvas, 'mousedown', function(e){ Input.handleMouseDown(e, canvas); });

@@ -142,14 +142,14 @@ Scene.prototype.render = function(camera, scene){
 		this.drawMesh(mesh, camera);
 	}
 	
+	if (!this.shadowMapping && camera.skybox){
+		this.drawSkybox(camera.skybox, camera);
+	}
+	
 	gl.enable( gl.BLEND ); 
 	for (var i=0,len=transparents.length;i<len;i++){
 		var mesh = transparents[i];
 		this.drawMesh(mesh, camera);
-	}
-	
-	if (!this.shadowMapping && camera.skybox){
-		this.drawSkybox(camera.skybox, camera);
 	}
 	
 	return this;

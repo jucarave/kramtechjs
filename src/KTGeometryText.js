@@ -2,7 +2,7 @@ var Color = require('./KTColor');
 var Geometry = require('./KTGeometry');
 var Vector4 = require('./KTVector4');
 
-function GeometryText(font, text, height){
+function GeometryText(font, text, height, color){
 	this.__ktgeometry = true;
 	this.ready = true;
 	
@@ -12,9 +12,11 @@ function GeometryText(font, text, height){
 	var w = height / 2;
 	var h = height / 2;
 	
+	if (!color) color = Color._WHITE;
+	
 	this.uvRegion = new Vector4(0.0, 0.0, 1.0, 1.0);
-	this.colorTop = Color._WHITE;
-	this.colorBottom = Color._WHITE;
+	this.colorTop = color;
+	this.colorBottom = color;
 	
 	var ind = 0;
 	for (var i=0,len=text.length;i<len;i++){

@@ -11,7 +11,7 @@ function Test(){
 	KT.init(this.canvas, params);
 	KT.Input.useLockPointer = true;
 	
-	this.font = new KT.TextureFont('img/fonts/arial_32.png', 32, 32, ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}');
+	this.font = new KT.TextureFont('img/fonts/arial_32.png', 32, 32, ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~');
 	this.waitFont();
 }
 
@@ -113,12 +113,12 @@ Test.prototype.createFrameScene = function(){
 	this.teapot.receiveShadow = true;
 	this.frameScene.add(this.teapot);
 	
-	var textGeo = new KT.GeometryText(this.font, 'KramtechJS', 2, "#FF3333");
+	var textGeo = new KT.GeometryText(this.font, 'Testing this font, it worked!', 2, "#FFFFFF");
 	var material = new KT.MaterialBasic(this.font, "#FFFFFF");
 	material.transparent = true;
 	material.drawFaces = 'BOTH';
 	this.text = new KT.Mesh(textGeo, material);
-	this.text.position.set(-8.0, 3.0, -3.0);
+	this.text.position.set(-textGeo.width / 2.0, 3.0, -3.0);
 	this.frameScene.add(this.text);
 	
 	

@@ -9,7 +9,7 @@ function GeometryText(font, text, height, color){
 	var textGeo = new Geometry();
 	
 	var x = 0;
-	var w = height / 2;
+	var w = height;
 	var h = height / 2;
 	
 	if (!color) color = Color._WHITE;
@@ -28,15 +28,18 @@ function GeometryText(font, text, height, color){
 		var hr = uvRegion.z;
 		var vr = uvRegion.w;
 		
-		textGeo.addVertice(x + w, -h,  0, this.colorBottom, hr, yr);
-		textGeo.addVertice(x - w,  h,  0, this.colorTop, xr, vr);
-		textGeo.addVertice(x - w, -h,  0, this.colorBottom, xr, yr);
-		textGeo.addVertice(x + w,  h,  0, this.colorTop, hr, vr);
+		var ww = w * font.getCharaWidth(chara);
+		var xw = x + ww;
+		
+		textGeo.addVertice(xw, -h,  0, this.colorBottom, hr, yr);
+		textGeo.addVertice( x,  h,  0, this.colorTop, xr, vr);
+		textGeo.addVertice( x, -h,  0, this.colorBottom, xr, yr);
+		textGeo.addVertice(xw,  h,  0, this.colorTop, hr, vr);
 		
 		textGeo.addFace(ind, ind + 1, ind + 2);
 		textGeo.addFace(ind, ind + 3, ind + 1);
 		
-		x += height;
+		x += ww;
 		ind += 4;
 	}
 	
@@ -48,6 +51,8 @@ function GeometryText(font, text, height, color){
 	this.facesBuffer = textGeo.facesBuffer;
 	this.colorsBuffer = textGeo.colorsBuffer;
 	this.normalsBuffer = textGeo.normalsBuffer;
+	
+	this.width = x;
 }
 
 module.exports = GeometryText;

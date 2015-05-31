@@ -5,6 +5,10 @@ var Matrix4 = require('./KTMatrix4');
 var Utils = require('./KTUtils');
 
 var KT = {
+	TEXT_ALIGN_LEFT: 0,
+	TEXT_ALIGN_CENTER: 1,
+	TEXT_ALIGN_RIGHT: 2,
+	
 	init: function(canvas, params){
 		this.canvas = canvas;
 		this.gl = null;

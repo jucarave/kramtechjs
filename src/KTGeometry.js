@@ -8,16 +8,28 @@ var Vector4 = require('./KTVector4');
 function Geometry(){
 	this.__ktgeometry = true;
 	
-	this.vertices = [];
-	this.triangles = [];
-	this.uvCoords = [];
-	this.colors = [];
-	this.normals = [];
+	this.clear();
 	this.uvRegion = new Vector4(0.0, 0.0, 1.0, 1.0);
 	this.boundingBox = null;
 }
 
 module.exports = Geometry;
+
+Geometry.prototype.clear = function(){
+	this.vertices = [];
+	this.triangles = [];
+	this.uvCoords = [];
+	this.colors = [];
+	this.normals = [];
+	
+	this.vertexBuffer = null;
+	this.texBuffer = null;
+	this.facesBuffer = null;
+	this.colorsBuffer = null;
+	this.normalsBuffer = null;
+	
+	this.ready = false;
+};
 
 Geometry.prototype.addVertice = function(x, y, z, color, tx, ty){
 	if (!color) color = Color._WHITE;

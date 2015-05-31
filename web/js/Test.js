@@ -113,12 +113,12 @@ Test.prototype.createFrameScene = function(){
 	this.teapot.receiveShadow = true;
 	this.frameScene.add(this.teapot);
 	
-	var textGeo = new KT.GeometryText(this.font, 'Testing this font, it worked!', 2, "#FFFFFF");
+	var textGeo = new KT.GeometryText(this.font, 'Testing this font, it worked!', 2, KT.TEXT_ALIGN_CENTER, "#FFFFFF");
 	var material = new KT.MaterialBasic(this.font, "#FFFFFF");
 	material.transparent = true;
 	material.drawFaces = 'BOTH';
 	this.text = new KT.Mesh(textGeo, material);
-	this.text.position.set(-textGeo.width / 2.0, 3.0, -3.0);
+	this.text.position.set(0.0, 3.0, -3.0);
 	this.frameScene.add(this.text);
 	
 	

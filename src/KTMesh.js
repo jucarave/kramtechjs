@@ -46,8 +46,6 @@ Mesh.prototype.lookAtObject = function(camera){
 };
 
 Mesh.prototype.getTransformationMatrix = function(camera){
-	if (this.geometry.autoUpdate) this.geometry.updateGeometry();
-	
 	if (this.isBillboard){ this.lookAtObject(camera); }
 		
 	if (!this.transformationMatrix || !this.position.equals(this.previousPosition) || !this.rotation.equals(this.previousRotation) || !this.scale.equals(this.previousScale)){

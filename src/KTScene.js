@@ -81,6 +81,7 @@ Scene.prototype.drawMesh = function(mesh, camera){
 	KT.switchProgram(shader);
 	this.setMaterialAttributes(mesh.material);
 	
+	if (mesh.geometry.autoUpdate) mesh.geometry.updateGeometry();
 	material.sendAttribData(mesh, camera, this);
 	material.sendUniformData(mesh, camera, this);
 	

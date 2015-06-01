@@ -31,14 +31,16 @@ Test.prototype.createSimpleScene = function(){
 	var gl = KT.gl;
 	this.scene = new KT.Scene();
 	
-	this.camera = new KT.CameraOrtho(512.0, 512.0, 0.1, 0.2);
-	this.camera.position.set(256.0,256.0,0.1);
-	this.camera.lookAt(new KT.Vector3(256.0,256.0,0.0));
+	this.camera = new KT.CameraOrtho(this.canvas.width, this.canvas.height, 0.1, 0.2);
+	this.camera.position.set(this.canvas.width / 2,this.canvas.height / 2,0.1);
+	this.camera.lookAt(new KT.Vector3(this.canvas.width / 2,this.canvas.height / 2,0.0));
 	
-	var weapon = new KT.MeshSprite(100.0, 100.0, this.pLight[1].shadowBuffer);
-	weapon.position.set(0.0, 0.0, 0.0);
-	weapon.material.transparent = false;
-	this.scene.add(weapon);
+	var textGeo = new KT.GeometryText(this.font, 'FPS: 30', 32, KT.TEXT_ALIGN_LEFT, "#FFFFFF");
+	var material = new KT.MaterialBasic(this.font, "#FFFFFF");
+	material.transparent = true;
+	this.fpsCounter = new KT.Mesh(textGeo, material);
+	this.fpsCounter.position.set(4.0, this.canvas.height - 34.0, 0.0);
+	this.scene.add(this.fpsCounter);
 };
 
 Test.prototype.createFrameScene = function(){
@@ -163,9 +165,9 @@ Test.prototype.loopScene = function(){
 	
 	T.frameScene.clear();
 	T.frameScene.render(T.fCamera);
-	//T.scene.render(T.camera, true);
+	T.scene.render(T.camera, true);
 	
-	document.getElementById("fpsMeter").innerHTML = 'FPS: ' + KT.clock.fps;
+	this.fpsCounter.geometry.text = 'FPS: ' + KT.clock.fps;
 };
 
 var test;

@@ -52,11 +52,16 @@ GeometryText.prototype.updateGeometry = function(){
 	this._previousAlign = this.align;
 	this._previousColor = this.color;
 	
+	this.vertexBuffer = null;
+	this.texBuffer = null;
+	this.facesBuffer = null;
+	this.colorsBuffer = null;
+	this.normalsBuffer = null;
 	this.textGeometry.clear();
 	
 	var x = 0;
 	var w = this.size;
-	var h = this.size / 2;
+	var h = this.size;
 	
 	var ind = 0;
 	for (var i=0,len=this.text.length;i<len;i++){
@@ -71,9 +76,9 @@ GeometryText.prototype.updateGeometry = function(){
 		var ww = w * this.font.getCharaWidth(chara);
 		var xw = x + ww;
 		
-		this.textGeometry.addVertice(xw, -h,  0, this.color, hr, yr);
+		this.textGeometry.addVertice(xw,  0,  0, this.color, hr, yr);
 		this.textGeometry.addVertice( x,  h,  0, this.color, xr, vr);
-		this.textGeometry.addVertice( x, -h,  0, this.color, xr, yr);
+		this.textGeometry.addVertice( x,  0,  0, this.color, xr, yr);
 		this.textGeometry.addVertice(xw,  h,  0, this.color, hr, vr);
 		
 		this.textGeometry.addFace(ind, ind + 1, ind + 2);

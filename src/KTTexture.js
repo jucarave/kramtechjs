@@ -19,10 +19,15 @@ function Texture(src, params){
 	
 	this.texture = null;
 	
-	var T = this;
-	this.image = KT.loadImage(src, function(image){
-		T.parseTexture();
-	});
+	if (src.data && src.data instanceof Uint8Array){
+		this.image = src;
+		this.parseTexture();
+	}else{
+		var T = this;
+		this.image = KT.loadImage(src, function(image){
+			T.parseTexture();
+		});
+	}
 }
 
 module.exports = Texture;
@@ -35,7 +40,11 @@ Texture.prototype.parseTexture = function(){
 	
 	gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 	
-	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.image);
+	if (this.image instanceof Image){
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.image);
+	}else if (this.image.data && this.image.data instanceof Uint8Array){
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.image.width, this.image.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, this.image.data);
+	}
 	
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, this.magFilter);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, this.minFilter);

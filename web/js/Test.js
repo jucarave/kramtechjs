@@ -34,6 +34,7 @@ Test.prototype.fillScreen = function(){
 	
 	this.canvas.style.position = "absolute";
 	this.canvas.style.margin = "auto";
+	this.canvas.style.imageRendering = 'pixelated';
 	 
 	if (this.outerAspect < this.innerAspect){
 		this.canvas.style.width = "100%";
@@ -118,7 +119,7 @@ Test.prototype.createFrameScene = function(){
 	this.frameScene.add(this.plane);
 	
 	var cylGeo  = new KT.GeometryCylinder(1.0, 1.0, 2.0, 16, 16, false, false, {uvRegion: new KT.Vector4(0.0, 0.0, 0.5, 1.0)});
-	var material = new KT.MaterialPhong(null, "#66FF66");
+	var material = new KT.MaterialPhong(new KT.Texture({width: 1, height: 1, data: new Uint8Array([255, 0, 0, 255])}), "#FFFFFF");
 	material.shininess = 32.0;
 	this.cylinder = new KT.Mesh(cylGeo, material);
 	this.cylinder.position.z = -2.0;

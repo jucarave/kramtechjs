@@ -13,6 +13,7 @@ function Test(){
 	
 	this.font = new KT.TextureFont('img/fonts/arial_32.png', 32, 32, ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~');
 	this.waitFont();
+	this.fillScreen();
 }
 
 Test.prototype.waitFont = function(){
@@ -24,6 +25,26 @@ Test.prototype.waitFont = function(){
 		KT.setLoopMethod(function(){ T.loopScene(); });
 	}else{
 		setTimeout(function(){ T.waitFont(); }, this.fps);
+	}
+};
+
+Test.prototype.fillScreen = function(){
+	this.innerAspect = this.canvas.width / this.canvas.height;
+	this.outerAspect = window.innerWidth / window.innerHeight;
+	
+	this.canvas.style.position = "absolute";
+	this.canvas.style.margin = "auto";
+	 
+	if (this.outerAspect < this.innerAspect){
+		this.canvas.style.width = "100%";
+		this.canvas.style.height = "auto";
+		this.canvas.style.left = "";
+		this.canvas.style.right = "";
+	}else{
+		this.canvas.style.width = "auto";
+		this.canvas.style.height = "100%";
+		this.canvas.style.left = "0";
+		this.canvas.style.right = "0";
 	}
 };
 
@@ -173,4 +194,8 @@ Test.prototype.loopScene = function(){
 var test;
 KT.Utils.addEvent(window, "load", function(){
 	test = new Test();
+	
+	KT.Utils.addEvent(window, "resize", function(){
+		test.fillScreen();
+	});
 });

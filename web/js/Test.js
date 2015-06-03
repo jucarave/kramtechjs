@@ -29,6 +29,8 @@ Test.prototype.waitFont = function(){
 };
 
 Test.prototype.fillScreen = function(){
+	return;
+	
 	this.innerAspect = this.canvas.width / this.canvas.height;
 	this.outerAspect = window.innerWidth / window.innerHeight;
 	

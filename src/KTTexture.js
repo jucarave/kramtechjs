@@ -37,7 +37,6 @@ Texture.prototype.parseTexture = function(){
 	
 	this.texture = gl.createTexture();
 	gl.bindTexture(gl.TEXTURE_2D, this.texture);
-	
 	gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 	
 	if (this.image instanceof Image){

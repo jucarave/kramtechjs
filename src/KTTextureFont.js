@@ -68,6 +68,7 @@ TextureFont.prototype.parseTexture = function(){
 	this.texture = gl.createTexture();
 	gl.bindTexture(gl.TEXTURE_2D, this.texture);
 	
+	gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.image.width, this.image.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, this.imageData);
 	
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);

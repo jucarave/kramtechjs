@@ -1,9 +1,3 @@
-var Clock = require('./KTClock');
-var Shaders = require('./KTShaders');
-var Input = require('./KTInput');
-var Matrix4 = require('./KTMatrix4');
-var Utils = require('./KTUtils');
-
 var KT = {
 	TEXT_ALIGN_LEFT: 0,
 	TEXT_ALIGN_CENTER: 1,
@@ -22,6 +16,7 @@ var KT = {
 		this.__initProperties();
 		this.__initShaders();
 		this.__initParams();
+		this.__createMissingTexture();
 		
 		this.clock = new Clock();
 		this.looping = true;
@@ -83,6 +78,21 @@ var KT = {
 		};
 		
 		this.fps = (params.limitFPS)? params.limitFPS : 1000 / 60;
+	},
+	
+	__createMissingTexture: function(){
+		var data = [];
+		
+		for (var y=0;y<64;y++){
+			for (var x=0;x<256;x+=4){
+				data[y * 256 + x + 0] = 255;
+				data[y * 256 + x + 1] = 255;
+				data[y * 256 + x + 2] = 255;
+				data[y * 256 + x + 3] = 255;
+			}
+		}
+		
+		this.missingTexture = new Texture({data: new Uint8Array(data), width: 64, height: 64});
 	},
 	
 	createArrayBuffer: function(type, dataArray, itemSize){
@@ -407,3 +417,10 @@ var requestAnimFrame = (function(){
             window.setTimeout(callback, KT.fps);
           };
 })();
+
+var Clock = require('./KTClock');
+var Shaders = require('./KTShaders');
+var Input = require('./KTInput');
+var Matrix4 = require('./KTMatrix4');
+var Utils = require('./KTUtils');
+var Texture = require('./KTTexture');

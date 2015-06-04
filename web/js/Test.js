@@ -29,8 +29,6 @@ Test.prototype.waitFont = function(){
 };
 
 Test.prototype.fillScreen = function(){
-	return;
-	
 	this.innerAspect = this.canvas.width / this.canvas.height;
 	this.outerAspect = window.innerWidth / window.innerHeight;
 	
@@ -59,11 +57,11 @@ Test.prototype.createSimpleScene = function(){
 	this.camera.position.set(this.canvas.width / 2,this.canvas.height / 2,0.1);
 	this.camera.lookAt(new KT.Vector3(this.canvas.width / 2,this.canvas.height / 2,0.0));
 	
-	var textGeo = new KT.GeometryText(this.font, 'FPS: 30', 32, KT.TEXT_ALIGN_LEFT, "#FFFFFF");
+	var textGeo = new KT.GeometryText(this.font, 'FPS: 30', 24, KT.TEXT_ALIGN_LEFT, "#FFFFFF");
 	var material = new KT.MaterialBasic(this.font, "#FFFFFF");
 	material.transparent = true;
 	this.fpsCounter = new KT.Mesh(textGeo, material);
-	this.fpsCounter.position.set(4.0, this.canvas.height - 34.0, 0.0);
+	this.fpsCounter.position.set(4.0, this.canvas.height - 30.0, 0.0);
 	this.scene.add(this.fpsCounter);
 };
 
@@ -78,7 +76,7 @@ Test.prototype.createFrameScene = function(){
 	this.skybox = new KT.TextureCube(bp + 'posx.png', bp + 'negx.png',  bp + 'posy.png',  bp + 'negy.png',  bp + 'posz.png',  bp + 'negz.png');
 	
 	this.fCamera = new KT.CameraPerspective(KT.Math.degToRad(60), this.canvas.width / this.canvas.height, 0.1, 400.0);
-	this.fCamera.position.set(0,5,7);
+	this.fCamera.position.set(0,10,16);
 	this.fCamera.lookAt(new KT.Vector3(0,0,0));
 	this.fCamera.setSkybox(this.skybox);
 	
@@ -113,7 +111,7 @@ Test.prototype.createFrameScene = function(){
 	this.sphere.receiveShadow = true;
 	this.frameScene.add(this.sphere);
 	
-	var plnGeo = new KT.GeometryPlane(32.0, 32.0, {uvRegion: new KT.Vector4(0.5, 0.0, 1.0, 1.0)});
+	var plnGeo = new KT.GeometryPlane(32.0, 32.0);
 	var material = new KT.MaterialPhong(null, "#FFFFFF");
 	this.plane = new KT.Mesh(plnGeo, material);
 	this.plane.position.y = -1.5;
@@ -130,7 +128,7 @@ Test.prototype.createFrameScene = function(){
 	this.frameScene.add(this.cylinder);
 	
 	var teapot = new KT.Geometry3DModel('models/teapot.obj');
-	var material = new KT.MaterialPhong(null, "#6666FF");
+	var material = new KT.MaterialPhong(KT.missingTexture, "#6666FF");
 	material.shininess = 32.0;
 	material.drawFaces = 'BOTH';
 	this.teapot = new KT.Mesh(teapot, material);

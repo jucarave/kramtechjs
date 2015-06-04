@@ -83,13 +83,49 @@ var KT = {
 	__createMissingTexture: function(){
 		var data = [];
 		
+		var c1 = [66,66,66];
+		var c2 = [122,122,122];
+		var c3 = [200,200,200];
+		var c4 = [255,255,255];
+		
+		var yy = 0;
 		for (var y=0;y<64;y++){
+			var xx = 0;
 			for (var x=0;x<256;x+=4){
-				data[y * 256 + x + 0] = 255;
-				data[y * 256 + x + 1] = 255;
-				data[y * 256 + x + 2] = 255;
+				var c;
+				if ((xx < 32 && yy < 32) || (xx >= 32 && yy >= 32)){
+					c = c2;
+					if (xx < 32 && yy < 32){
+						if ((xx < 16 && yy < 16) || (xx >= 16 && yy >= 16)){
+							c = c1;
+						}
+					}else{
+						if ((xx < 48 && yy < 48) || (xx >= 48 && yy >= 48)){
+							c = c1;
+						}
+					}
+				}else{
+					c = c4;
+					if (xx >= 32 && yy < 32){
+						if ((xx < 48 && yy < 16) || (xx >= 48 && yy >= 16)){
+							c = c3;
+						}
+					}else if (xx < 32 && yy >= 32){
+						if ((xx < 16 && yy < 48) || (xx >= 16 && yy >= 48)){
+							c = c3;
+						}
+					}
+				}
+				
+				data[y * 256 + x + 0] = c[0];
+				data[y * 256 + x + 1] = c[1];
+				data[y * 256 + x + 2] = c[2];
 				data[y * 256 + x + 3] = 255;
+				
+				xx++;
 			}
+			
+			yy++;
 		}
 		
 		this.missingTexture = new Texture({data: new Uint8Array(data), width: 64, height: 64});

@@ -21,6 +21,7 @@ function Texture(src, params){
 	
 	if (src.data && src.data instanceof Uint8Array){
 		this.image = src;
+		this.image.ready = true;
 		this.parseTexture();
 	}else{
 		var T = this;

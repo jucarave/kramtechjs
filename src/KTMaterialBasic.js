@@ -59,8 +59,13 @@ MaterialBasic.prototype.sendUniformData = function(mesh, camera, scene){
 			gl.uniform4fv(uni.location, new Float32Array(color));
 		}else if (uni.name == 'uTextureSampler'){
 			if (mesh.material.textureMap){
+				var tex = mesh.material.textureMap;
+				if (tex.image && !tex.image.ready){
+					tex = KT.missingTexture;
+				}
+				
 				gl.activeTexture(gl.TEXTURE0);
-				gl.bindTexture(gl.TEXTURE_2D, mesh.material.textureMap.texture);
+				gl.bindTexture(gl.TEXTURE_2D, tex.texture);
 				gl.uniform1i(uni.location, 0);
 			}
 		}else if (uni.name == 'uHasTexture'){

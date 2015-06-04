@@ -53,6 +53,7 @@ TextureCube.prototype.parseTexture = function(){
 	gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.texture);
 	
 	for (var i=0;i<6;i++){
+		gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 		gl.texImage2D(types[i], 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, this.images[i]);
 	}
 	

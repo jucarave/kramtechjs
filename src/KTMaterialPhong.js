@@ -179,7 +179,8 @@ MaterialPhong.prototype.sendUniformData = function(mesh, camera, scene){
 		}else if (uni.name == 'uOpacity'){
 			gl.uniform1f(uni.location, mesh.material.opacity);
 		}else if (uni.name == 'uTextureRepeat' && mesh.material.textureMap){
-			gl.uniform2f(uni.location, mesh.material.textureMap.repeat.x, mesh.material.textureMap.repeat.y);
+			var repeat = (mesh.material.repeat)? mesh.material.repeat : mesh.material.textureMap.repeat;
+			gl.uniform2f(uni.location, repeat.x, repeat.y);
 		}else if (uni.name == 'uGeometryUV' && mesh.material.textureMap){
 			gl.uniform4f(uni.location, mesh.geometry.uvRegion.x, mesh.geometry.uvRegion.y, mesh.geometry.uvRegion.z, mesh.geometry.uvRegion.w);
 		}else if (uni.name == 'uTextureOffset' && mesh.material.textureMap){

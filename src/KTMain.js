@@ -51,10 +51,11 @@ var KT = {
 	
 	__initShaders: function(){
 		this.shaders = {};
-		this.shaders.basic = this.processShader(Shaders.basic);
-		this.shaders.lambert = this.processShader(Shaders.lambert);
-		this.shaders.phong = this.processShader(Shaders.phong);
-		this.shaders.skybox = this.processShader(Shaders.skybox);
+		
+		if (this.modules.basicMaterial) this.shaders.basic = this.processShader(Shaders.basic);
+		if (this.modules.lambertMaterial) this.shaders.lambert = this.processShader(Shaders.lambert);
+		if (this.modules.phongMaterial) this.shaders.phong = this.processShader(Shaders.phong);
+		if (this.modules.skyboxMaterial) this.shaders.skybox = this.processShader(Shaders.skybox);
 		
 		if (this.modules.shadowMapping)
 			this.shaders.depth = this.processShader(Shaders.depthMap);
@@ -74,7 +75,11 @@ var KT = {
 		
 		this.modules = {
 			specularLight: (params.specularLight !== undefined)? params.specularLight : true,
-			shadowMapping: (params.shadowMapping !== undefined)? params.shadowMapping : true
+			shadowMapping: (params.shadowMapping !== undefined)? params.shadowMapping : true,
+			basicMaterial: (params.basicMaterial !== undefined)? params.basicMaterial : true,
+			lambertMaterial: (params.lambertMaterial !== undefined)? params.lambertMaterial : true,
+			phongMaterial: (params.phongMaterial !== undefined)? params.phongMaterial : true,
+			skyboxMaterial: (params.skyboxMaterial !== undefined)? params.skyboxMaterial : true,
 		};
 		
 		this.fps = (params.limitFPS)? params.limitFPS : 1000 / 60;

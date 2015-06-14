@@ -106,7 +106,7 @@ Scene.prototype.renderToFramebuffer = function(camera, framebuffer){
 	gl.viewport(0,0,gl.width,gl.height);
 };
 
-Scene.prototype.render = function(camera, scene){
+Scene.prototype.render = function(camera){
 	var gl = KT.gl;
 	
 	

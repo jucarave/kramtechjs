@@ -3,7 +3,7 @@ var Color = require('./KTColor');
 var Geometry = require('./KTGeometry');
 var Vector4 = require('./KTVector4');
 
-function GeometryText(font, text, size, align, color, maxWidth){
+function GeometryText(font, text, size, align, color, maxWidth, wrap){
 	this.__ktgeometry = true;
 	this.ready = true;
 	
@@ -20,6 +20,7 @@ function GeometryText(font, text, size, align, color, maxWidth){
 	this.align = align;
 	this.color = color;
 	this.maxWidth = (maxWidth)? maxWidth : -1;
+	this.wrap = (wrap)? wrap : 'char';
 	
 	this._previousHeight = null;
 	this._previousText = null;
@@ -44,6 +45,45 @@ GeometryText.prototype.hasChanged = function(){
 	);
 };
 
+GeometryText.prototype.formatText = function(){
+	if (this.wrap != 'word') return [this.text];
+	
+	var ret = [];
+	var line = '';
+	var width = 0;
+	var words = this.text.split(' ');
+	
+	var last = true;
+	var blank = this.size * this.font.getCharaWidth(' ');
+	for (var i=0,len=words.length;i<len;i++){
+		var w = words[i];
+		var ww = blank;
+		
+		for (var j=0,jlen=w.length;j<jlen;j++){
+			ww += this.size * this.font.getCharaWidth(w.charAt(j));
+		}
+		
+		if (width + ww < this.maxWidth){
+			if (line != "") line += ' ';
+			line += w;
+			width += ww;
+			last = false;
+		}else{
+			ret.push(line);
+			line = w;
+			width = ww;
+			last = true;
+		}
+	}
+	
+	if (!last){
+		ret.push(line);
+	}
+	
+	console.log(blank);
+	return ret;
+};
+
 GeometryText.prototype.updateGeometry = function(){
 	if (!this.hasChanged()) return;
 	
@@ -60,41 +100,47 @@ GeometryText.prototype.updateGeometry = function(){
 	this.normalsBuffer = null;
 	this.textGeometry.clear();
 	
-	var x = 0;
+	var text = this.formatText();
 	var y = 0;
 	var w = this.size;
 	var h = this.size;
 	
 	var ind = 0;
-	for (var i=0,len=this.text.length;i<len;i++){
-		var chara = this.text.charAt(i);
+	for (var j=0,jlen=text.length;j<jlen;j++){
+		var x = 0;
 		
-		var uvRegion = this.font.getUVCoords(chara);
-		var xr = uvRegion.x;
-		var yr = uvRegion.y;
-		var hr = uvRegion.z;
-		var vr = uvRegion.w;
-		
-		var ww = w * this.font.getCharaWidth(chara);
-		var xw = x + ww;
-		
-		if (this.maxWidth != -1 && xw >= this.maxWidth){
-			x = 0;
-			y -= this.size;
-			i--;
-			continue;
+		for (var i=0,len=text[j].length;i<len;i++){
+			var chara = text[j].charAt(i);
+			
+			var uvRegion = this.font.getUVCoords(chara);
+			var xr = uvRegion.x;
+			var yr = uvRegion.y;
+			var hr = uvRegion.z;
+			var vr = uvRegion.w;
+			
+			var ww = w * this.font.getCharaWidth(chara);
+			var xw = x + ww;
+			
+			if (this.maxWidth != -1 && this.wrap == 'char' && xw >= this.maxWidth){
+				x = 0;
+				y -= this.size;
+				i--;
+				continue;
+			}
+			
+			this.textGeometry.addVertice(xw,    y,  0, this.color, hr, yr);
+			this.textGeometry.addVertice( x,  y+h,  0, this.color, xr, vr);
+			this.textGeometry.addVertice( x,    y,  0, this.color, xr, yr);
+			this.textGeometry.addVertice(xw,  y+h,  0, this.color, hr, vr);
+			
+			this.textGeometry.addFace(ind, ind + 1, ind + 2);
+			this.textGeometry.addFace(ind, ind + 3, ind + 1);
+			
+			x += ww;
+			ind += 4;
 		}
 		
-		this.textGeometry.addVertice(xw,    y,  0, this.color, hr, yr);
-		this.textGeometry.addVertice( x,  y+h,  0, this.color, xr, vr);
-		this.textGeometry.addVertice( x,    y,  0, this.color, xr, yr);
-		this.textGeometry.addVertice(xw,  y+h,  0, this.color, hr, vr);
-		
-		this.textGeometry.addFace(ind, ind + 1, ind + 2);
-		this.textGeometry.addFace(ind, ind + 3, ind + 1);
-		
-		x += ww;
-		ind += 4;
+		y -= this.size;
 	}
 	
 	if (this.align == KT.TEXT_ALIGN_CENTER){

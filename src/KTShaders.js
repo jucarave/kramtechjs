@@ -88,6 +88,7 @@ module.exports = {
 			"uniform lowp vec2 uTextureRepeat; " +
 			"uniform lowp vec2 uTextureOffset; " +
 			"uniform mediump vec4 uGeometryUV; " +
+			"uniform lowp float uOpacity; " +
 			
 			"varying mediump vec2 vTextureCoord; " + 
 			"varying mediump vec4 vVertexColor; " + 
@@ -102,7 +103,7 @@ module.exports = {
 					"color *= texColor; " +
 				"} " + 
 				
-				"gl_FragColor = color;" + 
+				"gl_FragColor = vec4(color.rgb, color.a * uOpacity);" + 
 			"}"
 	},
 	

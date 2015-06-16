@@ -77,6 +77,8 @@ MaterialBasic.prototype.sendUniformData = function(mesh, camera, scene){
 			gl.uniform4f(uni.location, mesh.geometry.uvRegion.x, mesh.geometry.uvRegion.y, mesh.geometry.uvRegion.z, mesh.geometry.uvRegion.w);
 		}else if (uni.name == 'uTextureOffset' && mesh.material.textureMap){
 			gl.uniform2f(uni.location, mesh.material.textureMap.offset.x, mesh.material.textureMap.offset.y);
+		}else if (uni.name == 'uOpacity'){
+			gl.uniform1f(uni.location, mesh.material.opacity);
 		}
 	}
 };

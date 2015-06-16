@@ -3,7 +3,7 @@ var Color = require('./KTColor');
 var Geometry = require('./KTGeometry');
 var Vector4 = require('./KTVector4');
 
-function GeometryText(font, text, size, align, color){
+function GeometryText(font, text, size, align, color, maxWidth){
 	this.__ktgeometry = true;
 	this.ready = true;
 	
@@ -19,6 +19,7 @@ function GeometryText(font, text, size, align, color){
 	this.font = font;
 	this.align = align;
 	this.color = color;
+	this.maxWidth = (maxWidth)? maxWidth : -1;
 	
 	this._previousHeight = null;
 	this._previousText = null;
@@ -60,6 +61,7 @@ GeometryText.prototype.updateGeometry = function(){
 	this.textGeometry.clear();
 	
 	var x = 0;
+	var y = 0;
 	var w = this.size;
 	var h = this.size;
 	
@@ -76,10 +78,17 @@ GeometryText.prototype.updateGeometry = function(){
 		var ww = w * this.font.getCharaWidth(chara);
 		var xw = x + ww;
 		
-		this.textGeometry.addVertice(xw,  0,  0, this.color, hr, yr);
-		this.textGeometry.addVertice( x,  h,  0, this.color, xr, vr);
-		this.textGeometry.addVertice( x,  0,  0, this.color, xr, yr);
-		this.textGeometry.addVertice(xw,  h,  0, this.color, hr, vr);
+		if (this.maxWidth != -1 && xw >= this.maxWidth){
+			x = 0;
+			y -= this.size;
+			i--;
+			continue;
+		}
+		
+		this.textGeometry.addVertice(xw,    y,  0, this.color, hr, yr);
+		this.textGeometry.addVertice( x,  y+h,  0, this.color, xr, vr);
+		this.textGeometry.addVertice( x,    y,  0, this.color, xr, yr);
+		this.textGeometry.addVertice(xw,  y+h,  0, this.color, hr, vr);
 		
 		this.textGeometry.addFace(ind, ind + 1, ind + 2);
 		this.textGeometry.addFace(ind, ind + 3, ind + 1);

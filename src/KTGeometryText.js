@@ -80,7 +80,6 @@ GeometryText.prototype.formatText = function(){
 		ret.push(line);
 	}
 	
-	console.log(blank);
 	return ret;
 };
 

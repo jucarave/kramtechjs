@@ -28,6 +28,8 @@ function Mesh(geometry, material){
 	this.previousRotation = this.rotation.clone();
 	this.previousScale = this.scale.clone();
 	
+	this.order = 0;
+	
 	this.transformationMatrix = null;
 	this.transformationStack = 'SRxRyRzT';
 }

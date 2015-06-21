@@ -136,7 +136,12 @@ Scene.prototype.render = function(camera){
 		if (mesh.material.opacity == 0.0) continue;
 		
 		if (mesh.material.opacity != 1.0 || mesh.material.transparent){
-			transparents.push(mesh);
+			if (!transparents[mesh.order]){
+				transparents[mesh.order] = mesh;
+			}else{
+				transparents.splice(mesh.order, 0, mesh);
+			}
+			
 			continue;
 		}
 		
@@ -148,9 +153,9 @@ Scene.prototype.render = function(camera){
 	}
 	
 	gl.enable( gl.BLEND ); 
-	for (var i=0,len=transparents.length;i<len;i++){
-		var mesh = transparents[i];
-		this.drawMesh(mesh, camera);
+	for (var i in transparents){
+		if (transparents[i])
+			this.drawMesh(transparents[i], camera);
 	}
 	
 	return this;

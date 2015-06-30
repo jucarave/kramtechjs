@@ -130,8 +130,13 @@ Scene.prototype.render = function(camera){
 	gl.disable( gl.BLEND ); 
 	var transparents = [];
 	
-	for (var i=0,len=this.meshes.length;i<len;i++){
-		var mesh = this.meshes[i];
+	for (var i=0,mesh;mesh=this.meshes[i];i++){
+		if (mesh.remove){
+			this.meshes.splice(i, 1);
+			i--;
+			continue;
+		}
+		
 		if (!mesh.visible) continue;
 		if (mesh.material.opacity == 0.0) continue;
 		

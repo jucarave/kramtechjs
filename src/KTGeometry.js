@@ -11,6 +11,7 @@ function Geometry(){
 	this.clear();
 	this.uvRegion = new Vector4(0.0, 0.0, 1.0, 1.0);
 	this.boundingBox = null;
+	this.boundingSphere = null;
 }
 
 module.exports = Geometry;
@@ -151,6 +152,22 @@ Geometry.prototype.computeBoundingBox = function(){
 		y2: y2,
 		z2: z2,
 	}; 
+	
+	return this;
+};
+
+Geometry.prototype.computeBoundingSphere = function(){
+	var max;
+	
+	for (var i=0,vert;vert=this.vertices[i];i++){
+		var length = vert.length();
+		
+		max = (i==0)? length : Math.max(max, length);
+	}
+	
+	this.boundingSphere = {
+		radius: max
+	};
 	
 	return this;
 };

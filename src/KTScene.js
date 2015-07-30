@@ -195,3 +195,9 @@ Scene.prototype.setMaterialAttributes = function(material){
 		gl.disable(gl.CULL_FACE);
 	}
 };
+
+Scene.prototype.getMeshLights = function(mesh){
+	var geometry = mesh.geometry;
+	
+	return this.lights;
+};

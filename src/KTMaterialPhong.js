@@ -117,7 +117,7 @@ MaterialPhong.prototype.sendUniformData = function(mesh, camera, scene){
 	var transformationMatrix;
 	var uniforms = this.shader.uniforms;
 	var modelTransformation;
-	var lights = scene.lights;
+	var lights = scene.getMeshLights(mesh);
 	var lightsCount = 0;
 	
 	var usedLightUniform = null;

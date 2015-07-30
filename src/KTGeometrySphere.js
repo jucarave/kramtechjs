@@ -54,12 +54,14 @@ function GeometrySphere(radius, latBands, lonBands, params){
 	}
 	
 	sphGeo.build();
+	sphGeo.computeBoundingSphere();
 	
 	this.vertexBuffer = sphGeo.vertexBuffer;
 	this.texBuffer = sphGeo.texBuffer;
 	this.facesBuffer = sphGeo.facesBuffer;
 	this.colorsBuffer = sphGeo.colorsBuffer;
 	this.normalsBuffer = sphGeo.normalsBuffer;
+	this.boundingSphere = sphGeo.boundingSphere;
 }
 
 module.exports = GeometrySphere;

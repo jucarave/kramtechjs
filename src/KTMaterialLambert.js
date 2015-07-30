@@ -124,7 +124,7 @@ MaterialLambert.prototype.sendUniformData = function(mesh, camera, scene){
 			if (lightsCount == uni.data.length)
 				continue;
 				
-			var lights = scene.lights;
+			var lights = scene.getMeshLights(mesh);
 			for (var j=0,jlen=lights.length;j<jlen;j++){
 				this.sendLightUniformData(lights[j], uni.data[lightsCount++], modelTransformation);
 			}

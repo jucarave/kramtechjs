@@ -104,7 +104,7 @@ FlyCamera.prototype.setCamera = function(camera){
 	var zoom = Vector3.vectorsDifference(camera.position, this.target).length();
 	
 	this.angle.x = (-KTMath.get2DAngle(this.target.x, this.target.z, camera.position.x, camera.position.z) + KTMath.PI2) % KTMath.PI2;
-	this.angle.y = (-KTMath.get2DAngle(0, camera.position.y, zoom, this.target.y) + KTMath.PI2) % KTMath.PI2;
+	this.angle.y = (-KTMath.get2DAngle(0, camera.position.y, zoom, this.target.y));
 	
 	this.setCameraPosition();
 };

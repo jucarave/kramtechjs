@@ -92,12 +92,14 @@ function GeometryCylinder(radiusTop, radiusBottom, height, widthSegments, height
 	}
 	
 	cylGeo.build();
+	cylGeo.computeBoundingCylinder();
 	
 	this.vertexBuffer = cylGeo.vertexBuffer;
 	this.texBuffer = cylGeo.texBuffer;
 	this.facesBuffer = cylGeo.facesBuffer;
 	this.colorsBuffer = cylGeo.colorsBuffer;
 	this.normalsBuffer = cylGeo.normalsBuffer;
+	this.boundingCylinder = cylGeo.boundingCylinder;
 }
 
 module.exports = GeometryCylinder;

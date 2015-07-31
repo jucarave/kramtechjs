@@ -12,6 +12,7 @@ function Geometry(){
 	this.uvRegion = new Vector4(0.0, 0.0, 1.0, 1.0);
 	this.boundingBox = null;
 	this.boundingSphere = null;
+	this.boundingCylinder = null;
 }
 
 module.exports = Geometry;
@@ -28,6 +29,10 @@ Geometry.prototype.clear = function(){
 	this.facesBuffer = null;
 	this.colorsBuffer = null;
 	this.normalsBuffer = null;
+	
+	this.boundingBox = null;
+	this.boundingSphere = null;
+	this.boundingCylinder = null;
 	
 	this.ready = false;
 };
@@ -167,6 +172,29 @@ Geometry.prototype.computeBoundingSphere = function(){
 	
 	this.boundingSphere = {
 		radius: max
+	};
+	
+	return this;
+};
+
+Geometry.prototype.computeBoundingCylinder = function(){
+	var rad, ymax, ymin;
+	
+	for (var i=0,vert;vert=this.vertices[i];i++){
+		var vert2d = vert.clone();
+		vert2d.y = 0;
+		
+		var length = vert2d.length();
+		
+		rad = (i==0)? length : Math.max(rad, length);
+		ymax = (i==0)? vert.y : Math.max(ymax, vert.y);
+		ymin = (i==0)? vert.y : Math.min(ymin, vert.y);
+	}
+	
+	this.boundingCylinder = {
+		radius: rad,
+		y1: ymin,
+		y2: ymax
 	};
 	
 	return this;

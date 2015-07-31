@@ -105,7 +105,7 @@ FlyCamera.prototype.setCamera = function(camera){
 	var zoom = Vector3.vectorsDifference(camera.position, this.target).length();
 	
 	this.angle.x = (-KTMath.get2DAngle(this.target.x, this.target.z, camera.position.x, camera.position.z) + KTMath.PI2) % KTMath.PI2;
-	this.angle.y = (-KTMath.get2DAngle(0, camera.position.y, zoom, this.target.y) + KTMath.PI2) % KTMath.PI2;
+	this.angle.y = (-KTMath.get2DAngle(0, camera.position.y, zoom, this.target.y));
 	
 	this.setCameraPosition();
 };
@@ -391,6 +391,7 @@ function Geometry(){
 	this.uvRegion = new Vector4(0.0, 0.0, 1.0, 1.0);
 	this.boundingBox = null;
 	this.boundingSphere = null;
+	this.boundingCylinder = null;
 }
 
 module.exports = Geometry;
@@ -407,6 +408,10 @@ Geometry.prototype.clear = function(){
 	this.facesBuffer = null;
 	this.colorsBuffer = null;
 	this.normalsBuffer = null;
+	
+	this.boundingBox = null;
+	this.boundingSphere = null;
+	this.boundingCylinder = null;
 	
 	this.ready = false;
 };
@@ -546,6 +551,29 @@ Geometry.prototype.computeBoundingSphere = function(){
 	
 	this.boundingSphere = {
 		radius: max
+	};
+	
+	return this;
+};
+
+Geometry.prototype.computeBoundingCylinder = function(){
+	var rad, ymax, ymin;
+	
+	for (var i=0,vert;vert=this.vertices[i];i++){
+		var vert2d = vert.clone();
+		vert2d.y = 0;
+		
+		var length = vert2d.length();
+		
+		rad = (i==0)? length : Math.max(rad, length);
+		ymax = (i==0)? vert.y : Math.max(ymax, vert.y);
+		ymin = (i==0)? vert.y : Math.min(ymin, vert.y);
+	}
+	
+	this.boundingCylinder = {
+		radius: rad,
+		y1: ymin,
+		y2: ymax
 	};
 	
 	return this;
@@ -888,12 +916,14 @@ function GeometryCylinder(radiusTop, radiusBottom, height, widthSegments, height
 	}
 	
 	cylGeo.build();
+	cylGeo.computeBoundingCylinder();
 	
 	this.vertexBuffer = cylGeo.vertexBuffer;
 	this.texBuffer = cylGeo.texBuffer;
 	this.facesBuffer = cylGeo.facesBuffer;
 	this.colorsBuffer = cylGeo.colorsBuffer;
 	this.normalsBuffer = cylGeo.normalsBuffer;
+	this.boundingCylinder = cylGeo.boundingCylinder;
 }
 
 module.exports = GeometryCylinder;

@@ -53,7 +53,10 @@ FlyCamera.prototype.keyboardControls = function(){
 };
 
 FlyCamera.prototype.mouseControls = function(){
-	if (this.onlyOnLock && !Input.mouseLocked) return;
+	if (this.onlyOnLock && !Input.mouseLocked){ 
+		this.lastDrag = null;
+		return;
+	}
 	
 	var moved = false;
 	
